@@ -16,4 +16,12 @@ public class MathUtils {
 			return 1;
 		return -1;
 	}
+
+	/**
+	 * @param f
+	 * @return the sign of f, or 0 if no sign
+	 */
+	public static int sign(float f) {
+		return f > 0 ? 1 : (f < 0 ? -1 : 0);
+	}
 }

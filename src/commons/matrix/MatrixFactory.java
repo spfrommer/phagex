@@ -6,6 +6,25 @@ public class MatrixFactory {
 	}
 
 	/**
+	 * @param width
+	 * @return an identity matrix
+	 */
+	public static Matrix identity(int width) {
+		float[] newArray = new float[width * width];
+		for (int r = 0; r < width; r++) {
+			for (int w = 0; w < width; w++) {
+				int arrayLoc = r * width + w;
+				if (r == w) {
+					newArray[arrayLoc] = 1;
+				} else {
+					newArray[arrayLoc] = 0;
+				}
+			}
+		}
+		return new Matrix(width, width, newArray);
+	}
+
+	/**
 	 * @param x
 	 * @param y
 	 * @param z
@@ -42,5 +61,13 @@ public class MatrixFactory {
 	 */
 	public static Matrix affineScale(float scaleX, float scaleY) {
 		return new Matrix(3, 3, new float[] { scaleX, 0, 0, 0, scaleY, 0, 0, 0, 1 });
+	}
+
+	/**
+	 * @param scale
+	 * @return a scaling Matrix
+	 */
+	public static Matrix affineScale(Vector2f scale) {
+		return affineScale(scale.getX(), scale.getY());
 	}
 }

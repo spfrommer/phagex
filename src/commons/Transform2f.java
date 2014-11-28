@@ -1,11 +1,14 @@
 package commons;
 
+import commons.matrix.DimensionException;
+import commons.matrix.Matrix;
+import commons.matrix.MatrixUtils;
 import commons.matrix.Vector2f;
 
 /**
- * A rotate, translate, and scale in a 2 dimensional space.
+ * A translate, rotation, and scale in a 2 dimensional space.
  * 
- * Order applied: rotation, translation, scale.
+ * Order applied: translate, rotation, scale.
  */
 public class Transform2f {
 	private Vector2f m_translate;
@@ -35,30 +38,44 @@ public class Transform2f {
 	}
 
 	/**
+	 * Creates a new Transform from an affine transform Matrix.
+	 * 
+	 * @param matrix
+	 */
+	public Transform2f(Matrix matrix) {
+		if (matrix.getRows() != 3 || matrix.getColumns() != 3)
+			throw new DimensionException();
+
+		m_translate = MatrixUtils.getTranslate(matrix);
+		m_rotate = MatrixUtils.getRotation(matrix);
+		m_scale = MatrixUtils.getScale(matrix);
+	}
+
+	/**
 	 * @return the translatation
 	 */
-	public Vector2f getTranslatation() {
+	public Vector2f getTranslation() {
 		return m_translate;
 	}
 
 	/**
 	 * @param translate
 	 */
-	public void setTranslatation(Vector2f translate) {
+	public void setTranslation(Vector2f translate) {
 		m_translate = translate;
 	}
 
 	/**
 	 * @return the rotatation
 	 */
-	public float getRotatation() {
+	public float getRotation() {
 		return m_rotate;
 	}
 
 	/**
 	 * @param rotate
 	 */
-	public void setRotatation(float rotate) {
+	public void setRotation(float rotate) {
 		m_rotate = rotate;
 	}
 
@@ -74,5 +91,10 @@ public class Transform2f {
 	 */
 	public void setScale(Vector2f scale) {
 		m_scale = scale;
+	}
+
+	@Override
+	public String toString() {
+		return getTranslation() + "\n" + getRotation() + "\n" + getScale();
 	}
 }

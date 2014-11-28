@@ -7,15 +7,6 @@ import commons.Transform2f;
  */
 public interface EntityListener {
 	/**
-	 * Called when setTransform() is called on an Entity.
-	 * 
-	 * @param entity
-	 * @param oldTransform
-	 * @param newTransform
-	 */
-	public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform);
-
-	/**
 	 * Called when a child is added to an Entity.
 	 * 
 	 * @param entity
@@ -37,6 +28,11 @@ public interface EntityListener {
 	 * @param entity
 	 * @param oldParent
 	 * @param newParent
+	 * @param oldTransform
+	 * @param newTransform
 	 */
-	public void parentChanged(Entity entity, EntityContainer oldParent, EntityContainer newParent);
+	public void parentChanged(Entity entity, EntityContainer oldParent, EntityContainer newParent,
+			Transform2f oldTransform, Transform2f newTransform);
+
+	public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform);
 }

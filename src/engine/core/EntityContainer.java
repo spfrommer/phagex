@@ -1,5 +1,6 @@
 package engine.core;
 
+
 public interface EntityContainer {
 	/**
 	 * Adds an Entity to the container.

@@ -58,17 +58,21 @@ public class Entity implements EntityContainer {
 	}
 
 	/**
-	 * Sets the parent EntityContainer.
+	 * Sets the parent EntityContainer and the new relative transform.
 	 * 
 	 * @param parent
 	 */
-	protected void setParent(EntityContainer parent) {
+	protected void setParent(EntityContainer parent, Transform2f transform) {
 		if (parent == null)
-			throw new SceneException("Cannot set parent to null!");
+			throw new EntityException("Cannot set parent to null!");
+		if (transform == null)
+			throw new EntityException("Transform cannot be null!");
 
 		for (EntityListener listener : m_listeners)
-			listener.parentChanged(this, m_parent, parent);
+			listener.parentChanged(this, m_parent, parent, m_transform, transform);
+
 		m_parent = parent;
+		m_transform = transform;
 	}
 
 	/**
@@ -119,7 +123,8 @@ public class Entity implements EntityContainer {
 	}
 
 	/**
-	 * Sets the Entity's transform and notifies its listeners.
+	 * Sets the Entity's transform and notifies its listeners. These listeners are only notified if the transform is
+	 * changed without changing the parents.
 	 * 
 	 * @param transform
 	 */
