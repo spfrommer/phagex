@@ -38,11 +38,22 @@ public class Matrix {
 	}
 
 	/**
-	 * @return the Matrix cast to a Vector3d
+	 * @return the Matrix cast to a Vector2f
 	 */
-	public Vector2f toVector() {
+	public Vector2f toVector2f() {
 		if (m_rows == 2 && m_columns == 1) {
 			return new Vector2f(getVal(0, 0), getVal(1, 0));
+		} else {
+			throw new DimensionException();
+		}
+	}
+
+	/**
+	 * @return the Matrix cast to a Vector3f
+	 */
+	public Vector3f toVector3f() {
+		if (m_rows == 3 && m_columns == 1) {
+			return new Vector3f(getVal(0, 0), getVal(1, 0), getVal(2, 0));
 		} else {
 			throw new DimensionException();
 		}

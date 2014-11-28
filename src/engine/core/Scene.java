@@ -76,6 +76,8 @@ public class Scene implements EntityContainer {
 		entity.getParent().removeChild(entity);
 		newParent.addChild(entity);
 		entity.setParent(newParent);
+		// todo transform set
+
 	}
 
 	/**

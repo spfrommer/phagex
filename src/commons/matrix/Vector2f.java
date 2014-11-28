@@ -23,6 +23,14 @@ public class Vector2f extends Matrix {
 	}
 
 	/**
+	 * @return the original vector + 1 for the Z component of the 3f matrix
+	 */
+	@Override
+	public Vector3f augment() {
+		return new Vector3f(getX(), getY(), 1);
+	}
+
+	/**
 	 * Returns the z dimension of the cross product of 2 vectors in the 2d plane (the x and y dimensions are obviously
 	 * zero).
 	 * 

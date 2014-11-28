@@ -30,6 +30,15 @@ public class Vector3f extends Matrix {
 	}
 
 	/**
+	 * Returns a Vector2f from the x and y components of this Vector.
+	 * 
+	 * @return
+	 */
+	public Vector2f unaugment() {
+		return new Vector2f(getX(), getY());
+	}
+
+	/**
 	 * @param vector
 	 * @return the cross product of the two vectors
 	 */
