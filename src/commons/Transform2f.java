@@ -3,7 +3,9 @@ package commons;
 import commons.matrix.Vector2f;
 
 /**
- * A translate, rotate, and scale in a 2 dimensional space.
+ * A scale, rotate, and translate in a 2 dimensional space.
+ * 
+ * Order applied: Scale, rotation, translation.
  */
 public class Transform2f {
 	private Vector2f m_translate;
