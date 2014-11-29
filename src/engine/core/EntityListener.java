@@ -31,7 +31,7 @@ public interface EntityListener {
 	 * @param oldTransform
 	 * @param newTransform
 	 */
-	public void parentChanged(Entity entity, EntityContainer oldParent, EntityContainer newParent,
+	public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent,
 			Transform2f oldTransform, Transform2f newTransform);
 
 	public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform);

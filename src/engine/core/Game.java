@@ -48,9 +48,14 @@ public class Game {
 		Scene scene = new Scene(game);
 		game.scenes().addScene("main", scene);
 
-		Entity test = scene.createEntity(scene);
+		Entity test = scene.createEntity("test", scene);
 		test.setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(1f, 1f)));
 		test.scripts().add(new SJava());
+
+		Entity child = scene.createEntity("child1", test);
+		child.setTransform(new Transform2f(new Vector2f(-1f, -1f), 0f, new Vector2f(1f, 1f)));
+
+		child.setName("child");
 
 		game.start();
 		game.update(0.1666f);

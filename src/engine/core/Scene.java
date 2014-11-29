@@ -16,7 +16,7 @@ import engine.core.exceptions.SceneException;
 /**
  * Creates, destroys, and moves Entities in the tree.
  */
-public class Scene implements EntityContainer {
+public class Scene implements TreeNode {
 	// the top level entities are practically the children of the EntityContainer aspect of the Scene
 	private Set<Entity> m_topLevelEntities;
 	private Set<Entity> m_allEntities;
@@ -61,15 +61,17 @@ public class Scene implements EntityContainer {
 	/**
 	 * Creates a child Entity of a parent container. The Entity is empty.
 	 * 
+	 * @param name
+	 * 
 	 * @param parent
 	 * @return
 	 */
-	public Entity createEntity(EntityContainer parent) {
+	public Entity createEntity(String name, TreeNode parent) {
 		if (parent == null)
 			throw new SceneException("Cannot create an Entity with a null parent!");
 		if (!m_allEntities.contains(parent) && !(this == parent))
 			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
-		Entity entity = new Entity(this, parent, new ArrayList<Component>());
+		Entity entity = new Entity(name, this, parent, new ArrayList<Component>());
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		return entity;
@@ -79,11 +81,13 @@ public class Scene implements EntityContainer {
 	 * Creates a child Entity of a parent container. The Entity has the Components specified in the builder as well as a
 	 * CTransform and a CScriptData.
 	 * 
+	 * @param name
+	 * 
 	 * @param parent
 	 * @param builder
 	 * @return
 	 */
-	public Entity createEntity(EntityContainer parent, EntityBuilder builder) {
+	public Entity createEntity(String name, TreeNode parent, EntityBuilder builder) {
 		if (parent == null)
 			throw new SceneException("Cannot create an Entity with a null parent!");
 		if (!m_allEntities.contains(parent) && !(this == parent))
@@ -94,7 +98,8 @@ public class Scene implements EntityContainer {
 			components.add(componentBuilder.build());
 		}
 
-		Entity entity = new Entity(this, parent, components);
+		Entity entity = new Entity(name, this, parent, components);
+		entity.setName(name);
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		return entity;
@@ -133,7 +138,7 @@ public class Scene implements EntityContainer {
 	 * @param entity
 	 * @param newParent
 	 */
-	public void moveEntity(Entity entity, EntityContainer newParent) {
+	public void moveEntity(Entity entity, TreeNode newParent) {
 		if (entity == null)
 			throw new SceneException("Tried to move a null Entity!");
 		if (newParent == null)
@@ -174,7 +179,7 @@ public class Scene implements EntityContainer {
 			throw new SceneException("Entity is not part of Scene - transform cannot be calculated!");
 		// List of entities in the chain
 		List<Entity> entities = new ArrayList<Entity>();
-		EntityContainer parent = entity;
+		TreeNode parent = entity;
 		while (parent != this) {
 			entities.add((Entity) parent);
 			parent = ((Entity) parent).tree().getParent();
@@ -214,5 +219,15 @@ public class Scene implements EntityContainer {
 		if (!m_topLevelEntities.contains(entity))
 			throw new SceneException("Trying to remove an Entity not in the top level!");
 		m_topLevelEntities.remove(entity);
+	}
+
+	@Override
+	public String getName() {
+		return "scene";
+	}
+
+	@Override
+	public void childNameChanged(TreeNode child, String oldName, String newName) {
+
 	}
 }

@@ -10,7 +10,7 @@ import engine.core.exceptions.ComponentException;
 /**
  * An Entity in a Scene. Child Entities all transform relative to each other.
  */
-public class Entity implements EntityContainer {
+public class Entity implements TreeNode {
 	// the Scene this Entity belongs to
 	private Scene m_scene;
 
@@ -28,6 +28,9 @@ public class Entity implements EntityContainer {
 	// listeners for transformation / child changes
 	private List<EntityListener> m_listeners;
 
+	// the name of the Entity
+	private String m_name;
+
 	/**
 	 * Constructs a new Entity.
 	 * 
@@ -35,7 +38,8 @@ public class Entity implements EntityContainer {
 	 * @param parent
 	 * @param components
 	 */
-	protected Entity(Scene scene, EntityContainer parent, List<Component> components) {
+	protected Entity(String name, Scene scene, TreeNode parent, List<Component> components) {
+		m_name = name;
 		m_scene = scene;
 		m_listeners = new ArrayList<EntityListener>();
 		m_transform = new CTransform(this, new Transform2f());
@@ -68,6 +72,21 @@ public class Entity implements EntityContainer {
 	 */
 	protected List<EntityListener> getListeners() {
 		return m_listeners;
+	}
+
+	@Override
+	public String getName() {
+		return m_name;
+	}
+
+	public void setName(String name) {
+		m_tree.getParent().childNameChanged(this, m_name, name);
+		m_name = name;
+	}
+
+	@Override
+	public void childNameChanged(TreeNode child, String oldName, String newName) {
+		m_tree.childNameChanged(child, oldName, newName);
 	}
 
 	/**
