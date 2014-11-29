@@ -38,6 +38,17 @@ public class Transform2f {
 	}
 
 	/**
+	 * Creates a clone of another Transform2f.
+	 * 
+	 * @param transform
+	 */
+	public Transform2f(Transform2f transform) {
+		m_translate = transform.getTranslation();
+		m_rotate = transform.getRotation();
+		m_scale = transform.getScale();
+	}
+
+	/**
 	 * Creates a new Transform from an affine transform Matrix.
 	 * 
 	 * @param matrix

@@ -3,6 +3,8 @@ package engine.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import engine.core.exceptions.SceneException;
+
 /**
  * Manages unused Scenes for the Game.
  */

@@ -10,6 +10,7 @@ import commons.Transform2f;
 import commons.matrix.Matrix;
 import commons.matrix.MatrixFactory;
 import commons.matrix.Vector2f;
+import engine.core.exceptions.SceneException;
 
 /**
  * Creates, destroys, and moves Entities in the tree.
@@ -35,7 +36,7 @@ public class Scene implements EntityContainer {
 			throw new SceneException("Cannot create an Entity with a null parent!");
 		if (!m_allEntities.contains(parent) && !(this == parent))
 			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
-		Entity entity = new Entity(this, parent);
+		Entity entity = new Entity(this, parent, new ArrayList<Component>());
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		return entity;
@@ -50,7 +51,7 @@ public class Scene implements EntityContainer {
 		if (!m_allEntities.contains(entity))
 			throw new SceneException("Trying to destroy an Entity not in the Scene!");
 
-		entity.getParent().removeChild(entity);
+		entity.tree().getParent().removeChild(entity);
 		recursiveRemove(entity);
 	}
 
@@ -61,7 +62,7 @@ public class Scene implements EntityContainer {
 	 * @param entity
 	 */
 	private void recursiveRemove(Entity entity) {
-		for (Entity child : entity.getChildren()) {
+		for (Entity child : entity.tree().getChildren()) {
 			recursiveRemove(child);
 		}
 		m_allEntities.remove(entity);
@@ -81,7 +82,7 @@ public class Scene implements EntityContainer {
 			throw new SceneException("Tried to move an Entity into a null parent!");
 		if (!m_allEntities.contains(newParent) && !(this == newParent))
 			throw new SceneException("Tried to move an Entity to a container not in the Scene!");
-		if (entity.getParent() == newParent)
+		if (entity.tree().getParent() == newParent)
 			throw new SceneException("Tried to move an Entity into its parent!");
 		Transform2f oldTrans = getWorldTransform(entity);
 		System.out.println("Old trans: \n" + oldTrans);
@@ -103,9 +104,9 @@ public class Scene implements EntityContainer {
 
 		System.out.println("New trans: \n" + newTrans);
 
-		entity.getParent().removeChild(entity);
+		entity.tree().getParent().removeChild(entity);
 		newParent.addChild(entity);
-		entity.setParent(newParent, newTrans);
+		entity.tree().setParent(newParent, newTrans);
 	}
 
 	public Transform2f getWorldTransform(Entity entity) {
@@ -118,7 +119,7 @@ public class Scene implements EntityContainer {
 		EntityContainer parent = entity;
 		while (parent != this) {
 			entities.add((Entity) parent);
-			parent = ((Entity) parent).getParent();
+			parent = ((Entity) parent).tree().getParent();
 		}
 		Collections.reverse(entities);
 

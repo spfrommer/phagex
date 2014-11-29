@@ -1,45 +1,59 @@
 package engine.core;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import commons.Transform2f;
+import commons.matrix.Vector2f;
+
+import engine.core.exceptions.ComponentException;
 
 /**
  * An Entity in a Scene. Child Entities all transform relative to each other.
  */
 public class Entity implements EntityContainer {
-	// the parent Entity / scene
-	private EntityContainer m_parent;
-	// the child Entities
-	private Set<Entity> m_children;
-
 	// the Scene this Entity belongs to
 	private Scene m_scene;
 
-	// the Entity's transformation in a 2d space.
-	private Transform2f m_transform;
+	// manages the children and parent
+	private TreeManager m_tree;
+	// manages the components
+	private ComponentManager m_component;
+
+	// the Entity's transformation in a 2d space as a component.
+	private CTransform m_transform;
 	// listeners for transformation / child changes
 	private List<EntityListener> m_listeners;
 
-	protected Entity(Scene scene, EntityContainer parent) {
+	/**
+	 * Constructs a new Entity.
+	 * 
+	 * @param scene
+	 * @param parent
+	 * @param components
+	 */
+	protected Entity(Scene scene, EntityContainer parent, List<Component> components) {
 		m_scene = scene;
-		m_children = new LinkedHashSet<Entity>();
 		m_listeners = new ArrayList<EntityListener>();
-		m_transform = new Transform2f();
-		m_parent = parent;
+		m_transform = new CTransform(this, new Transform2f());
+
+		m_tree = new TreeManager(this, parent);
+		m_component = new ComponentManager(components, m_transform);
+	}
+
+	/**
+	 * @return the listeners on this Entity
+	 */
+	protected List<EntityListener> getListeners() {
+		return m_listeners;
 	}
 
 	/**
 	 * Destroys the instance fields of the Entity to make garbage collection easier.
 	 */
 	protected void destroy() {
-		m_parent = null;
 		m_scene = null;
 		m_transform = null;
-		m_children.clear();
 		m_listeners.clear();
 	}
 
@@ -51,75 +65,13 @@ public class Entity implements EntityContainer {
 	}
 
 	/**
-	 * @return the parent EntityContainer
-	 */
-	public EntityContainer getParent() {
-		return m_parent;
-	}
-
-	/**
-	 * Sets the parent EntityContainer and the new relative transform.
-	 * 
-	 * @param parent
-	 */
-	protected void setParent(EntityContainer parent, Transform2f transform) {
-		if (parent == null)
-			throw new EntityException("Cannot set parent to null!");
-		if (transform == null)
-			throw new EntityException("Transform cannot be null!");
-
-		for (EntityListener listener : m_listeners)
-			listener.parentChanged(this, m_parent, parent, m_transform, transform);
-
-		m_parent = parent;
-		m_transform = transform;
-	}
-
-	/**
-	 * Adds a child to the Entity.
-	 * 
-	 * @param child
-	 */
-	@Override
-	public void addChild(Entity child) {
-		if (m_children.contains(child))
-			throw new EntityException("Entity already has this child!");
-
-		m_children.add(child);
-		for (EntityListener listener : m_listeners)
-			listener.childAdded(this, child);
-	}
-
-	/**
-	 * Removes a child from the Entity.
-	 * 
-	 * @param child
-	 */
-	@Override
-	public void removeChild(Entity child) {
-		if (!m_children.contains(child))
-			throw new EntityException("Trying to remove a nonexistant child!");
-		m_children.remove(child);
-
-		for (EntityListener listener : m_listeners)
-			listener.childRemoved(this, child);
-	}
-
-	/**
-	 * @return the children of this Entity
-	 */
-	public Set<Entity> getChildren() {
-		return m_children;
-	}
-
-	/**
 	 * Do not modify this transform as it will not notify the listeners, and the physics system will simply overwrite
 	 * your new values. Call setTransform() instead.
 	 * 
 	 * @return the Entity's transform.
 	 */
 	public Transform2f getTransform() {
-		return m_transform;
+		return m_transform.getTransform();
 	}
 
 	/**
@@ -130,17 +82,34 @@ public class Entity implements EntityContainer {
 	 */
 	public void setTransform(Transform2f transform) {
 		if (transform == null)
-			throw new EntityException("Cannot set a null transform!");
-		for (EntityListener listener : m_listeners)
-			listener.transformSet(this, m_transform, transform);
-		m_transform = transform;
+			throw new ComponentException("Cannot set a null transform!");
+
+		m_transform.setTransform(transform);
 	}
 
-	public String toTabbedString(int tabs) {
+	/**
+	 * Returns the TreeManager, which manages this Entity's children and parents.
+	 * 
+	 * @return
+	 */
+	public TreeManager tree() {
+		return m_tree;
+	}
+
+	/**
+	 * Returns the ComponentManager, which manages this Entity's components.
+	 * 
+	 * @return
+	 */
+	public ComponentManager components() {
+		return m_component;
+	}
+
+	private String toTabbedString(int tabs) {
 		String tabString = makeTabs(tabs);
 		String string = "";
 		string += tabString + "Entity " + super.toString() + ": \n";
-		for (Entity e : m_children) {
+		for (Entity e : m_tree.getChildren()) {
 			string += /*tabString + "Child: \n" + */e.toTabbedString(tabs + 1);
 		}
 		return string;
@@ -159,10 +128,31 @@ public class Entity implements EntityContainer {
 		String string = "";
 		string += "\n----------------------------------------------\n";
 		string += "Entity " + super.toString() + ": \n";
-		for (Entity e : m_children) {
+		for (Entity e : m_tree.getChildren()) {
 			string += /*"Child: \n" + */e.toTabbedString(1);
 		}
 		string += "\n----------------------------------------------";
 		return string;
+	}
+
+	@Override
+	public void addChild(Entity entity) {
+		m_tree.addChild(entity);
+	}
+
+	@Override
+	public void removeChild(Entity entity) {
+		m_tree.removeChild(entity);
+	}
+
+	public static void main(String[] args) {
+		Scene scene = new Scene();
+		Entity test = scene.createEntity(scene);
+		test.setTransform(new Transform2f(new Vector2f(1f, 1f), 0f, new Vector2f(1f, 1f)));
+		CTransform trans = (CTransform) test.components().getComponent(CTransform.NAME);
+		System.out.println(trans.getTransform());
+		System.out.println("-----------------");
+		Vector2f position = (Vector2f) test.components().getField(CTransform.TRANSLATION);
+		System.out.println(position);
 	}
 }
