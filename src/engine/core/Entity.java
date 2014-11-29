@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import commons.Transform2f;
-import commons.matrix.Vector2f;
 
 import engine.core.exceptions.ComponentException;
 
@@ -17,8 +16,10 @@ public class Entity implements EntityContainer {
 
 	// manages the children and parent
 	private TreeManager m_tree;
-	// manages the components
+	// manages the components and fields
 	private ComponentManager m_components;
+	// manages the Scripts
+	private ScriptManager m_scripts;
 
 	// the Entity's transformation in a 2d space as a component.
 	private CTransform m_transform;
@@ -41,13 +42,24 @@ public class Entity implements EntityContainer {
 		m_scriptData = new CScriptData();
 
 		m_tree = new TreeManager(this, parent);
-		m_components = new ComponentManager(components, m_transform);
+		m_components = new ComponentManager(components, m_transform, m_scriptData);
+		m_scripts = new ScriptManager(this);
+	}
+
+	/**
+	 * Calls onSceneLoad() on the Scripts.
+	 */
+	public void onSceneLoad() {
+		m_scripts.onSceneLoad();
 	}
 
 	/**
 	 * Updates the Entity's Scripts and reloads the script data.
+	 * 
+	 * @param time
 	 */
-	public void update() {
+	public void update(float time) {
+		m_scripts.update(time);
 		m_components.reloadData(m_scriptData);
 	}
 
@@ -115,6 +127,15 @@ public class Entity implements EntityContainer {
 		return m_components;
 	}
 
+	/**
+	 * Returns the ScriptManager, which manages this Entity's scripts.
+	 * 
+	 * @return
+	 */
+	public ScriptManager scripts() {
+		return m_scripts;
+	}
+
 	private String toTabbedString(int tabs) {
 		String tabString = makeTabs(tabs);
 		String string = "";
@@ -153,16 +174,5 @@ public class Entity implements EntityContainer {
 	@Override
 	public void removeChild(Entity entity) {
 		m_tree.removeChild(entity);
-	}
-
-	public static void main(String[] args) {
-		Scene scene = new Scene();
-		Entity test = scene.createEntity(scene);
-		test.setTransform(new Transform2f(new Vector2f(1f, 1f), 0f, new Vector2f(1f, 1f)));
-		CTransform trans = (CTransform) test.components().getComponent(CTransform.NAME);
-		System.out.println(trans.getTransform());
-		System.out.println("-----------------");
-		Vector2f position = (Vector2f) test.components().getField(CTransform.TRANSLATION);
-		System.out.println(position);
 	}
 }

@@ -10,6 +10,7 @@ import commons.Transform2f;
 import commons.matrix.Matrix;
 import commons.matrix.MatrixFactory;
 import commons.matrix.Vector2f;
+
 import engine.core.exceptions.SceneException;
 
 /**
@@ -19,14 +20,46 @@ public class Scene implements EntityContainer {
 	// the top level entities are practically the children of the EntityContainer aspect of the Scene
 	private Set<Entity> m_topLevelEntities;
 	private Set<Entity> m_allEntities;
+	private Game m_game;
 
-	public Scene() {
+	/**
+	 * Initializes a Scene in a Game.
+	 * 
+	 * @param game
+	 */
+	public Scene(Game game) {
 		m_topLevelEntities = new LinkedHashSet<Entity>();
 		m_allEntities = new LinkedHashSet<Entity>();
+		m_game = game;
 	}
 
 	/**
-	 * Creates a child Entity of a parent.
+	 * Calls onSceneLoad() on all the Entities.
+	 */
+	public void onSceneLoad() {
+		for (Entity entity : m_allEntities)
+			entity.onSceneLoad();
+	}
+
+	/**
+	 * Updates the Entities in the Scene.
+	 * 
+	 * @param time
+	 */
+	public void update(float time) {
+		for (Entity entity : m_allEntities)
+			entity.update(time);
+	}
+
+	/**
+	 * @return the Game this Scene belongs to
+	 */
+	public Game getGame() {
+		return m_game;
+	}
+
+	/**
+	 * Creates a child Entity of a parent container. The Entity is empty.
 	 * 
 	 * @param parent
 	 * @return
@@ -37,6 +70,31 @@ public class Scene implements EntityContainer {
 		if (!m_allEntities.contains(parent) && !(this == parent))
 			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
 		Entity entity = new Entity(this, parent, new ArrayList<Component>());
+		parent.addChild(entity);
+		m_allEntities.add(entity);
+		return entity;
+	}
+
+	/**
+	 * Creates a child Entity of a parent container. The Entity has the Components specified in the builder as well as a
+	 * CTransform and a CScriptData.
+	 * 
+	 * @param parent
+	 * @param builder
+	 * @return
+	 */
+	public Entity createEntity(EntityContainer parent, EntityBuilder builder) {
+		if (parent == null)
+			throw new SceneException("Cannot create an Entity with a null parent!");
+		if (!m_allEntities.contains(parent) && !(this == parent))
+			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
+
+		List<Component> components = new ArrayList<Component>();
+		for (ComponentBuilder<? extends Component> componentBuilder : builder.getComponentBuilders()) {
+			components.add(componentBuilder.build());
+		}
+
+		Entity entity = new Entity(this, parent, components);
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		return entity;
@@ -85,7 +143,7 @@ public class Scene implements EntityContainer {
 		if (entity.tree().getParent() == newParent)
 			throw new SceneException("Tried to move an Entity into its parent!");
 		Transform2f oldTrans = getWorldTransform(entity);
-		System.out.println("Old trans: \n" + oldTrans);
+		// System.out.println("Old trans: \n" + oldTrans);
 		Transform2f chainTrans;
 		if (newParent == this) {
 			chainTrans = new Transform2f();
@@ -93,7 +151,7 @@ public class Scene implements EntityContainer {
 			chainTrans = getWorldTransform((Entity) newParent);
 		}
 
-		System.out.println("Chain trans: \n" + chainTrans);
+		// System.out.println("Chain trans: \n" + chainTrans);
 
 		Transform2f newTrans = new Transform2f();
 		newTrans.setTranslation(oldTrans.getTranslation().subtract(chainTrans.getTranslation()).toVector2f());
@@ -102,7 +160,7 @@ public class Scene implements EntityContainer {
 		Vector2f chainScale = chainTrans.getScale();
 		newTrans.setScale(new Vector2f(oldScale.getX() / chainScale.getX(), oldScale.getY() / chainScale.getY()));
 
-		System.out.println("New trans: \n" + newTrans);
+		// System.out.println("New trans: \n" + newTrans);
 
 		entity.tree().getParent().removeChild(entity);
 		newParent.addChild(entity);
@@ -156,32 +214,5 @@ public class Scene implements EntityContainer {
 		if (!m_topLevelEntities.contains(entity))
 			throw new SceneException("Trying to remove an Entity not in the top level!");
 		m_topLevelEntities.remove(entity);
-	}
-
-	public static void main(String[] args) {
-		Scene scene = new Scene();
-		Entity topLevel = scene.createEntity(scene);
-		Entity secondLevel1 = scene.createEntity(topLevel);
-		Entity secondLevel2 = scene.createEntity(topLevel);
-
-		Entity thirdLevel = scene.createEntity(secondLevel2);
-
-		System.out.println("Top level: " + topLevel.hashCode());
-		System.out.println("Second level 1: " + secondLevel1.hashCode());
-		System.out.println("Second level 2: " + secondLevel2.hashCode());
-		System.out.println("Third level: " + thirdLevel.hashCode() + "\n");
-
-		topLevel.setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(1f, 1f)));
-		secondLevel2.setTransform(new Transform2f(new Vector2f(5f, 0f), 0f, new Vector2f(1f, 1f)));
-		thirdLevel.setTransform(new Transform2f(new Vector2f(0f, 1f), 0f, new Vector2f(1f, 1f)));
-
-		// System.out.println(thirdLevel.getTransform().getTranslation());
-		// System.out.println(scene.getWorldTransform(thirdLevel).getTranslation() + "\n");
-
-		scene.moveEntity(thirdLevel, secondLevel1);
-		// System.out.println(thirdLevel.getParent().hashCode());
-		System.out.println("------------------------");
-		System.out.println(scene.getWorldTransform(thirdLevel).getTranslation());
-		System.out.println(thirdLevel.getTransform().getTranslation());
 	}
 }

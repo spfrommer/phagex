@@ -26,12 +26,15 @@ public class ComponentManager {
 	 * @param entity
 	 * @param components
 	 * @param transform
+	 * @param script
 	 */
-	public ComponentManager(List<Component> components, CTransform transform) {
+	public ComponentManager(List<Component> components, CTransform transform, CScriptData script) {
 		m_components = new HashMap<String, Component>();
 		m_dataLocations = new HashMap<String, Component>();
+		m_dataReversed = new HashMap<Component, List<String>>();
 
 		m_components.put(transform.getName(), transform);
+		m_components.put(script.getName(), script);
 		for (Component comp : components) {
 			String name = comp.getName();
 			if (m_components.containsKey(name))
@@ -41,11 +44,11 @@ public class ComponentManager {
 		}
 
 		for (Component c : m_components.values()) {
+			m_dataReversed.put(c, new ArrayList<String>());
 			for (String identifier : c.getIdentifiers()) {
 				if (m_dataLocations.containsKey(identifier))
 					throw new ComponentException("Identifier duplicate: " + identifier);
 				m_dataLocations.put(identifier, c);
-				m_dataReversed.put(c, new ArrayList<String>());
 				m_dataReversed.get(c).add(identifier);
 			}
 		}

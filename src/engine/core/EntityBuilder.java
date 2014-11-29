@@ -6,8 +6,9 @@ import java.util.List;
 import engine.core.exceptions.ComponentException;
 
 /**
- * Builds an Entity from a bunch of ComponentBuilders. CTransform builders should not be added, as they are already
- * added automatically.
+ * Builds an Entity from a bunch of ComponentBuilders. CTransform and CScriptData builders should not be added, as they
+ * are already added automatically. Scripts are added later. To build the Entity, call scene.createEntity(parent,
+ * builder).
  */
 public class EntityBuilder {
 	private List<ComponentBuilder<? extends Component>> m_builders;
@@ -58,5 +59,14 @@ public class EntityBuilder {
 				m_builders.remove(builder);
 			}
 		}
+	}
+
+	/**
+	 * Returns the individual ComponentBuilders.
+	 * 
+	 * @return
+	 */
+	protected List<ComponentBuilder<? extends Component>> getComponentBuilders() {
+		return m_builders;
 	}
 }

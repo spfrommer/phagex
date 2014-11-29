@@ -55,7 +55,7 @@ public class SceneManager {
 	}
 
 	/**
-	 * Sets the current Scene.
+	 * Sets the current Scene. DO NOT CALL THIS UNTIL YOU HAVE CALLED START() IN THE GAME.
 	 * 
 	 * @param name
 	 */
@@ -63,6 +63,7 @@ public class SceneManager {
 		if (!m_scenes.containsKey(name))
 			throw new SceneException("No Scene found for: " + name);
 		m_current = m_scenes.get(name);
+		m_scenes.get(name).onSceneLoad();
 	}
 
 	/**
