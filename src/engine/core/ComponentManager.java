@@ -25,14 +25,16 @@ public class ComponentManager {
 	 * 
 	 * @param entity
 	 * @param components
+	 * @param tags
 	 * @param transform
 	 * @param script
 	 */
-	public ComponentManager(List<Component> components, CTransform transform, CScriptData script) {
+	public ComponentManager(List<Component> components, CTags tags, CTransform transform, CScriptData script) {
 		m_components = new HashMap<String, Component>();
 		m_dataLocations = new HashMap<String, Component>();
 		m_dataReversed = new HashMap<Component, List<String>>();
 
+		m_components.put(tags.getName(), tags);
 		m_components.put(transform.getName(), transform);
 		m_components.put(script.getName(), script);
 		for (Component comp : components) {

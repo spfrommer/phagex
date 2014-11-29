@@ -1,9 +1,8 @@
 package engine.core.script;
 
-import commons.Transform2f;
-
 import engine.core.CTransform;
 import engine.core.Entity;
+import engine.core.TagList;
 
 /**
  * A Script written in Java.
@@ -15,8 +14,8 @@ public class SJava extends Script {
 		System.out.println("Got trans: " + trans.getTransform());
 
 		Entity child1 = context().entity.tree().getChild("child");
-		Transform2f ctrans = child1.getTransform();
-		System.out.println("Child trans: " + ctrans);
+		TagList tags = child1.getTags();
+		System.out.println(tags);
 	}
 
 	@Override

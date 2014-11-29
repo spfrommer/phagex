@@ -21,6 +21,7 @@ public class Entity implements TreeNode {
 	// manages the Scripts
 	private ScriptManager m_scripts;
 
+	private CTags m_tags;
 	// the Entity's transformation in a 2d space as a component.
 	private CTransform m_transform;
 	// the Entity's shared script data
@@ -42,11 +43,12 @@ public class Entity implements TreeNode {
 		m_name = name;
 		m_scene = scene;
 		m_listeners = new ArrayList<EntityListener>();
+		m_tags = new CTags(new TagList());
 		m_transform = new CTransform(this, new Transform2f());
 		m_scriptData = new CScriptData();
 
 		m_tree = new TreeManager(this, parent);
-		m_components = new ComponentManager(components, m_transform, m_scriptData);
+		m_components = new ComponentManager(components, m_tags, m_transform, m_scriptData);
 		m_scripts = new ScriptManager(this);
 	}
 
@@ -126,6 +128,46 @@ public class Entity implements TreeNode {
 			throw new ComponentException("Cannot set a null transform!");
 
 		m_transform.setTransform(transform);
+	}
+
+	/**
+	 * @return the Entity's tags
+	 */
+	public TagList getTags() {
+		return m_tags.getTags();
+	}
+
+	/**
+	 * Sets the Entity's tags.
+	 * 
+	 * @param tags
+	 */
+	public void setTags(TagList tags) {
+		if (tags == null)
+			throw new ComponentException("Cannot set a null TagList!");
+		m_tags.setTags(tags);
+	}
+
+	/**
+	 * Adds a tag to the Entity.
+	 * 
+	 * @param tag
+	 */
+	public void addTag(String tag) {
+		if (tag == null)
+			throw new ComponentException("Cannot add a null tag");
+		m_tags.setTags(m_tags.getTags().newAdd(tag));
+	}
+
+	/**
+	 * Removes a tag from the Entity.
+	 * 
+	 * @param tag
+	 */
+	public void removeTag(String tag) {
+		if (tag == null)
+			throw new ComponentException("Cannot remove a null tag");
+		m_tags.setTags(m_tags.getTags().newRemove(tag));
 	}
 
 	/**

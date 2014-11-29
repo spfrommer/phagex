@@ -29,6 +29,9 @@ public class TreeManager {
 		m_childNames = new HashMap<String, Entity>();
 	}
 
+	/**
+	 * Clears the references to make garbage collection simpler.
+	 */
 	protected void destroy() {
 		m_parent = null;
 		m_children.clear();

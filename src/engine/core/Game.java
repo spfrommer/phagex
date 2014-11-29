@@ -46,7 +46,7 @@ public class Game {
 	public static void main(String[] args) {
 		Game game = new Game();
 		Scene scene = new Scene(game);
-		game.scenes().addScene("main", scene);
+		game.scenes().addScene(scene, "main");
 
 		Entity test = scene.createEntity("test", scene);
 		test.setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(1f, 1f)));
@@ -54,6 +54,8 @@ public class Game {
 
 		Entity child = scene.createEntity("child1", test);
 		child.setTransform(new Transform2f(new Vector2f(-1f, -1f), 0f, new Vector2f(1f, 1f)));
+		child.addTag("foo");
+		child.addTag("bar");
 
 		child.setName("child");
 

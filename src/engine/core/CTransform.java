@@ -98,6 +98,11 @@ public class CTransform implements Component {
 		if (m_warnings)
 			Logger.instance().warn("Getting data on a unbound CTransform");
 
+		if (identifier == null)
+			throw new ComponentException("Cannot set transform data with a null identifier");
+		if (data == null)
+			throw new ComponentException("Cannot set null data for identifier: " + identifier);
+
 		Transform2f newTransform = new Transform2f(m_transform);
 		if (identifier.equals(TRANSLATION))
 			newTransform.setTranslation((Vector2f) data);

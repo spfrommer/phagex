@@ -3,6 +3,8 @@ package engine.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import commons.Logger;
+
 import engine.core.exceptions.SceneException;
 
 /**
@@ -13,6 +15,9 @@ public class SceneManager {
 
 	private Scene m_current;
 
+	/**
+	 * Makes a new SceneManager.
+	 */
 	public SceneManager() {
 		m_scenes = new HashMap<String, Scene>();
 	}
@@ -20,14 +25,16 @@ public class SceneManager {
 	/**
 	 * Adds a Scene to the game.
 	 * 
-	 * @param name
 	 * @param scene
+	 * @param name
 	 */
-	public void addScene(String name, Scene scene) {
+	public void addScene(Scene scene, String name) {
 		if (m_scenes.containsKey(name))
 			throw new SceneException("Scene already exists for: " + name);
 		if (scene == null)
 			throw new SceneException("Tried to add null Scene!");
+
+		scene.setName(name);
 		m_scenes.put(name, scene);
 	}
 
@@ -76,11 +83,11 @@ public class SceneManager {
 	}
 
 	/**
-	 * Prints out all the Scenes that are in the game to standard out.
+	 * Logs all the Scenes that are in the game.
 	 */
 	public void dumpScenes() {
 		for (Scene scene : m_scenes.values())
-			System.out.println(scene);
-		System.out.println("\nCurrent: \n" + m_current);
+			Logger.instance().debug("" + scene);
+		Logger.instance().debug("\nCurrent: \n" + m_current);
 	}
 }

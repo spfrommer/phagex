@@ -22,6 +22,8 @@ public class Scene implements TreeNode {
 	private Set<Entity> m_allEntities;
 	private Game m_game;
 
+	private String m_name;
+
 	/**
 	 * Initializes a Scene in a Game.
 	 * 
@@ -223,7 +225,16 @@ public class Scene implements TreeNode {
 
 	@Override
 	public String getName() {
-		return "scene";
+		return m_name;
+	}
+
+	/**
+	 * Sets the name of the Scene.
+	 * 
+	 * @param name
+	 */
+	protected void setName(String name) {
+		m_name = name;
 	}
 
 	@Override
