@@ -18,10 +18,12 @@ public class Entity implements EntityContainer {
 	// manages the children and parent
 	private TreeManager m_tree;
 	// manages the components
-	private ComponentManager m_component;
+	private ComponentManager m_components;
 
 	// the Entity's transformation in a 2d space as a component.
 	private CTransform m_transform;
+	// the Entity's shared script data
+	private CScriptData m_scriptData;
 	// listeners for transformation / child changes
 	private List<EntityListener> m_listeners;
 
@@ -36,9 +38,17 @@ public class Entity implements EntityContainer {
 		m_scene = scene;
 		m_listeners = new ArrayList<EntityListener>();
 		m_transform = new CTransform(this, new Transform2f());
+		m_scriptData = new CScriptData();
 
 		m_tree = new TreeManager(this, parent);
-		m_component = new ComponentManager(components, m_transform);
+		m_components = new ComponentManager(components, m_transform);
+	}
+
+	/**
+	 * Updates the Entity's Scripts and reloads the script data.
+	 */
+	public void update() {
+		m_components.reloadData(m_scriptData);
 	}
 
 	/**
@@ -102,7 +112,7 @@ public class Entity implements EntityContainer {
 	 * @return
 	 */
 	public ComponentManager components() {
-		return m_component;
+		return m_components;
 	}
 
 	private String toTabbedString(int tabs) {

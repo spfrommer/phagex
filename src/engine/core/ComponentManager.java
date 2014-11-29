@@ -1,5 +1,7 @@
 package engine.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,8 @@ public class ComponentManager {
 	private Map<String, Component> m_components;
 	// says which Component has the data for an identifier
 	private Map<String, Component> m_dataLocations;
+	// reverse of dataLocations
+	private Map<Component, List<String>> m_dataReversed;
 
 	/**
 	 * Initializes the ComponentManager.
@@ -41,6 +45,31 @@ public class ComponentManager {
 				if (m_dataLocations.containsKey(identifier))
 					throw new ComponentException("Identifier duplicate: " + identifier);
 				m_dataLocations.put(identifier, c);
+				m_dataReversed.put(c, new ArrayList<String>());
+				m_dataReversed.get(c).add(identifier);
+			}
+		}
+	}
+
+	/**
+	 * Tells the Manager to reload the data from the Component.
+	 * 
+	 * @param component
+	 */
+	protected void reloadData(Component component) {
+		List<String> newIdents = Arrays.asList(component.getIdentifiers());
+		for (String ident : newIdents) {
+			if (!m_dataLocations.containsKey(ident)) {
+				m_dataLocations.put(ident, component);
+				m_dataReversed.get(component).add(ident);
+			}
+		}
+
+		List<String> oldIdents = m_dataReversed.get(component);
+		for (String ident : oldIdents) {
+			if (!newIdents.contains(ident)) {
+				m_dataLocations.remove(ident);
+				m_dataReversed.get(component).remove(ident);
 			}
 		}
 	}

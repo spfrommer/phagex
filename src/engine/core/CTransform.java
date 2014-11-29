@@ -1,5 +1,6 @@
 package engine.core;
 
+import commons.Logger;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
 
@@ -15,9 +16,27 @@ public class CTransform implements Component {
 	private Entity m_entity;
 	private Transform2f m_transform;
 
+	private boolean m_warnings = false;
+
+	public CTransform(Transform2f transform) {
+		m_transform = transform;
+		m_warnings = true;
+	}
+
 	public CTransform(Entity entity, Transform2f transform) {
 		m_entity = entity;
 		m_transform = transform;
+		m_warnings = false;
+	}
+
+	/**
+	 * Sets the Entity that this CTransform should notify.
+	 * 
+	 * @param entity
+	 */
+	public void setEntity(Entity entity) {
+		m_entity = entity;
+		m_warnings = false;
 	}
 
 	/**
@@ -27,6 +46,8 @@ public class CTransform implements Component {
 	 * @return
 	 */
 	public Transform2f getTransform() {
+		if (m_warnings)
+			Logger.instance().warn("Getting transform on a unbound CTransform");
 		return m_transform;
 	}
 
@@ -36,6 +57,9 @@ public class CTransform implements Component {
 	 * @param transform
 	 */
 	public void setTransform(Transform2f transform) {
+		if (m_warnings)
+			Logger.instance().warn("Setting transform on a unbound CTransform");
+
 		if (transform == null)
 			throw new ComponentException("Cannot set a null transform!");
 
@@ -56,6 +80,9 @@ public class CTransform implements Component {
 
 	@Override
 	public Object getData(String identifier) {
+		if (m_warnings)
+			Logger.instance().warn("Getting data on a unbound CTransform");
+
 		if (identifier.equals(TRANSLATION))
 			return m_transform.getTranslation();
 		if (identifier.equals(ROTATION))
@@ -68,6 +95,9 @@ public class CTransform implements Component {
 
 	@Override
 	public void setData(String identifier, Object data) {
+		if (m_warnings)
+			Logger.instance().warn("Getting data on a unbound CTransform");
+
 		Transform2f newTransform = new Transform2f(m_transform);
 		if (identifier.equals(TRANSLATION))
 			newTransform.setTranslation((Vector2f) data);
@@ -77,5 +107,21 @@ public class CTransform implements Component {
 			newTransform.setScale((Vector2f) data);
 
 		setTransform(newTransform);
+	}
+
+	@Override
+	public ComponentBuilder<CTransform> getBuilder() {
+		ComponentBuilder<CTransform> builder = new ComponentBuilder<CTransform>() {
+			@Override
+			public CTransform build() {
+				return new CTransform(new Transform2f(m_transform));
+			}
+
+			@Override
+			public String getName() {
+				return NAME;
+			}
+		};
+		return builder;
 	}
 }

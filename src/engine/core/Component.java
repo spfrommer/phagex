@@ -33,4 +33,11 @@ public interface Component {
 	 * @param data
 	 */
 	public void setData(String identifier, Object data);
+
+	/**
+	 * Returns a builder which will make an exact copy of this Component.
+	 * 
+	 * @return
+	 */
+	public ComponentBuilder<? extends Component> getBuilder();
 }
