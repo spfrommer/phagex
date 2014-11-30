@@ -27,7 +27,7 @@ public class Logger {
 	 * 
 	 * @param string
 	 */
-	public void print(String string) {
+	public void out(String string) {
 		m_out.println(string);
 	}
 
@@ -36,7 +36,7 @@ public class Logger {
 	 * 
 	 * @param object
 	 */
-	public void print(Object object) {
+	public void out(Object object) {
 		m_out.println(object);
 	}
 

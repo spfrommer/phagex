@@ -1,2 +1,2 @@
 def damage(damage):
-	logger.print(damage)
+	logger.out(damage)

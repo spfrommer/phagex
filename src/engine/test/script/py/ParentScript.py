@@ -1,7 +1,7 @@
-logger.print('Initializing')
+logger.out('Initializing')
 
 def onSceneLoad():
-	logger.print('Scene Loaded!')
+	logger.out('Scene Loaded!')
 	
 def update(time):
 	child = entity.tree().getChild('child')
