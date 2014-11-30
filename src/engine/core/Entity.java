@@ -86,15 +86,16 @@ public class Entity implements TreeNode {
 		return m_listeners;
 	}
 
-	public String name() {
-		return m_name;
-	}
-
 	@Override
 	public String getName() {
 		return m_name;
 	}
 
+	/**
+	 * Sets the name of the Entity.
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		m_tree.getParent().childNameChanged(this, m_name, name);
 		m_name = name;

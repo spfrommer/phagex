@@ -133,6 +133,8 @@ public class TreeManager {
 	protected void childNameChanged(TreeNode child, String oldName, String newName) {
 		if (!m_children.contains(child))
 			throw new EntityException("This TreeNode is not my child!");
+		if (m_childNames.keySet().contains(newName))
+			throw new EntityException("No two children with the same name allowed!");
 
 		Entity entityChild = (Entity) child;
 		m_childNames.remove(oldName);

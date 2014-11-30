@@ -1,6 +1,7 @@
 from engine.core import CTransform
 
 logger.out('Initializing')
+logger.out(entity.name());
 logger.out(entity.fields().get(CTransform.TRANSLATION));
 
 def onSceneLoad():

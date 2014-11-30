@@ -9,6 +9,7 @@ import commons.matrix.Matrix;
 import commons.matrix.MatrixFactory;
 import commons.matrix.Vector2f;
 
+import engine.core.exceptions.EntityException;
 import engine.core.exceptions.SceneException;
 
 /**
@@ -18,6 +19,7 @@ public class Scene implements TreeNode {
 	// the top level entities are practically the children of the EntityContainer aspect of the Scene
 	private List<Entity> m_rootEntities;
 	private List<Entity> m_allEntities;
+	private List<String> m_childNames;
 	private Game m_game;
 
 	private String m_name;
@@ -255,6 +257,9 @@ public class Scene implements TreeNode {
 	public void addChild(Entity entity) {
 		if (m_rootEntities.contains(entity))
 			throw new SceneException("Entity is already in Scene!");
+		if (m_childNames.contains(entity.getName()))
+			throw new EntityException("No two children with the same name allowed!");
+		m_childNames.add(entity.getName());
 		m_rootEntities.add(entity);
 	}
 
@@ -266,12 +271,16 @@ public class Scene implements TreeNode {
 	public void removeChild(Entity entity) {
 		if (!m_rootEntities.contains(entity))
 			throw new SceneException("Trying to remove an Entity not in the top level!");
+		m_childNames.remove(entity.getName());
 		m_rootEntities.remove(entity);
 	}
 
 	@Override
 	public void childNameChanged(TreeNode child, String oldName, String newName) {
-
+		if (m_childNames.contains(newName))
+			throw new EntityException("No two children with the same name allowed!");
+		m_childNames.remove(oldName);
+		m_childNames.add(newName);
 	}
 
 	@Override
