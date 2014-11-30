@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/js-14.jar"/>
-	<classpathentry kind="lib" path="lib/js.jar"/>
-	<classpathentry kind="lib" path="lib/jython-standalone-2.7-b1.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
