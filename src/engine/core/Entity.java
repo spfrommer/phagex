@@ -14,8 +14,10 @@ public class Entity implements TreeNode {
 
 	// manages the children and parent
 	private TreeManager m_tree;
-	// manages the components and fields
+	// manages the components
 	private ComponentManager m_components;
+	// manages the fields
+	private FieldManager m_fields;
 	// manages the Scripts
 	private ScriptManager m_scripts;
 
@@ -47,6 +49,7 @@ public class Entity implements TreeNode {
 
 		m_tree = new TreeManager(this, parent);
 		m_components = new ComponentManager(this, components);
+		m_fields = new FieldManager(this);
 		m_scripts = new ScriptManager(this);
 	}
 
@@ -64,7 +67,7 @@ public class Entity implements TreeNode {
 	 */
 	public void updateScripts(float time) {
 		m_scripts.update(time);
-		m_components.reloadData(m_scriptData);
+		m_fields.reloadData(m_scriptData);
 	}
 
 	/**
@@ -146,6 +149,15 @@ public class Entity implements TreeNode {
 	 */
 	public ComponentManager components() {
 		return m_components;
+	}
+
+	/**
+	 * Returns the FieldManager, which manages this Entity's fields. It loads the fields from the ComponentManager.
+	 * 
+	 * @return
+	 */
+	public FieldManager fields() {
+		return m_fields;
 	}
 
 	/**
