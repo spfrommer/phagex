@@ -32,6 +32,7 @@ public class Scene implements TreeNode {
 	public Scene(Game game) {
 		m_rootEntities = new ArrayList<Entity>();
 		m_allEntities = new ArrayList<Entity>();
+		m_childNames = new ArrayList<String>();
 		m_game = game;
 	}
 
