@@ -56,10 +56,10 @@ public class TreeManager {
 			throw new EntityException("Transform cannot be null!");
 
 		for (EntityListener listener : m_entity.getListeners())
-			listener.parentChanged(m_entity, m_parent, parent, m_entity.getTransform(), transform);
+			listener.parentChanged(m_entity, m_parent, parent, m_entity.getCTransform().getTransform(), transform);
 
 		m_parent = parent;
-		m_entity.setTransform(transform);
+		m_entity.getCTransform().setTransform(transform);
 	}
 
 	/**

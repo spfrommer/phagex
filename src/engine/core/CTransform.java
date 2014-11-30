@@ -80,6 +80,8 @@ public class CTransform implements Component {
 
 	@Override
 	public Object getData(String identifier) {
+		if (identifier == null)
+			throw new ComponentException("Cannot get data for null identifier!");
 		if (m_warnings)
 			Logger.instance().warn("Getting data on a unbound CTransform");
 

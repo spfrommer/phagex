@@ -5,8 +5,6 @@ import java.util.List;
 
 import commons.Transform2f;
 
-import engine.core.exceptions.ComponentException;
-
 /**
  * An Entity in a Scene. Child Entities all transform relative to each other.
  */
@@ -48,7 +46,7 @@ public class Entity implements TreeNode {
 		m_scriptData = new CScriptData();
 
 		m_tree = new TreeManager(this, parent);
-		m_components = new ComponentManager(components, m_tags, m_transform, m_scriptData);
+		m_components = new ComponentManager(this, components);
 		m_scripts = new ScriptManager(this);
 	}
 
@@ -64,9 +62,18 @@ public class Entity implements TreeNode {
 	 * 
 	 * @param time
 	 */
-	public void update(float time) {
+	public void updateScripts(float time) {
 		m_scripts.update(time);
 		m_components.reloadData(m_scriptData);
+	}
+
+	/**
+	 * Destroys the instance fields of the Entity to make garbage collection easier.
+	 */
+	protected void destroy() {
+		m_scene = null;
+		m_transform = null;
+		m_listeners.clear();
 	}
 
 	/**
@@ -74,6 +81,10 @@ public class Entity implements TreeNode {
 	 */
 	protected List<EntityListener> getListeners() {
 		return m_listeners;
+	}
+
+	public String name() {
+		return m_name;
 	}
 
 	@Override
@@ -92,15 +103,6 @@ public class Entity implements TreeNode {
 	}
 
 	/**
-	 * Destroys the instance fields of the Entity to make garbage collection easier.
-	 */
-	protected void destroy() {
-		m_scene = null;
-		m_transform = null;
-		m_listeners.clear();
-	}
-
-	/**
 	 * @return the Scene this Entity belongs to
 	 */
 	public Scene getScene() {
@@ -108,66 +110,24 @@ public class Entity implements TreeNode {
 	}
 
 	/**
-	 * Do not modify this transform as it will not notify the listeners, and the physics system will simply overwrite
-	 * your new values. Call setTransform() instead.
-	 * 
-	 * @return the Entity's transform.
+	 * @return the CTags
 	 */
-	public Transform2f getTransform() {
-		return m_transform.getTransform();
+	public CTags getCTags() {
+		return m_tags;
 	}
 
 	/**
-	 * Sets the Entity's transform and notifies its listeners. These listeners are only notified if the transform is
-	 * changed without changing the parents.
-	 * 
-	 * @param transform
+	 * @return the CTransform
 	 */
-	public void setTransform(Transform2f transform) {
-		if (transform == null)
-			throw new ComponentException("Cannot set a null transform!");
-
-		m_transform.setTransform(transform);
+	public CTransform getCTransform() {
+		return m_transform;
 	}
 
 	/**
-	 * @return the Entity's tags
+	 * @return the CScriptData
 	 */
-	public TagList getTags() {
-		return m_tags.getTags();
-	}
-
-	/**
-	 * Sets the Entity's tags.
-	 * 
-	 * @param tags
-	 */
-	public void setTags(TagList tags) {
-		if (tags == null)
-			throw new ComponentException("Cannot set a null TagList!");
-		m_tags.setTags(tags);
-	}
-
-	/**
-	 * Adds a tag to the Entity.
-	 * 
-	 * @param tag
-	 */
-	public void addTag(String tag) {
-		if (tag == null)
-			throw new ComponentException("Cannot add a null tag");
-		m_tags.setTags(m_tags.getTags().newAdd(tag));
-	}
-
-	/**
-	 * Removes a tag from the Entity.
-	 * 
-	 * @param tag
-	 */
-	public void removeTag(String tag) {
-		if (tag == null)
-			throw new ComponentException("Cannot remove a null tag");
-		m_tags.setTags(m_tags.getTags().newRemove(tag));
+	public CScriptData getCScriptData() {
+		return m_scriptData;
 	}
 
 	/**

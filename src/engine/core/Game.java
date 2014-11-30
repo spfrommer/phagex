@@ -1,21 +1,24 @@
 package engine.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import commons.Transform2f;
 import commons.matrix.Vector2f;
-
-import engine.core.script.SJava;
 
 /**
  * Contains the Scenes and the Systems.
  */
 public class Game {
 	private SceneManager m_scenes;
+	private List<EntitySystem> m_systems;
 
 	/**
 	 * Initializes a Game with no Scenes.
 	 */
 	public Game() {
 		m_scenes = new SceneManager();
+		m_systems = new ArrayList<EntitySystem>();
 	}
 
 	/**
@@ -31,7 +34,21 @@ public class Game {
 	 * @param time
 	 */
 	public void update(float time) {
-		m_scenes.getCurrentScene().update(time);
+		Scene current = m_scenes.getCurrentScene();
+		List<Entity> entities = current.getAllEntities();
+
+		for (EntitySystem system : m_systems)
+			system.update(time);
+
+		for (Entity e : entities) {
+			for (EntitySystem system : m_systems) {
+				if (system.getFilter().matches(e))
+					system.updateEntity(e);
+			}
+		}
+
+		// updates the Scripts
+		m_scenes.getCurrentScene().updateScripts(time);
 	}
 
 	/**
@@ -49,13 +66,12 @@ public class Game {
 		game.scenes().addScene(scene, "main");
 
 		Entity test = scene.createEntity("test", scene);
-		test.setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(1f, 1f)));
-		test.scripts().add(new SJava());
+		test.getCTransform().setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(1f, 1f)));
 
 		Entity child = scene.createEntity("child1", test);
-		child.setTransform(new Transform2f(new Vector2f(-1f, -1f), 0f, new Vector2f(1f, 1f)));
-		child.addTag("foo");
-		child.addTag("bar");
+		child.getCTransform().setTransform(new Transform2f(new Vector2f(-1f, -1f), 0f, new Vector2f(1f, 1f)));
+		child.getCTags().addTag("foo");
+		child.getCTags().addTag("bar");
 
 		child.setName("child");
 

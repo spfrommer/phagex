@@ -1,6 +1,7 @@
 package engine.core;
 
 import engine.core.exceptions.ComponentException;
+import engine.core.exceptions.TagException;
 
 /**
  * A Component which holds a TagList.
@@ -29,7 +30,33 @@ public class CTags implements Component {
 	 * @param tags
 	 */
 	public void setTags(TagList tags) {
+		if (tags == null)
+			throw new ComponentException("Cannot set a null TagList!");
 		m_tags = tags;
+	}
+
+	/**
+	 * Adds a tag.
+	 * 
+	 * @param tag
+	 */
+	public void addTag(String tag) {
+		if (tag == null)
+			throw new TagException("Cannot add a null tag!");
+		if (m_tags.hasTag(tag))
+			throw new TagException("Cannot add same tag twice!");
+		m_tags = m_tags.newAdd(tag);
+	}
+
+	/**
+	 * Removes a tag.
+	 * 
+	 * @param tag
+	 */
+	public void removeTag(String tag) {
+		if (tag == null)
+			throw new TagException("Cannot remove a null tag!");
+		m_tags = m_tags.newRemove(tag);
 	}
 
 	@Override
@@ -44,6 +71,9 @@ public class CTags implements Component {
 
 	@Override
 	public Object getData(String identifier) {
+		if (identifier == null)
+			throw new ComponentException("Cannot get data for null identifier!");
+
 		if (identifier.equals(TAGS))
 			return m_tags;
 

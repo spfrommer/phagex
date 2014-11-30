@@ -27,8 +27,17 @@ public class Logger {
 	 * 
 	 * @param string
 	 */
-	public void regular(String string) {
+	public void print(String string) {
 		m_out.println(string);
+	}
+
+	/**
+	 * Prints an Object without formatting.
+	 * 
+	 * @param object
+	 */
+	public void print(Object object) {
+		m_out.println(object);
 	}
 
 	/**
@@ -37,6 +46,15 @@ public class Logger {
 	 * @param debug
 	 */
 	public void debug(String debug) {
+		m_out.println(DEBUG + debug);
+	}
+
+	/**
+	 * Prints out an Object as a debug String.
+	 * 
+	 * @param debug
+	 */
+	public void debug(Object debug) {
 		m_out.println(DEBUG + debug);
 	}
 
@@ -50,6 +68,15 @@ public class Logger {
 	}
 
 	/**
+	 * Prints out an Object as a warning String.
+	 * 
+	 * @param warn
+	 */
+	public void warn(Object warn) {
+		m_out.println(WARN + warn);
+	}
+
+	/**
 	 * Prints an error String.
 	 * 
 	 * @param error
@@ -59,11 +86,29 @@ public class Logger {
 	}
 
 	/**
+	 * Prints out an Object as an error String.
+	 * 
+	 * @param error
+	 */
+	public void error(Object error) {
+		m_out.println(ERROR + error);
+	}
+
+	/**
 	 * Prints a fatal String.
 	 * 
 	 * @param fatal
 	 */
 	public void fatal(String fatal) {
+		m_out.println(FATAL + fatal);
+	}
+
+	/**
+	 * Prints out an Object as a fatal error Strin.
+	 * 
+	 * @param fatal
+	 */
+	public void fatal(Object fatal) {
 		m_out.println(FATAL + fatal);
 	}
 

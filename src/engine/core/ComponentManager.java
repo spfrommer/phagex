@@ -29,14 +29,14 @@ public class ComponentManager {
 	 * @param transform
 	 * @param script
 	 */
-	public ComponentManager(List<Component> components, CTags tags, CTransform transform, CScriptData script) {
+	public ComponentManager(Entity entity, List<Component> components) {
 		m_components = new HashMap<String, Component>();
 		m_dataLocations = new HashMap<String, Component>();
 		m_dataReversed = new HashMap<Component, List<String>>();
 
-		m_components.put(tags.getName(), tags);
-		m_components.put(transform.getName(), transform);
-		m_components.put(script.getName(), script);
+		m_components.put(entity.getCTags().getName(), entity.getCTags());
+		m_components.put(entity.getCTransform().getName(), entity.getCTransform());
+		m_components.put(entity.getCScriptData().getName(), entity.getCScriptData());
 		for (Component comp : components) {
 			String name = comp.getName();
 			if (m_components.containsKey(name))
@@ -124,5 +124,26 @@ public class ComponentManager {
 			throw new IdentifierException("Cannot check identifier with a null String!");
 
 		return m_dataLocations.containsKey(identifier);
+	}
+
+	/**
+	 * @return a List of Components
+	 */
+	public List<Component> allComponents() {
+		return new ArrayList<Component>(m_components.values());
+	}
+
+	/**
+	 * @return a List of the Component names
+	 */
+	public List<String> allComponentNames() {
+		return new ArrayList<String>(m_components.keySet());
+	}
+
+	/**
+	 * @return a List of the Entity's fields
+	 */
+	public List<String> allFields() {
+		return new ArrayList<String>(m_dataLocations.keySet());
 	}
 }

@@ -38,6 +38,8 @@ public class TagList implements Iterable<String> {
 	public TagList newAdd(String tag) {
 		if (tag == null)
 			throw new TagException("Cannot add a null tag to a TagList!");
+		if (m_tags.contains(tag))
+			throw new TagException("Cannot add the same tag twice!");
 		List<String> newTags = new ArrayList<String>(m_tags);
 		newTags.add(tag);
 		return new TagList(newTags);
@@ -65,15 +67,34 @@ public class TagList implements Iterable<String> {
 		return m_tags.iterator();
 	}
 
-	public boolean containsGroup(String group) {
-		return m_tags.contains(group);
+	/**
+	 * @param tag
+	 * @return whether or not the TagList has the tag
+	 */
+	public boolean hasTag(String tag) {
+		return m_tags.contains(tag);
 	}
 
+	/**
+	 * @param tags
+	 * @return whether the two set intersect
+	 */
 	@SuppressWarnings("unchecked")
 	public boolean intersects(TagList tags) {
 		List<String> tagsClone = (List<String>) m_tags.clone();
 		tagsClone.retainAll(tags.m_tags);
 		return !tagsClone.isEmpty();
+	}
+
+	/**
+	 * @param tags
+	 * @return whether the TagList contains all the Strings in the second TagList
+	 */
+	public boolean containsAll(TagList tags) {
+		return m_tags.containsAll(tags.m_tags);
+		/*List<String> tagsClone = (List<String>) tags.m_tags.clone();
+		tagsClone.retainAll(m_tags);
+		return tagsClone.size() == tags.m_tags.size();*/
 	}
 
 	@Override

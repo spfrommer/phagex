@@ -2,9 +2,7 @@ package engine.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import commons.Transform2f;
 import commons.matrix.Matrix;
@@ -18,8 +16,8 @@ import engine.core.exceptions.SceneException;
  */
 public class Scene implements TreeNode {
 	// the top level entities are practically the children of the EntityContainer aspect of the Scene
-	private Set<Entity> m_topLevelEntities;
-	private Set<Entity> m_allEntities;
+	private List<Entity> m_rootEntities;
+	private List<Entity> m_allEntities;
 	private Game m_game;
 
 	private String m_name;
@@ -30,8 +28,8 @@ public class Scene implements TreeNode {
 	 * @param game
 	 */
 	public Scene(Game game) {
-		m_topLevelEntities = new LinkedHashSet<Entity>();
-		m_allEntities = new LinkedHashSet<Entity>();
+		m_rootEntities = new ArrayList<Entity>();
+		m_allEntities = new ArrayList<Entity>();
 		m_game = game;
 	}
 
@@ -48,9 +46,9 @@ public class Scene implements TreeNode {
 	 * 
 	 * @param time
 	 */
-	public void update(float time) {
+	public void updateScripts(float time) {
 		for (Entity entity : m_allEntities)
-			entity.update(time);
+			entity.updateScripts(time);
 	}
 
 	/**
@@ -71,6 +69,8 @@ public class Scene implements TreeNode {
 	public Entity createEntity(String name, TreeNode parent) {
 		if (parent == null)
 			throw new SceneException("Cannot create an Entity with a null parent!");
+		if (name == null)
+			throw new SceneException("Cannot create an Entity with a null name!");
 		if (!m_allEntities.contains(parent) && !(this == parent))
 			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
 		Entity entity = new Entity(name, this, parent, new ArrayList<Component>());
@@ -92,6 +92,8 @@ public class Scene implements TreeNode {
 	public Entity createEntity(String name, TreeNode parent, EntityBuilder builder) {
 		if (parent == null)
 			throw new SceneException("Cannot create an Entity with a null parent!");
+		if (name == null)
+			throw new SceneException("Cannot create an Entity with a null name!");
 		if (!m_allEntities.contains(parent) && !(this == parent))
 			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
 
@@ -111,13 +113,16 @@ public class Scene implements TreeNode {
 	 * Removes an Entity from the Scene.
 	 * 
 	 * @param entity
+	 * @param destroy
+	 *            whether or not the Entity should be completely destroyed to speed up garbage collection. Unless you
+	 *            want to reuse the Entity later, set this flag to true.
 	 */
-	public void destroyEntity(Entity entity) {
+	public void destroyEntity(Entity entity, boolean destroy) {
 		if (!m_allEntities.contains(entity))
 			throw new SceneException("Trying to destroy an Entity not in the Scene!");
 
 		entity.tree().getParent().removeChild(entity);
-		recursiveRemove(entity);
+		recursiveRemove(entity, destroy);
 	}
 
 	/**
@@ -126,12 +131,13 @@ public class Scene implements TreeNode {
 	 * 
 	 * @param entity
 	 */
-	private void recursiveRemove(Entity entity) {
+	private void recursiveRemove(Entity entity, boolean destroy) {
 		for (Entity child : entity.tree().getChildren()) {
-			recursiveRemove(child);
+			recursiveRemove(child, destroy);
 		}
 		m_allEntities.remove(entity);
-		entity.destroy();
+		if (destroy)
+			entity.destroy();
 	}
 
 	/**
@@ -174,6 +180,10 @@ public class Scene implements TreeNode {
 		entity.tree().setParent(newParent, newTrans);
 	}
 
+	/**
+	 * @param entity
+	 * @return the transform of the Entity in world coordinates.
+	 */
 	public Transform2f getWorldTransform(Entity entity) {
 		if (entity == null)
 			throw new SceneException("Tried to transform a null parent!");
@@ -190,7 +200,7 @@ public class Scene implements TreeNode {
 
 		Matrix transMatrix = MatrixFactory.identity(3);
 		for (Entity e : entities) {
-			Transform2f trans = e.getTransform();
+			Transform2f trans = e.getCTransform().getTransform();
 			// translate
 			transMatrix = transMatrix.multiply(MatrixFactory.affineTranslate(trans.getTranslation()));
 			// rotate
@@ -203,24 +213,65 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Adds a TOP-LEVEL child to the Scene. This should not be called. Use createEntity() instead.
+	 * Gets all the Entities in the Scene.
+	 * 
+	 * @return
 	 */
-	@Override
-	public void addChild(Entity entity) {
-		if (m_topLevelEntities.contains(entity))
-			throw new SceneException("Entity is already in Scene!");
-		m_topLevelEntities.add(entity);
+	protected List<Entity> directGetAllEntities() {
+		return m_allEntities;
 	}
 
 	/**
-	 * Removes a TOP-LEVEL child from the Scene. Really, you should call destroyEntity(Entity) if you want to completely
-	 * destroy it.
+	 * Gets all the Entities in the Scene.
+	 * 
+	 * @return
+	 */
+	public List<Entity> getAllEntities() {
+		return new ArrayList<Entity>(m_allEntities);
+	}
+
+	/**
+	 * Gets the top level Entities in the Scene.
+	 * 
+	 * @return
+	 */
+	protected List<Entity> directGetRootEntities() {
+		return m_rootEntities;
+	}
+
+	/**
+	 * Gets all the top level Entities in the Scene.
+	 * 
+	 * @return
+	 */
+	public List<Entity> getRootEntities() {
+		return new ArrayList<Entity>(m_rootEntities);
+	}
+
+	/**
+	 * Adds a TOP-LEVEL child to the Scene. This should not be called. Use createEntity(name, scene) instead.
+	 */
+	@Override
+	public void addChild(Entity entity) {
+		if (m_rootEntities.contains(entity))
+			throw new SceneException("Entity is already in Scene!");
+		m_rootEntities.add(entity);
+	}
+
+	/**
+	 * Removes a TOP-LEVEL child from the Scene. This should not be called. You should call destroyEntity(Entity) if you
+	 * want to completely destroy it.
 	 */
 	@Override
 	public void removeChild(Entity entity) {
-		if (!m_topLevelEntities.contains(entity))
+		if (!m_rootEntities.contains(entity))
 			throw new SceneException("Trying to remove an Entity not in the top level!");
-		m_topLevelEntities.remove(entity);
+		m_rootEntities.remove(entity);
+	}
+
+	@Override
+	public void childNameChanged(TreeNode child, String oldName, String newName) {
+
 	}
 
 	@Override
@@ -235,10 +286,5 @@ public class Scene implements TreeNode {
 	 */
 	protected void setName(String name) {
 		m_name = name;
-	}
-
-	@Override
-	public void childNameChanged(TreeNode child, String oldName, String newName) {
-
 	}
 }
