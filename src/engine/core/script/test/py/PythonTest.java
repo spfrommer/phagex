@@ -23,5 +23,9 @@ public class PythonTest {
 		XPython script1 = new XPython(code);
 		script1.setContext(new XScriptContext(game, scene, test));
 		script1.onSceneLoad();
+
+		Object[] params = new Object[] { new Integer(5) };
+
+		script1.callFunc("damage", params);
 	}
 }

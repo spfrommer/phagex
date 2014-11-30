@@ -9,6 +9,8 @@ import commons.Logger;
 import commons.ResourceFactory;
 import commons.ResourceLocator;
 
+import engine.core.exceptions.XScriptException;
+
 /**
  * A JavaScript script
  */
@@ -67,6 +69,15 @@ public class XJavaScript extends XScript {
 	public void exit() {
 		// call exit function
 		Context.exit();
+	}
+
+	@Override
+	public void callFunc(String func, Object[] params) {
+		if (func == null)
+			throw new XScriptException("Cannot call a null function!");
+		if (params == null)
+			throw new XScriptException("Cannot call a function with null params!");
+		// call function
 	}
 
 	@Override

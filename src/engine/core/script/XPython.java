@@ -1,5 +1,6 @@
 package engine.core.script;
 
+import org.python.core.Py;
 import org.python.core.PyFloat;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
@@ -7,6 +8,8 @@ import org.python.util.PythonInterpreter;
 import commons.Logger;
 import commons.ResourceFactory;
 import commons.ResourceLocator;
+
+import engine.core.exceptions.XScriptException;
 
 public class XPython extends XScript {
 	private PythonInterpreter m_python;
@@ -17,10 +20,14 @@ public class XPython extends XScript {
 	private String m_code;
 
 	public XPython(String code) {
+		if (code == null)
+			throw new XScriptException("Cannot init Script with null String!");
 		m_code = code;
 	}
 
 	public XPython(ResourceLocator locator, String name) {
+		if (locator == null || name == null)
+			throw new XScriptException("Cannot init Script with null resources!");
 		m_code = ResourceFactory.readString(locator, name);
 	}
 
@@ -55,6 +62,29 @@ public class XPython extends XScript {
 	@Override
 	public void exit() {
 		m_exit.__call__();
+	}
+
+	@Override
+	public void callFunc(String func, Object[] params) {
+		if (func == null)
+			throw new XScriptException("Cannot call a null function!");
+		if (params == null)
+			throw new XScriptException("Cannot call a function with null params!");
+
+		try {
+			PyObject function = m_python.get(func);
+			if (params.length == 0) {
+				function.__call__();
+			} else {
+				PyObject[] pyParams = new PyObject[params.length];
+				for (int i = 0; i < params.length; i++)
+					pyParams[i] = Py.java2py(params[i]);
+
+				function.__call__(pyParams);
+			}
+		} catch (Exception ex) {
+			return;
+		}
 	}
 
 	@Override

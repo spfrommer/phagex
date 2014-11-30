@@ -1,4 +1,7 @@
-logger.print('Hello, World!')
+logger.print('Initializing')
 
 def onSceneLoad():
-	logger.print('Test')
+	logger.print('Scene Loaded!')
+	
+def damage(damage):
+	logger.print(damage);

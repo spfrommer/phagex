@@ -71,4 +71,20 @@ public class ScriptManager {
 		script.deactivateContext();
 		m_scripts.remove(script);
 	}
+
+	/**
+	 * Calls the function on all the Scripts.
+	 * 
+	 * @param func
+	 * @param params
+	 */
+	public void callFunc(String func, Object[] params) {
+		if (func == null)
+			throw new XScriptException("Cannot call a null function!");
+		if (params == null)
+			throw new XScriptException("Cannot call a function with null params!");
+
+		for (XScript script : m_scripts)
+			script.callFunc(func, params);
+	}
 }

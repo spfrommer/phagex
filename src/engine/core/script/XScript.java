@@ -45,6 +45,9 @@ public abstract class XScript {
 		return m_context;
 	}
 
+	/**
+	 * Called when the ScriptContext is set.
+	 */
 	public abstract void onContextSet();
 
 	/**
@@ -63,6 +66,14 @@ public abstract class XScript {
 	 * Tells the Script to exit.
 	 */
 	public abstract void exit();
+
+	/**
+	 * Calls a function in the Script. If the function doesn't exist, the script simply ignores it.
+	 * 
+	 * @param func
+	 * @param params
+	 */
+	public abstract void callFunc(String func, Object[] params);
 
 	/**
 	 * Makes the Script duplicate itself.
