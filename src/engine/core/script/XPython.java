@@ -44,46 +44,48 @@ public class XPython extends XScript {
 
 		m_python.exec(m_code);
 
-		m_sceneLoad = m_python.get("onSceneLoad");
+		m_sceneLoad = m_python.get(XScript.SCENE_LOAD);
 		m_update = m_python.get(XScript.UPDATE);
 		m_exit = m_python.get(XScript.EXIT);
 	}
 
 	@Override
 	public void onSceneLoad() {
-		m_sceneLoad.__call__();
+		if (m_sceneLoad != null)
+			m_sceneLoad.__call__();
 	}
 
 	@Override
 	public void update(float time) {
-		m_update.__call__(new PyFloat(time));
+		if (m_sceneLoad != null)
+			m_update.__call__(new PyFloat(time));
 	}
 
 	@Override
 	public void exit() {
-		m_exit.__call__();
+		if (m_sceneLoad != null)
+			m_exit.__call__();
 	}
 
 	@Override
-	public void callFunc(String func, Object[] params) {
+	public void callFunc(String func, Object... params) {
 		if (func == null)
 			throw new XScriptException("Cannot call a null function!");
 		if (params == null)
 			throw new XScriptException("Cannot call a function with null params!");
 
-		try {
-			PyObject function = m_python.get(func);
-			if (params.length == 0) {
-				function.__call__();
-			} else {
-				PyObject[] pyParams = new PyObject[params.length];
-				for (int i = 0; i < params.length; i++)
-					pyParams[i] = Py.java2py(params[i]);
-
-				function.__call__(pyParams);
-			}
-		} catch (Exception ex) {
+		PyObject function = m_python.get(func);
+		if (function == null)
 			return;
+
+		if (params.length == 0) {
+			function.__call__();
+		} else {
+			PyObject[] pyParams = new PyObject[params.length];
+			for (int i = 0; i < params.length; i++)
+				pyParams[i] = Py.java2py(params[i]);
+
+			function.__call__(pyParams);
 		}
 	}
 

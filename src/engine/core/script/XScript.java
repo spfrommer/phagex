@@ -73,7 +73,7 @@ public abstract class XScript {
 	 * @param func
 	 * @param params
 	 */
-	public abstract void callFunc(String func, Object[] params);
+	public abstract void callFunc(String func, Object... params);
 
 	/**
 	 * Makes the Script duplicate itself.

@@ -78,12 +78,26 @@ public class ScriptManager {
 	 * @param func
 	 * @param params
 	 */
-	public void callFunc(String func, Object[] params) {
+	public void callFunc(String func, Object... params) {
 		if (func == null)
 			throw new XScriptException("Cannot call a null function!");
 		if (params == null)
 			throw new XScriptException("Cannot call a function with null params!");
 
+		for (XScript script : m_scripts)
+			script.callFunc(func, params);
+	}
+
+	/**
+	 * Calls the function on all the Scripts.
+	 * 
+	 * @param func
+	 */
+	public void callFunc(String func) {
+		if (func == null)
+			throw new XScriptException("Cannot call a null function!");
+
+		Object[] params = new Object[0];
 		for (XScript script : m_scripts)
 			script.callFunc(func, params);
 	}

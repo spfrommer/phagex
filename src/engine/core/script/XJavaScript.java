@@ -72,7 +72,7 @@ public class XJavaScript extends XScript {
 	}
 
 	@Override
-	public void callFunc(String func, Object[] params) {
+	public void callFunc(String func, Object... params) {
 		if (func == null)
 			throw new XScriptException("Cannot call a null function!");
 		if (params == null)

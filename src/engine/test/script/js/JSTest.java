@@ -1,4 +1,4 @@
-package engine.core.script.test.js;
+package engine.test.script.js;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
