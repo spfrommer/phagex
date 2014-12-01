@@ -30,8 +30,8 @@ public class EntityFilter {
 		if (entity == null)
 			throw new EntityException("Cannot apply filter to null Entity!");
 		TagList tags = entity.getCTags().getTags();
-		List<String> components = entity.components().allComponentNames();
-		List<String> fields = entity.fields().allFields();
+		List<String> components = entity.components().allNames();
+		List<String> fields = entity.fields().all();
 		if (tags.containsAll(m_requiredTags) && components.containsAll(m_requiredComponents)
 				&& fields.containsAll(m_requiredFields)) {
 			return true;

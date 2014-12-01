@@ -1,8 +1,10 @@
 package engine.test.script.js;
 
+import commons.Logger;
+
 public class TestPrinter {
 	public void printHelloString() {
-		System.out.println("hello");
+		Logger.instance().out("hello");
 	}
 
 	public String getHelloString() {

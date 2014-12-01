@@ -67,7 +67,7 @@ public class Entity implements TreeNode {
 	 */
 	public void updateScripts(float time) {
 		m_scripts.update(time);
-		m_fields.reloadData(m_scriptData);
+		m_fields.reloadFields(m_scriptData);
 	}
 
 	/**
@@ -170,34 +170,9 @@ public class Entity implements TreeNode {
 		return m_scripts;
 	}
 
-	private String toTabbedString(int tabs) {
-		String tabString = makeTabs(tabs);
-		String string = "";
-		string += tabString + "Entity " + super.toString() + ": \n";
-		for (Entity e : m_tree.getChildren()) {
-			string += /*tabString + "Child: \n" + */e.toTabbedString(tabs + 1);
-		}
-		return string;
-	}
-
-	private String makeTabs(int tabs) {
-		String string = "";
-		for (int i = 0; i < tabs; i++) {
-			string += "\t";
-		}
-		return string;
-	}
-
 	@Override
 	public String toString() {
-		String string = "";
-		string += "\n----------------------------------------------\n";
-		string += "Entity " + super.toString() + ": \n";
-		for (Entity e : m_tree.getChildren()) {
-			string += /*"Child: \n" + */e.toTabbedString(1);
-		}
-		string += "\n----------------------------------------------";
-		return string;
+		return m_name;
 	}
 
 	@Override

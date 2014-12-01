@@ -28,7 +28,7 @@ public class JSTest {
 		List<ScriptEngine> engines = new ArrayList<ScriptEngine>();
 		for (int i = 0; i < 1000; i++) {
 			long curTime = System.currentTimeMillis();
-			System.out.println(curTime - lastTime);
+			Logger.instance().out(curTime - lastTime);
 			ScriptEngine engine = (new ScriptEngineManager()).getEngineByName("JavaScript");
 			ScriptContext context = engine.getContext();
 			context.setAttribute("name", "JavaScript", ScriptContext.ENGINE_SCOPE);
@@ -40,7 +40,7 @@ public class JSTest {
 		}
 		Runtime runtime = Runtime.getRuntime();
 		int mb = 1024 * 1024;
-		System.out.println("Used Memory:" + (runtime.totalMemory() - runtime.freeMemory()) / mb);*/
+		Logger.instance().out("Used Memory:" + (runtime.totalMemory() - runtime.freeMemory()) / mb);*/
 		/*for (int i = 0; i < 1000; i++) 
 
 			try {

@@ -3,8 +3,7 @@ package engine.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import commons.Transform2f;
-import commons.matrix.Vector2f;
+import engine.core.exceptions.GameException;
 
 /**
  * Contains the Scenes and the Systems.
@@ -46,9 +45,32 @@ public class Game {
 					system.updateEntity(e);
 			}
 		}
-
+		for (EntitySystem system : m_systems)
+			system.postUpdate();
 		// updates the Scripts
 		m_scenes.getCurrentScene().updateScripts(time);
+	}
+
+	/**
+	 * Adds an EntitySystem to the Game.
+	 * 
+	 * @param system
+	 */
+	public void addSystem(EntitySystem system) {
+		if (m_systems.contains(system))
+			throw new GameException("Cannot add the same EntitySystem twice!");
+		m_systems.add(system);
+	}
+
+	/**
+	 * Removes an EntitySystem from the Game.
+	 * 
+	 * @param system
+	 */
+	public void removeSystem(EntitySystem system) {
+		if (!m_systems.contains(system))
+			throw new GameException("Cannot remove a nonexistant EntitySystem!");
+		m_systems.remove(system);
 	}
 
 	/**
@@ -58,24 +80,5 @@ public class Game {
 	 */
 	public SceneManager scenes() {
 		return m_scenes;
-	}
-
-	public static void main(String[] args) {
-		Game game = new Game();
-		Scene scene = new Scene(game);
-		game.scenes().addScene(scene, "main");
-
-		Entity test = scene.createEntity("test", scene);
-		test.getCTransform().setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(1f, 1f)));
-
-		Entity child = scene.createEntity("child1", test);
-		child.getCTransform().setTransform(new Transform2f(new Vector2f(-1f, -1f), 0f, new Vector2f(1f, 1f)));
-		child.getCTags().addTag("foo");
-		child.getCTags().addTag("bar");
-
-		child.setName("child");
-
-		game.start();
-		game.update(0.1666f);
 	}
 }

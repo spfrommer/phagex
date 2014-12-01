@@ -6,8 +6,8 @@ import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
 import commons.Logger;
+import commons.Resource;
 import commons.ResourceFactory;
-import commons.ResourceLocator;
 
 import engine.core.exceptions.XScriptException;
 
@@ -25,10 +25,8 @@ public class XPython extends XScript {
 		m_code = code;
 	}
 
-	public XPython(ResourceLocator locator, String name) {
-		if (locator == null || name == null)
-			throw new XScriptException("Cannot init Script with null resources!");
-		m_code = ResourceFactory.readString(locator, name);
+	public XPython(Resource resource) {
+		m_code = ResourceFactory.readString(resource);
 	}
 
 	@Override

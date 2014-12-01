@@ -19,6 +19,11 @@ public interface EntitySystem {
 	public void updateEntity(Entity entity);
 
 	/**
+	 * Called after all the systems are finished, but before the Scripts are updated.
+	 */
+	public void postUpdate();
+
+	/**
 	 * @return the EntityFilter
 	 */
 	public EntityFilter getFilter();

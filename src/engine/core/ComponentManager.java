@@ -42,7 +42,7 @@ public class ComponentManager {
 	 * @param name
 	 * @return the Component for the specified name
 	 */
-	public Component getComponent(String name) {
+	public Component get(String name) {
 		if (name == null)
 			throw new ComponentException("Cannot get a Component with a null String!");
 		if (!m_components.containsKey(name))
@@ -55,7 +55,7 @@ public class ComponentManager {
 	 * @param name
 	 * @return whether the Component exists
 	 */
-	public boolean hasComponent(String name) {
+	public boolean has(String name) {
 		if (name == null)
 			throw new ComponentException("Cannot check Component with a null String!");
 		return m_components.containsKey(name);
@@ -64,14 +64,14 @@ public class ComponentManager {
 	/**
 	 * @return a List of Components
 	 */
-	public List<Component> allComponents() {
+	public List<Component> all() {
 		return new ArrayList<Component>(m_components.values());
 	}
 
 	/**
 	 * @return a List of the Component names
 	 */
-	public List<String> allComponentNames() {
+	public List<String> allNames() {
 		return new ArrayList<String>(m_components.keySet());
 	}
 }

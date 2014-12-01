@@ -6,8 +6,8 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 import commons.Logger;
+import commons.Resource;
 import commons.ResourceFactory;
-import commons.ResourceLocator;
 
 import engine.core.exceptions.XScriptException;
 
@@ -22,11 +22,13 @@ public class XJavaScript extends XScript {
 	private String m_code;
 
 	public XJavaScript(String code) {
+		if (code == null)
+			throw new XScriptException("Cannot init Script with null String!");
 		m_code = code;
 	}
 
-	public XJavaScript(ResourceLocator locator, String name) {
-		m_code = ResourceFactory.readString(locator, name);
+	public XJavaScript(Resource resource) {
+		m_code = ResourceFactory.readString(resource);
 	}
 
 	@Override

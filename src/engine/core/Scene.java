@@ -106,7 +106,6 @@ public class Scene implements TreeNode {
 		}
 
 		Entity entity = new Entity(name, this, parent, components);
-		entity.setName(name);
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		return entity;
@@ -159,7 +158,6 @@ public class Scene implements TreeNode {
 		if (entity.tree().getParent() == newParent)
 			throw new SceneException("Tried to move an Entity into its parent!");
 		Transform2f oldTrans = getWorldTransform(entity);
-		// System.out.println("Old trans: \n" + oldTrans);
 		Transform2f chainTrans;
 		if (newParent == this) {
 			chainTrans = new Transform2f();
@@ -167,16 +165,12 @@ public class Scene implements TreeNode {
 			chainTrans = getWorldTransform((Entity) newParent);
 		}
 
-		// System.out.println("Chain trans: \n" + chainTrans);
-
 		Transform2f newTrans = new Transform2f();
 		newTrans.setTranslation(oldTrans.getTranslation().subtract(chainTrans.getTranslation()).toVector2f());
 		newTrans.setRotation(newTrans.getRotation() - oldTrans.getRotation());
 		Vector2f oldScale = oldTrans.getScale();
 		Vector2f chainScale = chainTrans.getScale();
 		newTrans.setScale(new Vector2f(oldScale.getX() / chainScale.getX(), oldScale.getY() / chainScale.getY()));
-
-		// System.out.println("New trans: \n" + newTrans);
 
 		entity.tree().getParent().removeChild(entity);
 		newParent.addChild(entity);

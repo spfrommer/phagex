@@ -15,8 +15,10 @@ public class ResourceFactory {
 	 * @param resource
 	 * @return the read String
 	 */
-	public static String readString(ResourceLocator locator, String resource) {
-		Scanner scanner = new Scanner(locator.getResource(resource), "UTF-8");
+	public static String readString(Resource resource) {
+		if (resource == null)
+			throw new ResourceException("Cannot read a null resource!");
+		Scanner scanner = new Scanner(resource.open(), "UTF-8");
 		String string = scanner.useDelimiter("\\A").next();
 		scanner.close();
 		return string;

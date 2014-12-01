@@ -32,7 +32,7 @@ public class FieldManager {
 		m_scriptData = entity.getCScriptData();
 
 		ComponentManager components = entity.components();
-		List<Component> allComponents = components.allComponents();
+		List<Component> allComponents = components.all();
 
 		for (Component c : allComponents) {
 			m_dataReversed.put(c, new ArrayList<String>());
@@ -93,7 +93,7 @@ public class FieldManager {
 	 * 
 	 * @param component
 	 */
-	protected void reloadData(Component component) {
+	protected void reloadFields(Component component) {
 		if (component == null)
 			throw new ComponentException("Cannot reload data for null Component!");
 
@@ -117,7 +117,7 @@ public class FieldManager {
 	/**
 	 * @return a List of the Entity's fields
 	 */
-	public List<String> allFields() {
+	public List<String> all() {
 		return new ArrayList<String>(m_dataLocations.keySet());
 	}
 }

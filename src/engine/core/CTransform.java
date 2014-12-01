@@ -106,12 +106,15 @@ public class CTransform implements Component {
 			throw new ComponentException("Cannot set null data for identifier: " + identifier);
 
 		Transform2f newTransform = new Transform2f(m_transform);
-		if (identifier.equals(TRANSLATION))
+		if (identifier.equals(TRANSLATION)) {
 			newTransform.setTranslation((Vector2f) data);
-		if (identifier.equals(ROTATION))
+		} else if (identifier.equals(ROTATION)) {
 			newTransform.setRotation((Float) data);
-		if (identifier.equals(SCALE))
+		} else if (identifier.equals(SCALE)) {
 			newTransform.setScale((Vector2f) data);
+		} else {
+			throw new ComponentException("No data for identifier: " + identifier);
+		}
 
 		setTransform(newTransform);
 	}

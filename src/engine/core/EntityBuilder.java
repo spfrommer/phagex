@@ -21,26 +21,39 @@ public class EntityBuilder {
 	}
 
 	/**
+	 * Adds the component builder returned by component.getBuilder();
+	 * 
+	 * @param component
+	 */
+	public void addComponentBuilder(Component component) {
+		if (component == null)
+			throw new ComponentException("Cannot make builder from null Component!");
+
+		m_builders.add(component.getBuilder());
+	}
+
+	/**
 	 * Adds a ComponentBuilder to the EntityBuilder.
 	 * 
 	 * @param builder
 	 */
 	public void addComponentBuilder(ComponentBuilder<? extends Component> builder) {
 		if (builder == null)
-			throw new ComponentException("Trying to add a null builder.");
+			throw new ComponentException("Trying to add a null builder!");
 		if (builder.getName() == null)
-			throw new ComponentException("Trying to add a builder with a null name.");
+			throw new ComponentException("Trying to add a builder with a null name!");
 
-		if (builder.getName().equals(CTransform.NAME))
-			throw new ComponentException(
-					"Trying to add a CTransform component to an EntityBuilder - this is not required as the CTransform is added by default.");
+		if (builder.getName().equals(CTransform.NAME) || builder.getName().equals(CTags.NAME)
+				|| builder.getName().equals(CScriptData.NAME))
+			throw new ComponentException("Trying to add a " + builder.getName()
+					+ " component to an EntityBuilder - this is not required as it is added by default!");
+
 		for (ComponentBuilder<? extends Component> b : m_builders) {
-			if (!b.getName().equals(builder.getName())) {
-				m_builders.add(builder);
-			} else {
-				throw new ComponentException("Trying to build a Entity with two of the same type of Components.");
+			if (b.getName().equals(builder.getName())) {
+				throw new ComponentException("Trying to build a Entity with two of the same type of Components!");
 			}
 		}
+		m_builders.add(builder);
 	}
 
 	/**
@@ -50,15 +63,13 @@ public class EntityBuilder {
 	 */
 	public void removeComponentBuilder(ComponentBuilder<? extends Component> builder) {
 		if (builder == null)
-			throw new ComponentException("Trying to remove a null builder.");
+			throw new ComponentException("Trying to remove a null builder!");
 		if (builder.getName() == null)
-			throw new ComponentException("Trying to remove a builder with a null name.");
+			throw new ComponentException("Trying to remove a builder with a null name!");
+		if (!m_builders.contains(builder))
+			throw new ComponentException("Trying to remove a builder which wasn't added!");
 
-		for (ComponentBuilder<? extends Component> b : m_builders) {
-			if (b.getName().equals(builder.getName())) {
-				m_builders.remove(builder);
-			}
-		}
+		m_builders.remove(builder);
 	}
 
 	/**

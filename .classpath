@@ -6,5 +6,15 @@
 	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/disruptor.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/gltools-0.1.0a.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/gltools-lwjgl-0.1.0a.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/jsoup-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/logback-classic-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/logback-core-1.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/gltools/gltools-materials-0.1.0a.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,5 +1,6 @@
 package engine.test.script.py;
 
+import commons.Resource;
 import commons.ResourceFactory;
 import commons.ResourceLocator.ClasspathResourceLocator;
 
@@ -10,10 +11,10 @@ import engine.core.script.XPython;
 
 public class PyTest {
 	public static void main(String[] args) {
-		String parentCode = ResourceFactory.readString(new ClasspathResourceLocator(),
-				"engine/test/script/py/ParentScript.py");
-		String childCode = ResourceFactory.readString(new ClasspathResourceLocator(),
-				"engine/test/script/py/ChildScript.py");
+		String parentCode = ResourceFactory.readString(new Resource(new ClasspathResourceLocator(),
+				"engine/test/script/py/ParentScript.py"));
+		String childCode = ResourceFactory.readString(new Resource(new ClasspathResourceLocator(),
+				"engine/test/script/py/ChildScript.py"));
 
 		Game game = new Game();
 		Scene scene = new Scene(game);
