@@ -1,5 +1,7 @@
 package engine.imp.render;
 
+import java.util.Set;
+
 import commons.Transform2f;
 
 import engine.core.Entity;
@@ -16,9 +18,10 @@ import gltools.gl.lwjgl.glfw.GLFWWindow;
  */
 public class RenderingSystem implements EntitySystem {
 	public static final float DRAW_WIDTH = 1f;
+	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
 
 	private static final EntityFilter s_filter = new EntityFilter(new String[] { CRender.NAME }, new String[0],
-			new String[0]);
+			new String[0], true);
 
 	private Display m_display;
 	private Renderer2D m_renderer;
@@ -77,7 +80,12 @@ public class RenderingSystem implements EntitySystem {
 		m_renderer.rotate(transform.getRotation());
 		m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
 
-		m_renderer.fillRect(0, 0, DRAW_WIDTH, DRAW_WIDTH);
+		m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH);
+
+		Set<Entity> children = entity.tree().getChildren();
+		for (Entity child : children) {
+			updateEntity(child);
+		}
 
 		m_renderer.popModel();
 	}

@@ -12,7 +12,7 @@ import glextra.renderer.Renderer2D;
  */
 public class LightingSystem implements EntitySystem {
 	private static final EntityFilter s_filter = new EntityFilter(new String[] { CLight.NAME }, new String[0],
-			new String[0]);
+			new String[0], false);
 
 	private RenderingSystem m_render;
 
@@ -43,9 +43,6 @@ public class LightingSystem implements EntitySystem {
 		renderer.scale(transform.getScale().getX(), transform.getScale().getY());
 
 		renderer.renderLight(light.getLight());
-		// renderer.renderLight(new PointLight(new Vector3f(0f, 0f, 1f), new Vector3f(0.1f, 0.05f, 0.0001f), new
-		// Color(1f,
-		// 0f, 0f), new Color(0f, 0f, 1f)));
 
 		renderer.popModel();
 	}

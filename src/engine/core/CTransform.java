@@ -6,6 +6,9 @@ import commons.matrix.Vector2f;
 
 import engine.core.exceptions.ComponentException;
 
+/**
+ * A Component which holds an Entity's Transform2f.
+ */
 public class CTransform implements Component {
 	public static final String NAME = "transform";
 	public static final String TRANSLATION = "translation";
@@ -18,11 +21,22 @@ public class CTransform implements Component {
 
 	private boolean m_warnings = false;
 
+	/**
+	 * Initializes a CTransform with only a transform.
+	 * 
+	 * @param transform
+	 */
 	public CTransform(Transform2f transform) {
 		m_transform = transform;
 		m_warnings = true;
 	}
 
+	/**
+	 * Gives a CTransform a transform and a required Entity.
+	 * 
+	 * @param entity
+	 * @param transform
+	 */
 	public CTransform(Entity entity, Transform2f transform) {
 		m_entity = entity;
 		m_transform = transform;
@@ -68,6 +82,66 @@ public class CTransform implements Component {
 		m_transform = transform;
 	}
 
+	/**
+	 * Adds a translation to the current translation.
+	 * 
+	 * @param translate
+	 */
+	public void translate(Vector2f translate) {
+		if (translate == null)
+			throw new ComponentException("Cannot add a null translation!");
+		translate(translate.getX(), translate.getY());
+	}
+
+	/**
+	 * Adds a translation to the current translation.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void translate(float x, float y) {
+		Transform2f newTrans = new Transform2f(m_transform);
+		newTrans.setTranslation(m_transform.getTranslation().add(new Vector2f(x, y)).toVector2f());
+		setTransform(newTrans);
+	}
+
+	/**
+	 * Adds a rotation to the current rotation.
+	 * 
+	 * @param rotate
+	 */
+	public void rotate(float rotate) {
+		Transform2f newTrans = new Transform2f(m_transform);
+		newTrans.setRotation(m_transform.getRotation() + rotate);
+		setTransform(newTrans);
+	}
+
+	/**
+	 * Multiplies a scale to the current scale.
+	 * 
+	 * @param scale
+	 */
+	public void scale(Vector2f scale) {
+		if (scale == null)
+			throw new ComponentException("Cannot multiply by a null scale!");
+
+		scale(scale.getX(), scale.getY());
+	}
+
+	/**
+	 * Multiplies a scale to the current scale.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void scale(float x, float y) {
+		Transform2f newTrans = new Transform2f(m_transform);
+		Vector2f oldScale = m_transform.getScale();
+		Vector2f newScale = new Vector2f(x * oldScale.getX(), y * oldScale.getY());
+		newTrans.setScale(newScale);
+		setTransform(newTrans);
+	}
+
 	@Override
 	public String getName() {
 		return NAME;
@@ -101,7 +175,7 @@ public class CTransform implements Component {
 			Logger.instance().warn("Getting data on a unbound CTransform");
 
 		if (identifier == null)
-			throw new ComponentException("Cannot set transform data with a null identifier");
+			throw new ComponentException("Cannot set transform data with a null identifier!");
 		if (data == null)
 			throw new ComponentException("Cannot set null data for identifier: " + identifier);
 

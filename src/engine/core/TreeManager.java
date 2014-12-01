@@ -75,6 +75,7 @@ public class TreeManager {
 
 		m_children.add(child);
 		m_childNames.put(child.getName(), child);
+
 		for (EntityListener listener : m_entity.getListeners())
 			listener.childAdded(m_entity, child);
 	}

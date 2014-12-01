@@ -5,6 +5,8 @@ import java.util.List;
 
 import commons.Transform2f;
 
+import engine.core.exceptions.EntityException;
+
 /**
  * An Entity in a Scene. Child Entities all transform relative to each other.
  */
@@ -84,6 +86,32 @@ public class Entity implements TreeNode {
 	 */
 	protected List<EntityListener> getListeners() {
 		return m_listeners;
+	}
+
+	/**
+	 * Adds an EntityListener to the Entity.
+	 * 
+	 * @param listener
+	 */
+	public void addListener(EntityListener listener) {
+		if (listener == null)
+			throw new EntityException("Cannot add a null EntityListener!");
+
+		m_listeners.add(listener);
+	}
+
+	/**
+	 * Removes an EntityListener to the Entity.
+	 * 
+	 * @param listener
+	 */
+	public void removeListener(EntityListener listener) {
+		if (listener == null)
+			throw new EntityException("Cannot remove a null EntityListener!");
+		if (!m_listeners.contains(listener))
+			throw new EntityException("Tried to remove a nonexistant EntityListener!");
+
+		m_listeners.add(listener);
 	}
 
 	@Override

@@ -50,19 +50,24 @@ public class RenderTest {
 				new Vector3f(1f, 0.5f, 0.5f), new Color(1f, 0f, 0f))));
 		scene.createEntity("light", scene, lightBuilder);
 
-		EntityBuilder eBuilder = new EntityBuilder();
-		eBuilder.addComponentBuilder(new CRender(m_material, 1f));
-		Entity entity = scene.createEntity("test1", scene, eBuilder);
-		entity.scripts().add(new XPython(m_codeResource));
+		EntityBuilder parentBuilder = new EntityBuilder();
+		parentBuilder.addComponentBuilder(new CRender(m_material, 1f));
+		Entity parent = scene.createEntity("test", scene, parentBuilder);
+		parent.scripts().add(new XPython(m_codeResource));
+
+		EntityBuilder childBuilder = new EntityBuilder();
+		childBuilder.addComponentBuilder(new CRender(m_material, 1f));
+		Entity child = scene.createEntity("child", parent, childBuilder);
+		child.getCTransform().translate(0.5f, 0.5f);
 
 		game.start();
 		while (true) {
 			game.update(0.166666666f);
-			try {
+			/*try {
 				Thread.sleep(16);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
 	}
 
