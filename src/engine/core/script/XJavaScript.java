@@ -12,7 +12,7 @@ import commons.ResourceFactory;
 import engine.core.exceptions.XScriptException;
 
 /**
- * A JavaScript script
+ * A JavaScript script. NOT WORKING.
  */
 public class XJavaScript extends XScript {
 	private Context m_jsContext;
@@ -24,11 +24,13 @@ public class XJavaScript extends XScript {
 	public XJavaScript(String code) {
 		if (code == null)
 			throw new XScriptException("Cannot init Script with null String!");
+		Logger.instance().warn("JavaScript scripts are not working!");
 		m_code = code;
 	}
 
 	public XJavaScript(Resource resource) {
 		m_code = ResourceFactory.readString(resource);
+		Logger.instance().warn("JavaScript scripts are not working!");
 	}
 
 	@Override
