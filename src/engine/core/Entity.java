@@ -55,6 +55,27 @@ public class Entity implements TreeNode {
 	}
 
 	/**
+	 * Constructs a new Entity.
+	 * 
+	 * @param parent
+	 * @param components
+	 */
+	protected Entity(String name, Scene scene, TreeNode parent, List<Component> components, TagList tags,
+			Transform2f transform) {
+		m_name = name;
+		m_scene = scene;
+		m_listeners = new ArrayList<EntityListener>();
+		m_scriptData = new CScriptData();
+		m_tags = new CTags(tags);
+		m_transform = new CTransform(this, transform);
+
+		m_tree = new TreeManager(this, parent);
+		m_components = new ComponentManager(this, components);
+		m_fields = new FieldManager(this);
+		m_scripts = new ScriptManager(this);
+	}
+
+	/**
 	 * Calls onSceneLoad() on the Scripts.
 	 */
 	public void onSceneLoad() {

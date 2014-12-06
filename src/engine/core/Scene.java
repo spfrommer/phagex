@@ -106,7 +106,7 @@ public class Scene implements TreeNode {
 			components.add(componentBuilder.build());
 		}
 
-		Entity entity = new Entity(name, this, parent, components);
+		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), builder.getTransform());
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		m_game.entityAdded(entity, parent, this);

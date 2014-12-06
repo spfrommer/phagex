@@ -79,14 +79,14 @@ public class RenderingSystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time) {
+	public void update(float time, Scene scene) {
 		m_renderer.clear();
 		m_renderer.startLighted();
 		m_renderer.startGeometry();
 	}
 
 	@Override
-	public void updateEntity(Entity entity) {
+	public void updateEntity(Entity entity, Scene scene) {
 		Transform2f transform = entity.getCTransform().getTransform();
 		CRender render = (CRender) entity.components().get(CRender.NAME);
 
@@ -101,14 +101,14 @@ public class RenderingSystem implements EntitySystem {
 
 		Set<Entity> children = entity.tree().getChildren();
 		for (Entity child : children) {
-			updateEntity(child);
+			updateEntity(child, scene);
 		}
 
 		m_renderer.popModel();
 	}
 
 	@Override
-	public void postUpdate() {
+	public void postUpdate(Scene scene) {
 		m_renderer.finishGeometry();
 		m_renderer.finishLighted();
 		m_renderer.doLightingComputations();

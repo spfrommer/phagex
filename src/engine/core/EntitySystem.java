@@ -36,20 +36,24 @@ public interface EntitySystem {
 	 * Called to update any centralized process - such as a physics World, for example.
 	 * 
 	 * @param time
+	 * @param scene
 	 */
-	public void update(float time);
+	public void update(float time, Scene scene);
 
 	/**
 	 * Called to update an Entity which matches the filter.
 	 * 
 	 * @param entity
+	 * @param scene
 	 */
-	public void updateEntity(Entity entity);
+	public void updateEntity(Entity entity, Scene scene);
 
 	/**
 	 * Called after all the systems are finished, but before the Scripts are updated.
+	 * 
+	 * @param scene
 	 */
-	public void postUpdate();
+	public void postUpdate(Scene scene);
 
 	/**
 	 * @return the EntityFilter that's used when system.updateEntity(entity) is called

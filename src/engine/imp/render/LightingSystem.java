@@ -3,18 +3,21 @@ package engine.imp.render;
 import commons.Transform2f;
 
 import engine.core.Entity;
-import engine.core.SimpleEntityFilter;
 import engine.core.EntitySystem;
 import engine.core.Scene;
+import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
+import glcommon.vector.Vector3f;
+import glextra.renderer.Light;
+import glextra.renderer.Light.PointLight;
 import glextra.renderer.Renderer2D;
 
 /**
  * Draws Lights to a RenderSystem.
  */
 public class LightingSystem implements EntitySystem {
-	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CLight.NAME }, new String[0],
-			new String[0], false);
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CLight.NAME },
+			new String[0], new String[0], false);
 
 	private RenderingSystem m_render;
 
@@ -43,29 +46,26 @@ public class LightingSystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time) {
+	public void update(float time, Scene scene) {
 
 	}
 
 	@Override
-	public void updateEntity(Entity entity) {
+	public void updateEntity(Entity entity, Scene scene) {
 		Renderer2D renderer = m_render.getRenderer();
 
-		Transform2f transform = entity.getCTransform().getTransform();
-		CLight light = (CLight) entity.components().get(CLight.NAME);
+		Transform2f transform = scene.getWorldTransform(entity);
+		Light light = ((CLight) entity.components().get(CLight.NAME)).getLight();
+		if (light instanceof PointLight) {
+			((PointLight) light).setPosition(new Vector3f(transform.getTranslation().getX(), transform.getTranslation()
+					.getY(), 1f));
+		}
 
-		renderer.pushModel();
-		renderer.translate(transform.getTranslation().getX(), transform.getTranslation().getY());
-		renderer.rotate(transform.getRotation());
-		renderer.scale(transform.getScale().getX(), transform.getScale().getY());
-
-		renderer.renderLight(light.getLight());
-
-		renderer.popModel();
+		renderer.renderLight(light);
 	}
 
 	@Override
-	public void postUpdate() {
+	public void postUpdate(Scene scene) {
 
 	}
 

@@ -3,6 +3,8 @@ package engine.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import commons.Transform2f;
+
 import engine.core.exceptions.ComponentException;
 
 /**
@@ -12,12 +14,46 @@ import engine.core.exceptions.ComponentException;
  */
 public class EntityBuilder {
 	private List<ComponentBuilder<? extends Component>> m_builders;
+	private TagList m_tags = new TagList();
+	private Transform2f m_transform = new Transform2f();
 
 	/**
 	 * Initializes an EntityBuilder.
 	 */
 	public EntityBuilder() {
 		m_builders = new ArrayList<ComponentBuilder<? extends Component>>();
+	}
+
+	/**
+	 * @return a deep clone of the TagList
+	 */
+	public TagList getTagList() {
+		return new TagList(m_tags);
+	}
+
+	/**
+	 * Sets the TagList.
+	 * 
+	 * @param tags
+	 */
+	public void setTagList(TagList tags) {
+		m_tags = tags;
+	}
+
+	/**
+	 * @return a deep clone of the Transform
+	 */
+	public Transform2f getTransform() {
+		return new Transform2f(m_transform);
+	}
+
+	/**
+	 * Sets the transform.
+	 * 
+	 * @param transform
+	 */
+	public void setTransform(Transform2f transform) {
+		m_transform = transform;
 	}
 
 	/**

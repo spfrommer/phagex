@@ -80,16 +80,16 @@ public class Game {
 		List<Entity> entities = current.getAllEntities();
 
 		for (EntitySystem system : m_systems)
-			system.update(time);
+			system.update(time, null);
 
 		for (Entity e : entities) {
 			for (EntitySystem system : m_systems) {
 				if (system.getUpdateFilter().matches(e))
-					system.updateEntity(e);
+					system.updateEntity(e, current);
 			}
 		}
 		for (EntitySystem system : m_systems)
-			system.postUpdate();
+			system.postUpdate(current);
 		// updates the Scripts
 		m_scenes.getCurrentScene().updateScripts(time);
 	}

@@ -7,7 +7,6 @@ import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
 
-import engine.core.CTransform;
 import engine.core.ComponentBuilder;
 import engine.core.Entity;
 import engine.core.EntityBuilder;
@@ -56,7 +55,8 @@ public class PhysicsTest {
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
 				new Vector3f(1f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
-		scene.createEntity("light", scene, lightBuilder);
+		Entity light = scene.createEntity("light", scene, lightBuilder);
+		light.getCTransform().setTransform(new Transform2f(new Vector2f(0f, -2f), 0f, new Vector2f(1f, 1f)));
 
 		PhysicsData brickData = new PhysicsData();
 		brickData.setRestitution(0.5f);
@@ -65,7 +65,7 @@ public class PhysicsTest {
 		brickBuilder.addComponentBuilder(new CRender(m_material, 1f));
 		brickBuilder.addComponentBuilder(new CPhysicsBuilder());
 		Entity brick = scene.createEntity("brick", scene, brickBuilder);
-		brick.getCTransform().setTransform(new Transform2f(new Vector2f(-0.8f, 0f), 0.1f, new Vector2f(1f, 1f)));
+		brick.getCTransform().setTransform(new Transform2f(new Vector2f(-1.2f, 0f), 0.1f, new Vector2f(1f, 1f)));
 		brick.scripts().add(new XPython(m_codeResource));
 
 		PhysicsData groundData = new PhysicsData();
@@ -75,8 +75,8 @@ public class PhysicsTest {
 		EntityBuilder groundBuilder = new EntityBuilder();
 		groundBuilder.addComponentBuilder(new CRender(m_material, 1f));
 		groundBuilder.addComponentBuilder(new CPhysicsBuilder(groundData));
-		Entity ground = scene.createEntity("ground", scene, groundBuilder);
-		ground.getCTransform().setData(CTransform.TRANSLATION, new Vector2f(0f, -2f));
+		groundBuilder.setTransform(new Transform2f(new Vector2f(0f, -2f), 0f, new Vector2f(2f, 1f)));
+		scene.createEntity("ground", scene, groundBuilder);
 
 		game.start();
 		while (true) {

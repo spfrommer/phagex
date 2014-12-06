@@ -80,17 +80,17 @@ public class PhysicsSystem implements EntitySystem {
 		fixtureDef.density = 1f; // a nonsense value that gets overriden
 		if (physics.getShape() == null) {
 			Matrix transMatrix = MatrixFactory.identity(3);
-			transMatrix = transMatrix.multiply(MatrixFactory.affineTranslate(worldTransform.getTranslation()));
-			transMatrix = transMatrix.multiply(MatrixFactory.affineRotation(worldTransform.getRotation()));
 			transMatrix = transMatrix.multiply(MatrixFactory.affineScale(worldTransform.getScale()));
+			System.out.println(worldTransform.getScale());
 			Vector3f p1 = transMatrix.multiply(
 					new Vector3f(-RenderingSystem.HALF_DRAW_WIDTH, -RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
 			Vector3f p2 = transMatrix.multiply(
-					new Vector3f(RenderingSystem.HALF_DRAW_WIDTH, -RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
-			Vector3f p3 = transMatrix.multiply(
 					new Vector3f(-RenderingSystem.HALF_DRAW_WIDTH, RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
-			Vector3f p4 = transMatrix.multiply(
+			Vector3f p3 = transMatrix.multiply(
 					new Vector3f(RenderingSystem.HALF_DRAW_WIDTH, RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
+			Vector3f p4 = transMatrix.multiply(
+					new Vector3f(RenderingSystem.HALF_DRAW_WIDTH, -RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
+			System.out.println(p1 + ", " + p2 + ", " + p3 + ", " + p4);
 			Vec2[] vertices = new Vec2[4];
 			vertices[0] = new Vec2(p1.getX(), p1.getY());
 			vertices[1] = new Vec2(p2.getX(), p2.getY());
@@ -133,12 +133,12 @@ public class PhysicsSystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time) {
+	public void update(float time, Scene scene) {
 		m_world.step(time, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 	}
 
 	@Override
-	public void updateEntity(Entity entity) {
+	public void updateEntity(Entity entity, Scene scene) {
 		CPhysics entityPhysics = (CPhysics) entity.components().get(CPhysics.NAME);
 		Body body = m_bodies.get(entityPhysics);
 		Vec2 pos = body.getPosition();
@@ -148,7 +148,7 @@ public class PhysicsSystem implements EntitySystem {
 	}
 
 	@Override
-	public void postUpdate() {
+	public void postUpdate(Scene scene) {
 
 	}
 

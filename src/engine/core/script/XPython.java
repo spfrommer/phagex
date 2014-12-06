@@ -67,13 +67,13 @@ public class XPython extends XScript {
 
 	@Override
 	public void update(float time) {
-		if (m_sceneLoad != null)
+		if (m_update != null)
 			m_update.__call__(new PyFloat(time));
 	}
 
 	@Override
 	public void exit() {
-		if (m_sceneLoad != null)
+		if (m_exit != null)
 			m_exit.__call__();
 	}
 
