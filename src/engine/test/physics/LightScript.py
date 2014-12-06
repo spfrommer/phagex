@@ -14,7 +14,6 @@ def calc_moves():
 def update(time):
 	global timePassed
 	if (timePassed > 1000):
-		logger.out("Changing direction")
 		calc_moves()
 		timePassed = 0
 	transform.translate(moveX, moveY)

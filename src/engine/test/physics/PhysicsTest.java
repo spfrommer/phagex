@@ -25,6 +25,7 @@ import engine.imp.render.RenderingSystem;
 import glcommon.Color;
 import glcommon.vector.Vector3f;
 import glextra.material.Material;
+import gltools.input.Keyboard;
 
 public class PhysicsTest {
 	private MaterialFactory m_factory;
@@ -61,14 +62,14 @@ public class PhysicsTest {
 		brickBuilder.addComponentBuilder(new CRender(m_material, 1f));
 		brickBuilder.addComponentBuilder(new CPhysicsBuilder());
 		Entity brick = scene.createEntity("brick", scene, brickBuilder);
-		brick.getCTransform().setTransform(new Transform2f(new Vector2f(-1.2f, 0f), 0.1f, new Vector2f(1f, 1f)));
+		brick.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 0f), 0.1f, new Vector2f(1f, 1f)));
 		brick.scripts().add(new XPython(m_brickScript));
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
-		Entity light = scene.createEntity("light", brick, lightBuilder);
-		light.scripts().add(new XPython(m_lightScript));
+				new Vector3f(0.5f, 0.5f, 0.5f), new Color(0.5f, 0.5f, 0.5f))));
+		// Entity light = scene.createEntity("light", brick, lightBuilder);
+		// light.scripts().add(new XPython(m_lightScript));
 
 		PhysicsData groundData = new PhysicsData();
 		groundData.setType(BodyType.STATIC);
@@ -82,7 +83,21 @@ public class PhysicsTest {
 
 		game.start();
 		float lastTime = 16f;
+		int lightCount = 0;
+		float lastLightCreate = System.nanoTime();
 		while (true) {
+			Keyboard keyboard = rendering.getKeyboard();
+			if (keyboard.isKeyPressed(keyboard.getKey('l')) && System.nanoTime() - lastLightCreate > 1000000000) {
+				lastLightCreate = System.nanoTime();
+				EntityBuilder lBuilder = new EntityBuilder();
+				lBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
+						new Vector3f(0.01f, 0.01f, 3f), new Color((float) Math.random(), (float) Math.random(),
+								(float) Math.random()))));
+				Entity l = scene.createEntity("light" + lightCount, brick, lBuilder);
+				l.scripts().add(new XPython(m_lightScript));
+				lightCount++;
+				System.out.println("Created light number " + lightCount);
+			}
 			long startTime = System.nanoTime();
 			game.update(lastTime);
 			long endTime = System.nanoTime();

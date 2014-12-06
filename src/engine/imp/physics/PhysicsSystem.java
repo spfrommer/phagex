@@ -89,7 +89,6 @@ public class PhysicsSystem implements EntitySystem {
 					new Vector3f(RenderingSystem.HALF_DRAW_WIDTH, RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
 			Vector3f p4 = transMatrix.multiply(
 					new Vector3f(RenderingSystem.HALF_DRAW_WIDTH, -RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
-			System.out.println(p1 + ", " + p2 + ", " + p3 + ", " + p4);
 			Vec2[] vertices = new Vec2[4];
 			vertices[0] = new Vec2(p1.getX(), p1.getY());
 			vertices[1] = new Vec2(p2.getX(), p2.getY());

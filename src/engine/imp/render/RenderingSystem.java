@@ -14,6 +14,8 @@ import glextra.renderer.Renderer2D;
 import gltools.display.Display;
 import gltools.display.Window;
 import gltools.gl.lwjgl.glfw.GLFWWindow;
+import gltools.input.Keyboard;
+import gltools.input.Mouse;
 
 /**
  * Renders the Entities with a CRender to a Display.
@@ -61,6 +63,20 @@ public class RenderingSystem implements EntitySystem {
 	 */
 	protected Renderer2D getRenderer() {
 		return m_renderer;
+	}
+
+	/**
+	 * @return the Keyboard associated with the Display
+	 */
+	public Keyboard getKeyboard() {
+		return m_display.getKeyboard();
+	}
+
+	/**
+	 * @return the Mouse associated with the Display
+	 */
+	public Mouse getMouse() {
+		return m_display.getMouse();
 	}
 
 	@Override
