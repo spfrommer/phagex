@@ -29,8 +29,8 @@ import engine.imp.render.RenderingSystem;
  * Manages the physics of a Game.
  */
 public class PhysicsSystem implements EntitySystem {
-	public static final int VELOCITY_ITERATIONS = 20;
-	public static final int POSITION_ITERATIONS = 20;
+	public static final int VELOCITY_ITERATIONS = 10;
+	public static final int POSITION_ITERATIONS = 8;
 
 	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CPhysics.NAME },
 			new String[0], new String[0], true);
@@ -81,7 +81,6 @@ public class PhysicsSystem implements EntitySystem {
 		if (physics.getShape() == null) {
 			Matrix transMatrix = MatrixFactory.identity(3);
 			transMatrix = transMatrix.multiply(MatrixFactory.affineScale(worldTransform.getScale()));
-			System.out.println(worldTransform.getScale());
 			Vector3f p1 = transMatrix.multiply(
 					new Vector3f(-RenderingSystem.HALF_DRAW_WIDTH, -RenderingSystem.HALF_DRAW_WIDTH, 1)).toVector3f();
 			Vector3f p2 = transMatrix.multiply(
@@ -134,7 +133,7 @@ public class PhysicsSystem implements EntitySystem {
 
 	@Override
 	public void update(float time, Scene scene) {
-		m_world.step(time, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		m_world.step(time * 0.01f, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 	}
 
 	@Override
@@ -181,6 +180,8 @@ public class PhysicsSystem implements EntitySystem {
 			Body body = m_bodies.get(entity.components().get(CPhysics.NAME));
 			body.setTransform(new Vec2(newTransform.getTranslation().getX(), newTransform.getTranslation().getY()),
 					newTransform.getRotation());
+
+			// TODO: scaling
 		}
 	}
 }

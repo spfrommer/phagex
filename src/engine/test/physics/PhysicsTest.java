@@ -28,18 +28,20 @@ import glextra.material.Material;
 
 public class PhysicsTest {
 	private MaterialFactory m_factory;
-	private Resource m_codeResource;
+	private Resource m_brickScript;
+	private Resource m_lightScript;
 	private Resource m_materialResource;
 	private Material m_material;
 
 	public PhysicsTest() {
-		m_codeResource = new Resource(new ClasspathResourceLocator(), "engine/test/physics/Script.py");
+		m_brickScript = new Resource(new ClasspathResourceLocator(), "engine/test/physics/Script.py");
+		m_lightScript = new Resource(new ClasspathResourceLocator(), "engine/test/physics/LightScript.py");
 		m_materialResource = new Resource(new ClasspathResourceLocator(), "engine/test/physics/testtube.jpg");
 	}
 
 	public void start() {
 		Game game = new Game();
-		RenderingSystem rendering = new RenderingSystem(10f, 10f);
+		RenderingSystem rendering = new RenderingSystem(20f, 20f);
 		LightingSystem lighting = new LightingSystem(rendering);
 		PhysicsSystem physics = new PhysicsSystem(new Vector2f(0f, -0.04f));
 		game.addSystem(rendering);
@@ -52,12 +54,6 @@ public class PhysicsTest {
 		Scene scene = new Scene(game);
 		game.scenes().addScene(scene, "main");
 
-		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(1f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
-		Entity light = scene.createEntity("light", scene, lightBuilder);
-		light.getCTransform().setTransform(new Transform2f(new Vector2f(0f, -2f), 0f, new Vector2f(1f, 1f)));
-
 		PhysicsData brickData = new PhysicsData();
 		brickData.setRestitution(0.5f);
 
@@ -66,7 +62,13 @@ public class PhysicsTest {
 		brickBuilder.addComponentBuilder(new CPhysicsBuilder());
 		Entity brick = scene.createEntity("brick", scene, brickBuilder);
 		brick.getCTransform().setTransform(new Transform2f(new Vector2f(-1.2f, 0f), 0.1f, new Vector2f(1f, 1f)));
-		brick.scripts().add(new XPython(m_codeResource));
+		brick.scripts().add(new XPython(m_brickScript));
+
+		EntityBuilder lightBuilder = new EntityBuilder();
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
+				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
+		Entity light = scene.createEntity("light", brick, lightBuilder);
+		light.scripts().add(new XPython(m_lightScript));
 
 		PhysicsData groundData = new PhysicsData();
 		groundData.setType(BodyType.STATIC);
@@ -79,8 +81,12 @@ public class PhysicsTest {
 		scene.createEntity("ground", scene, groundBuilder);
 
 		game.start();
+		float lastTime = 16f;
 		while (true) {
-			game.update(0.16f);
+			long startTime = System.nanoTime();
+			game.update(lastTime);
+			long endTime = System.nanoTime();
+			lastTime = (endTime - startTime) / 1000000;
 		}
 	}
 

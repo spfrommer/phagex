@@ -5,9 +5,9 @@ import java.util.Set;
 import commons.Transform2f;
 
 import engine.core.Entity;
-import engine.core.SimpleEntityFilter;
 import engine.core.EntitySystem;
 import engine.core.Scene;
+import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
 import glextra.renderer.LWJGLRenderer2D;
 import glextra.renderer.Renderer2D;
@@ -22,8 +22,8 @@ public class RenderingSystem implements EntitySystem {
 	public static final float DRAW_WIDTH = 1f;
 	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
 
-	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME }, new String[0],
-			new String[0], true);
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME },
+			new String[0], new String[0], true);
 
 	private Display m_display;
 	private Renderer2D m_renderer;
@@ -88,16 +88,19 @@ public class RenderingSystem implements EntitySystem {
 	@Override
 	public void updateEntity(Entity entity, Scene scene) {
 		Transform2f transform = entity.getCTransform().getTransform();
-		CRender render = (CRender) entity.components().get(CRender.NAME);
-
-		m_renderer.setMaterial(render.getMaterial());
+		boolean hasCRender = entity.components().has(CRender.NAME);
+		if (hasCRender) {
+			CRender render = (CRender) entity.components().get(CRender.NAME);
+			m_renderer.setMaterial(render.getMaterial());
+		}
 
 		m_renderer.pushModel();
 		m_renderer.translate(transform.getTranslation().getX(), transform.getTranslation().getY());
 		m_renderer.rotate(transform.getRotation());
 		m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
 
-		m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH);
+		if (hasCRender)
+			m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH);
 
 		Set<Entity> children = entity.tree().getChildren();
 		for (Entity child : children) {

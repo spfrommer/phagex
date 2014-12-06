@@ -80,7 +80,7 @@ public class Game {
 		List<Entity> entities = current.getAllEntities();
 
 		for (EntitySystem system : m_systems)
-			system.update(time, null);
+			system.update(time, current);
 
 		for (Entity e : entities) {
 			for (EntitySystem system : m_systems) {
