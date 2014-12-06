@@ -5,8 +5,10 @@ import java.util.Set;
 import commons.Transform2f;
 
 import engine.core.Entity;
-import engine.core.EntityFilter;
+import engine.core.SimpleEntityFilter;
 import engine.core.EntitySystem;
+import engine.core.Scene;
+import engine.core.TreeNode;
 import glextra.renderer.LWJGLRenderer2D;
 import glextra.renderer.Renderer2D;
 import gltools.display.Display;
@@ -20,7 +22,7 @@ public class RenderingSystem implements EntitySystem {
 	public static final float DRAW_WIDTH = 1f;
 	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
 
-	private static final EntityFilter s_filter = new EntityFilter(new String[] { CRender.NAME }, new String[0],
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME }, new String[0],
 			new String[0], true);
 
 	private Display m_display;
@@ -62,6 +64,21 @@ public class RenderingSystem implements EntitySystem {
 	}
 
 	@Override
+	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
+
+	}
+
+	@Override
+	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
+
+	}
+
+	@Override
+	public void entityMoved(Entity entity, TreeNode oldParent, TreeNode newParent, Scene scene) {
+
+	}
+
+	@Override
 	public void update(float time) {
 		m_renderer.clear();
 		m_renderer.startLighted();
@@ -99,7 +116,12 @@ public class RenderingSystem implements EntitySystem {
 	}
 
 	@Override
-	public EntityFilter getFilter() {
+	public SimpleEntityFilter getUpdateFilter() {
+		return s_filter;
+	}
+
+	@Override
+	public SimpleEntityFilter getEntityEventFilter() {
 		return s_filter;
 	}
 }

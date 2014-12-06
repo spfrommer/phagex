@@ -23,10 +23,14 @@ public class PyTest {
 		Entity test = scene.createEntity("test1", scene);
 		Entity child = scene.createEntity("child", test);
 
+		long startTime = System.currentTimeMillis();
 		test.scripts().add(new XPython(parentCode));
 		child.scripts().add(new XPython(childCode));
+		long endTime = System.currentTimeMillis();
+		System.out.println(endTime - startTime);
 
 		game.start();
+		game.update(0.166666666f);
 		game.update(0.166666666f);
 	}
 }

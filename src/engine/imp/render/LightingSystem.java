@@ -3,15 +3,17 @@ package engine.imp.render;
 import commons.Transform2f;
 
 import engine.core.Entity;
-import engine.core.EntityFilter;
+import engine.core.SimpleEntityFilter;
 import engine.core.EntitySystem;
+import engine.core.Scene;
+import engine.core.TreeNode;
 import glextra.renderer.Renderer2D;
 
 /**
  * Draws Lights to a RenderSystem.
  */
 public class LightingSystem implements EntitySystem {
-	private static final EntityFilter s_filter = new EntityFilter(new String[] { CLight.NAME }, new String[0],
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CLight.NAME }, new String[0],
 			new String[0], false);
 
 	private RenderingSystem m_render;
@@ -23,6 +25,21 @@ public class LightingSystem implements EntitySystem {
 	 */
 	public LightingSystem(RenderingSystem render) {
 		m_render = render;
+	}
+
+	@Override
+	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
+
+	}
+
+	@Override
+	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
+
+	}
+
+	@Override
+	public void entityMoved(Entity entity, TreeNode oldParent, TreeNode newParent, Scene scene) {
+
 	}
 
 	@Override
@@ -53,7 +70,12 @@ public class LightingSystem implements EntitySystem {
 	}
 
 	@Override
-	public EntityFilter getFilter() {
+	public SimpleEntityFilter getUpdateFilter() {
+		return s_filter;
+	}
+
+	@Override
+	public SimpleEntityFilter getEntityEventFilter() {
 		return s_filter;
 	}
 }

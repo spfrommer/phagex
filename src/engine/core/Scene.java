@@ -79,6 +79,7 @@ public class Scene implements TreeNode {
 		Entity entity = new Entity(name, this, parent, new ArrayList<Component>());
 		parent.addChild(entity);
 		m_allEntities.add(entity);
+		m_game.entityAdded(entity, parent, this);
 		return entity;
 	}
 
@@ -108,6 +109,7 @@ public class Scene implements TreeNode {
 		Entity entity = new Entity(name, this, parent, components);
 		parent.addChild(entity);
 		m_allEntities.add(entity);
+		m_game.entityAdded(entity, parent, this);
 		return entity;
 	}
 
@@ -124,7 +126,7 @@ public class Scene implements TreeNode {
 			throw new SceneException("Trying to destroy an Entity not in the Scene!");
 
 		entity.tree().getParent().removeChild(entity);
-		recursiveRemove(entity, destroy);
+		recursiveRemove(entity, entity.tree().getParent(), destroy);
 	}
 
 	/**
@@ -133,13 +135,14 @@ public class Scene implements TreeNode {
 	 * 
 	 * @param entity
 	 */
-	private void recursiveRemove(Entity entity, boolean destroy) {
+	private void recursiveRemove(Entity entity, TreeNode parent, boolean destroy) {
 		for (Entity child : entity.tree().getChildren()) {
-			recursiveRemove(child, destroy);
+			recursiveRemove(child, entity, destroy);
 		}
 		m_allEntities.remove(entity);
 		if (destroy)
 			entity.destroy();
+		m_game.entityRemoved(entity, parent, this);
 	}
 
 	/**
@@ -157,6 +160,9 @@ public class Scene implements TreeNode {
 			throw new SceneException("Tried to move an Entity to a container not in the Scene!");
 		if (entity.tree().getParent() == newParent)
 			throw new SceneException("Tried to move an Entity into its parent!");
+
+		TreeNode oldParent = entity.tree().getParent();
+
 		Transform2f oldTrans = getWorldTransform(entity);
 		Transform2f chainTrans;
 		if (newParent == this) {
@@ -172,9 +178,11 @@ public class Scene implements TreeNode {
 		Vector2f chainScale = chainTrans.getScale();
 		newTrans.setScale(new Vector2f(oldScale.getX() / chainScale.getX(), oldScale.getY() / chainScale.getY()));
 
-		entity.tree().getParent().removeChild(entity);
+		oldParent.removeChild(entity);
 		newParent.addChild(entity);
 		entity.tree().setParent(newParent, newTrans);
+
+		m_game.entityMoved(entity, oldParent, newParent, this);
 	}
 
 	/**

@@ -82,7 +82,7 @@ public class MaterialFactory {
 			return (MaterialXMLLoader.s_load(m_system.getDisplay().getGL(), m_deferred.getResource(),
 					new GLResourceLocator(m_deferred.getLocator()))).get(0);
 		} catch (Exception e) {
-			throw new RenderException("Deferred could not be created: " + MATERIAL_LOC, e);
+			throw new RenderingException("Deferred could not be created: " + MATERIAL_LOC, e);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class MaterialFactory {
 			return TextureFactory.s_loadTexture(m_system.getRenderer().getGL(), resource.getResource(),
 					new GLResourceLocator(resource.getLocator()));
 		} catch (IOException e) {
-			throw new RenderException("Material could not be created: " + resource.getResource(), e);
+			throw new RenderingException("Material could not be created: " + resource.getResource(), e);
 		}
 	}
 }

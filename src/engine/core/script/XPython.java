@@ -1,5 +1,7 @@
 package engine.core.script;
 
+import java.util.List;
+
 import org.python.core.Py;
 import org.python.core.PyFloat;
 import org.python.core.PyObject;
@@ -9,6 +11,7 @@ import commons.Logger;
 import commons.Resource;
 import commons.ResourceFactory;
 
+import engine.core.Component;
 import engine.core.exceptions.XScriptException;
 
 public class XPython extends XScript {
@@ -35,10 +38,19 @@ public class XPython extends XScript {
 
 		XScriptContext context = context();
 
+		m_python.set("logger", Logger.instance());
 		m_python.set("game", context.game);
 		m_python.set("scene", context.scene);
 		m_python.set("entity", context.entity);
-		m_python.set("logger", Logger.instance());
+
+		m_python.set("tree", context.entity.tree());
+		m_python.set("scripts", context.entity.scripts());
+		m_python.set("components", context.entity.components());
+		m_python.set("fields", context.entity.fields());
+
+		List<Component> allComps = context.entity.components().all();
+		for (Component c : allComps)
+			m_python.set(c.getName(), c);
 
 		m_python.exec(m_code);
 

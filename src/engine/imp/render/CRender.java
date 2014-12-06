@@ -12,7 +12,7 @@ public class CRender implements Component {
 	public static final String NAME = "render";
 	public static final String MATERIAL = "render_material";
 	public static final String DEPTH = "render_depth";
-	public static final String[] IDENTIFIERS = new String[] { MATERIAL, DEPTH };
+	private static final String[] IDENTIFIERS = new String[] { MATERIAL, DEPTH };
 
 	private Material m_material;
 	private float m_depth;
@@ -43,7 +43,7 @@ public class CRender implements Component {
 	 */
 	public void setMaterial(Material material) {
 		if (material == null)
-			throw new RenderException("Cannot set a null Material!");
+			throw new RenderingException("Cannot set a null Material!");
 		m_material = material;
 	}
 
@@ -63,7 +63,7 @@ public class CRender implements Component {
 	 */
 	public void setDepth(float depth) {
 		if (depth <= 0)
-			throw new RenderException("Depth must be greater than zero!");
+			throw new RenderingException("Depth must be greater than zero!");
 		m_depth = depth;
 	}
 

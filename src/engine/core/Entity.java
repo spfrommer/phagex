@@ -37,7 +37,6 @@ public class Entity implements TreeNode {
 	/**
 	 * Constructs a new Entity.
 	 * 
-	 * @param scene
 	 * @param parent
 	 * @param components
 	 */

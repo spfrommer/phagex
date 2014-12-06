@@ -9,7 +9,7 @@ import engine.core.exceptions.TagException;
 public class CTags implements Component {
 	public static final String NAME = "tags";
 	public static final String TAGS = "tags";
-	public static final String[] IDENTIFIERS = new String[] { TAGS };
+	private static final String[] IDENTIFIERS = new String[] { TAGS };
 
 	private TagList m_tags;
 

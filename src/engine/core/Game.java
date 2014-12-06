@@ -21,6 +21,49 @@ public class Game {
 	}
 
 	/**
+	 * Called by the Scene.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	protected void entityAdded(Entity entity, TreeNode parent, Scene scene) {
+		for (EntitySystem system : m_systems) {
+			if (system.getEntityEventFilter().matches(entity))
+				system.entityAdded(entity, parent, scene);
+		}
+	}
+
+	/**
+	 * Called by the Scene.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	protected void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
+		for (EntitySystem system : m_systems) {
+			if (system.getEntityEventFilter().matches(entity))
+				system.entityAdded(entity, parent, scene);
+		}
+	}
+
+	/**
+	 * Called by the Scene.
+	 * 
+	 * @param entity
+	 * @param oldParent
+	 * @param newParent
+	 * @param scene
+	 */
+	protected void entityMoved(Entity entity, TreeNode oldParent, TreeNode newParent, Scene scene) {
+		for (EntitySystem system : m_systems) {
+			if (system.getEntityEventFilter().matches(entity))
+				system.entityMoved(entity, oldParent, newParent, scene);
+		}
+	}
+
+	/**
 	 * Starts the Game and loads the Scene called "main".
 	 */
 	public void start() {
@@ -41,7 +84,7 @@ public class Game {
 
 		for (Entity e : entities) {
 			for (EntitySystem system : m_systems) {
-				if (system.getFilter().matches(e))
+				if (system.getUpdateFilter().matches(e))
 					system.updateEntity(e);
 			}
 		}

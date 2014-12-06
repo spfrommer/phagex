@@ -5,6 +5,34 @@ package engine.core;
  */
 public interface EntitySystem {
 	/**
+	 * Called when an Entity that matches the EntitySystem's EntityFilter is added to the Scene.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	public void entityAdded(Entity entity, TreeNode parent, Scene scene);
+
+	/**
+	 * Called when an Entity that matches the EntitySystem's EntityFilter is removed from the Scene.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	public void entityRemoved(Entity entity, TreeNode parent, Scene scene);
+
+	/**
+	 * Called when an Entity is moved to a new parent.
+	 * 
+	 * @param entity
+	 * @param oldParent
+	 * @param newParent
+	 * @param scene
+	 */
+	public void entityMoved(Entity entity, TreeNode oldParent, TreeNode newParent, Scene scene);
+
+	/**
 	 * Called to update any centralized process - such as a physics World, for example.
 	 * 
 	 * @param time
@@ -24,7 +52,12 @@ public interface EntitySystem {
 	public void postUpdate();
 
 	/**
-	 * @return the EntityFilter
+	 * @return the EntityFilter that's used when system.updateEntity(entity) is called
 	 */
-	public EntityFilter getFilter();
+	public EntityFilter getUpdateFilter();
+
+	/**
+	 * @return the EntityFilter that's used when system.entityAdded/Removed/Moved is called
+	 */
+	public EntityFilter getEntityEventFilter();
 }

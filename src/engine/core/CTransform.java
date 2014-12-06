@@ -14,7 +14,7 @@ public class CTransform implements Component {
 	public static final String TRANSLATION = "translation";
 	public static final String ROTATION = "rotation";
 	public static final String SCALE = "scale";
-	public static final String[] IDENTIFIERS = new String[] { TRANSLATION, ROTATION, SCALE };
+	private static final String[] IDENTIFIERS = new String[] { TRANSLATION, ROTATION, SCALE };
 
 	private Entity m_entity;
 	private Transform2f m_transform;
@@ -79,6 +79,21 @@ public class CTransform implements Component {
 
 		for (EntityListener listener : m_entity.getListeners())
 			listener.transformSet(m_entity, m_transform, transform);
+		m_transform = transform;
+	}
+
+	/**
+	 * Sets the Transform2f without notifying the listeners. This shouldn't be called.
+	 * 
+	 * @param transform
+	 */
+	public void quietSetTransform(Transform2f transform) {
+		if (m_warnings)
+			Logger.instance().warn("Setting transform on a unbound CTransform");
+
+		if (transform == null)
+			throw new ComponentException("Cannot set a null transform!");
+
 		m_transform = transform;
 	}
 

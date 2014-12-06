@@ -11,7 +11,7 @@ import glextra.renderer.Light;
 public class CLight implements Component {
 	public static final String NAME = "light";
 	public static final String LIGHT = "render_light";
-	public static final String[] IDENTIFIERS = new String[] { LIGHT };
+	private static final String[] IDENTIFIERS = new String[] { LIGHT };
 
 	private Light m_light;
 

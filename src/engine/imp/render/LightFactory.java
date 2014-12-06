@@ -22,7 +22,7 @@ public class LightFactory {
 					new Color(point.getDiffuseColor()), new Color(point.getAmbientColor()));
 			return clone;
 		} else {
-			throw new RenderException("Cannot clone Light: " + light);
+			throw new RenderingException("Cannot clone Light: " + light);
 		}
 	}
 

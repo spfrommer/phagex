@@ -3,9 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
-	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
-	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/disruptor.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/gltools-0.1.0a.jar"/>
@@ -16,5 +13,11 @@
 	<classpathentry kind="lib" path="lib/gltools/lwjgl.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/slf4j-api-1.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/gltools-materials-0.1.0a.jar"/>
+	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
