@@ -11,16 +11,20 @@ public interface EntityListener {
 	 * 
 	 * @param entity
 	 * @param child
+	 * @param scene
+	 *            TODO
 	 */
-	public void childAdded(Entity entity, Entity child);
+	public void childAdded(Entity entity, Entity child, Scene scene);
 
 	/**
 	 * Called when a child is removed from an Entity.
 	 * 
 	 * @param entity
 	 * @param child
+	 * @param scene
+	 *            TODO
 	 */
-	public void childRemoved(Entity entity, Entity child);
+	public void childRemoved(Entity entity, Entity child, Scene scene);
 
 	/**
 	 * Called when the parent of an Entity changes.
@@ -30,9 +34,11 @@ public interface EntityListener {
 	 * @param newParent
 	 * @param oldTransform
 	 * @param newTransform
+	 * @param scene
+	 *            TODO
 	 */
-	public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent,
-			Transform2f oldTransform, Transform2f newTransform);
+	public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldTransform,
+			Transform2f newTransform, Scene scene);
 
-	public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform);
+	public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform, Scene scene);
 }

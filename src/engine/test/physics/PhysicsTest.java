@@ -2,6 +2,7 @@ package engine.test.physics;
 
 import org.jbox2d.dynamics.BodyType;
 
+import commons.Logger;
 import commons.Resource;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
@@ -56,24 +57,26 @@ public class PhysicsTest {
 		game.scenes().addScene(scene, "main");
 
 		PhysicsData brickData = new PhysicsData();
-		brickData.setRestitution(0.5f);
+		brickData.setRestitution(0f);
+		brickData.setMass(100f);
 
 		EntityBuilder brickBuilder = new EntityBuilder();
 		brickBuilder.addComponentBuilder(new CRender(m_material, 1f));
 		brickBuilder.addComponentBuilder(new CPhysicsBuilder());
 		Entity brick = scene.createEntity("brick", scene, brickBuilder);
-		brick.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 0f), 0.1f, new Vector2f(1f, 1f)));
+		brick.getCTransform().setTransform(
+				new Transform2f(new Vector2f(0f, 2f), (float) Math.PI / 4, new Vector2f(1f, 1f)));
 		brick.scripts().add(new XPython(m_brickScript));
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
 				new Vector3f(0.5f, 0.5f, 0.5f), new Color(0.5f, 0.5f, 0.5f))));
-		// Entity light = scene.createEntity("light", brick, lightBuilder);
+		Entity light = scene.createEntity("light", brick, lightBuilder);
 		// light.scripts().add(new XPython(m_lightScript));
 
 		PhysicsData groundData = new PhysicsData();
 		groundData.setType(BodyType.STATIC);
-		groundData.setRestitution(0.5f);
+		groundData.setRestitution(0f);
 
 		EntityBuilder groundBuilder = new EntityBuilder();
 		groundBuilder.addComponentBuilder(new CRender(m_material, 1f));
@@ -98,10 +101,19 @@ public class PhysicsTest {
 				lightCount++;
 				System.out.println("Created light number " + lightCount);
 			}
+			if (keyboard.isKeyPressed(keyboard.getKey("UP"))) {
+				CPhysics physicsComp = (CPhysics) brick.components().get(CPhysics.NAME);
+				physicsComp.applyForce(new Vector2f(0f, 1f));
+			}
+			if (keyboard.isKeyPressed(keyboard.getKey("DOWN"))) {
+				CPhysics physicsComp = (CPhysics) brick.components().get(CPhysics.NAME);
+				physicsComp.applyForce(new Vector2f(0f, -1f));
+			}
 			long startTime = System.nanoTime();
-			game.update(lastTime);
+			game.update(16f);
 			long endTime = System.nanoTime();
 			lastTime = (endTime - startTime) / 1000000;
+			Logger.instance().out(lastTime);
 		}
 	}
 

@@ -2,11 +2,13 @@ package engine.imp.physics;
 
 import org.jbox2d.collision.shapes.MassData;
 import org.jbox2d.collision.shapes.Shape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 
 import commons.Logger;
+import commons.matrix.Vector2f;
 
 import engine.core.Component;
 import engine.core.ComponentBuilder;
@@ -78,6 +80,41 @@ public class CPhysics implements Component {
 	 */
 	protected PhysicsData getPhysicsData() {
 		return m_data;
+	}
+
+	/**
+	 * Applies a force to the center of the object. Forces are calculated by multiplying with the timestep (as opposed
+	 * to impulses, which are instantaneous). This will do nothing unless the Entity has been added to the world.
+	 * 
+	 * @param force
+	 */
+	public void applyForce(Vector2f force) {
+		Body body = m_physics.getBody(this);
+		if (m_physics != null)
+			body.applyForceToCenter(new Vec2(force.getX(), force.getY()));
+	}
+
+	/**
+	 * Applies an impulse to the center of the object. Impulses are not time dependant (as opposed to forces, which are
+	 * multiplied with the time step). This will do nothing unless the Entity has been added to the world.
+	 * 
+	 * @param impulse
+	 */
+	public void applyImpulse(Vector2f impulse) {
+		Body body = m_physics.getBody(this);
+		if (m_physics != null)
+			body.applyLinearImpulse(new Vec2(impulse.getX(), impulse.getY()), body.getWorldCenter());
+	}
+
+	/**
+	 * Applies a torque. This will do nothing unless the Entity has been added to the world.
+	 * 
+	 * @param torque
+	 */
+	public void applyTorque(float torque) {
+		Body body = m_physics.getBody(this);
+		if (m_physics != null)
+			body.applyTorque(torque);
 	}
 
 	/**

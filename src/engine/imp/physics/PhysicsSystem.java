@@ -132,7 +132,7 @@ public class PhysicsSystem implements EntitySystem {
 
 	@Override
 	public void update(float time, Scene scene) {
-		m_world.step(time * 0.01f, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		m_world.step(0.16666f, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 	}
 
 	@Override
@@ -162,24 +162,24 @@ public class PhysicsSystem implements EntitySystem {
 
 	private class PhysicsListener implements EntityListener {
 		@Override
-		public void childAdded(Entity entity, Entity child) {
+		public void childAdded(Entity entity, Entity child, Scene scene) {
 		}
 
 		@Override
-		public void childRemoved(Entity entity, Entity child) {
+		public void childRemoved(Entity entity, Entity child, Scene scene) {
 		}
 
 		@Override
 		public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldTransform,
-				Transform2f newTransform) {
+				Transform2f newTransform, Scene scene) {
 		}
 
 		@Override
-		public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform) {
+		public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform, Scene scene) {
 			Body body = m_bodies.get(entity.components().get(CPhysics.NAME));
-			body.setTransform(new Vec2(newTransform.getTranslation().getX(), newTransform.getTranslation().getY()),
-					newTransform.getRotation());
-
+			Transform2f worldTrans = scene.getWorldTransform(entity);
+			body.setTransform(new Vec2(worldTrans.getTranslation().getX(), worldTrans.getTranslation().getY()),
+					worldTrans.getRotation());
 			// TODO: scaling
 		}
 	}

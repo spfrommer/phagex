@@ -77,9 +77,10 @@ public class CTransform implements Component {
 		if (transform == null)
 			throw new ComponentException("Cannot set a null transform!");
 
-		for (EntityListener listener : m_entity.getListeners())
-			listener.transformSet(m_entity, m_transform, transform);
+		Transform2f oldTrans = m_transform;
 		m_transform = transform;
+		for (EntityListener listener : m_entity.getListeners())
+			listener.transformSet(m_entity, oldTrans, transform, m_entity.getScene());
 	}
 
 	/**

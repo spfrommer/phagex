@@ -55,11 +55,13 @@ public class TreeManager {
 		if (transform == null)
 			throw new EntityException("Transform cannot be null!");
 
-		for (EntityListener listener : m_entity.getListeners())
-			listener.parentChanged(m_entity, m_parent, parent, m_entity.getCTransform().getTransform(), transform);
+		Transform2f oldTransform = m_entity.getCTransform().getTransform();
 
 		m_parent = parent;
-		m_entity.getCTransform().setTransform(transform);
+		m_entity.getCTransform().quietSetTransform(transform);
+
+		for (EntityListener listener : m_entity.getListeners())
+			listener.parentChanged(m_entity, m_parent, parent, oldTransform, transform, m_entity.getScene());
 	}
 
 	/**
@@ -77,7 +79,7 @@ public class TreeManager {
 		m_childNames.put(child.getName(), child);
 
 		for (EntityListener listener : m_entity.getListeners())
-			listener.childAdded(m_entity, child);
+			listener.childAdded(m_entity, child, m_entity.getScene());
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class TreeManager {
 		m_children.remove(child);
 
 		for (EntityListener listener : m_entity.getListeners())
-			listener.childRemoved(m_entity, child);
+			listener.childRemoved(m_entity, child, m_entity.getScene());
 	}
 
 	/**
