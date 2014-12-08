@@ -1,4 +1,4 @@
-package engine.imp.physics;
+package engine.imp.physics.box2d;
 
 import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.dynamics.BodyType;
@@ -6,7 +6,7 @@ import org.jbox2d.dynamics.BodyType;
 /**
  * Contains all the data to initialize a CPhysics.
  */
-public class PhysicsData {
+public class Box2dPhysicsData {
 	private BodyType m_type = BodyType.DYNAMIC;
 	private boolean m_bullet = false;
 	private boolean m_fixedRotation = false;
@@ -22,7 +22,7 @@ public class PhysicsData {
 	/**
 	 * Creates an empty PhysicsData with all fields initialized to default values.
 	 */
-	public PhysicsData() {
+	public Box2dPhysicsData() {
 
 	}
 
@@ -31,7 +31,7 @@ public class PhysicsData {
 	 * 
 	 * @param physics
 	 */
-	public PhysicsData(CPhysics physics) {
+	public Box2dPhysicsData(CBox2dPhysics physics) {
 		m_type = physics.getType();
 		m_bullet = physics.isBullet();
 		m_fixedRotation = physics.isFixedRotation();
@@ -48,7 +48,7 @@ public class PhysicsData {
 	 * 
 	 * @param physics
 	 */
-	public PhysicsData(PhysicsData physics) {
+	public Box2dPhysicsData(Box2dPhysicsData physics) {
 		m_type = physics.getType();
 		m_bullet = physics.isBullet();
 		m_fixedRotation = physics.isFixedRotation();

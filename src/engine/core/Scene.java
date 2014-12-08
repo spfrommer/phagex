@@ -168,7 +168,7 @@ public class Scene implements TreeNode {
 		if (newParent == this) {
 			chainTrans = new Transform2f();
 		} else {
-			chainTrans = getWorldTransform((Entity) newParent);
+			chainTrans = getWorldTransform(newParent);
 		}
 
 		Transform2f newTrans = new Transform2f();
@@ -186,17 +186,17 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * @param entity
+	 * @param node
 	 * @return the transform of the Entity in world coordinates.
 	 */
-	public Transform2f getWorldTransform(Entity entity) {
-		if (entity == null)
+	public Transform2f getWorldTransform(TreeNode node) {
+		if (node == null)
 			throw new SceneException("Tried to transform a null parent!");
-		if (!m_allEntities.contains(entity))
+		if (!m_allEntities.contains(node))
 			throw new SceneException("Entity is not part of Scene - transform cannot be calculated!");
 		// List of entities in the chain
 		List<Entity> entities = new ArrayList<Entity>();
-		TreeNode parent = entity;
+		TreeNode parent = node;
 		while (parent != this) {
 			entities.add((Entity) parent);
 			parent = ((Entity) parent).tree().getParent();

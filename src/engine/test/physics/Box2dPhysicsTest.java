@@ -14,9 +14,9 @@ import engine.core.EntityBuilder;
 import engine.core.Game;
 import engine.core.Scene;
 import engine.core.script.XPython;
-import engine.imp.physics.CPhysics;
-import engine.imp.physics.PhysicsData;
-import engine.imp.physics.PhysicsSystem;
+import engine.imp.physics.box2d.Box2dPhysicsData;
+import engine.imp.physics.box2d.Box2dPhysicsSystem;
+import engine.imp.physics.box2d.CBox2dPhysics;
 import engine.imp.render.CLight;
 import engine.imp.render.CRender;
 import engine.imp.render.LightFactory;
@@ -28,14 +28,14 @@ import glcommon.vector.Vector3f;
 import glextra.material.Material;
 import gltools.input.Keyboard;
 
-public class PhysicsTest {
+public class Box2dPhysicsTest {
 	private MaterialFactory m_factory;
 	private Resource m_brickScript;
 	private Resource m_lightScript;
 	private Resource m_materialResource;
 	private Material m_material;
 
-	public PhysicsTest() {
+	public Box2dPhysicsTest() {
 		m_brickScript = new Resource(new ClasspathResourceLocator(), "engine/test/physics/Script.py");
 		m_lightScript = new Resource(new ClasspathResourceLocator(), "engine/test/physics/LightScript.py");
 		m_materialResource = new Resource(new ClasspathResourceLocator(), "engine/test/physics/testtube.jpg");
@@ -45,7 +45,7 @@ public class PhysicsTest {
 		Game game = new Game();
 		RenderingSystem rendering = new RenderingSystem(20f, 20f);
 		LightingSystem lighting = new LightingSystem(rendering);
-		PhysicsSystem physics = new PhysicsSystem(new Vector2f(0f, -0.04f));
+		Box2dPhysicsSystem physics = new Box2dPhysicsSystem(new Vector2f(0f, -10f));
 		game.addSystem(rendering);
 		game.addSystem(lighting);
 		game.addSystem(physics);
@@ -56,9 +56,9 @@ public class PhysicsTest {
 		Scene scene = new Scene(game);
 		game.scenes().addScene(scene, "main");
 
-		PhysicsData brickData = new PhysicsData();
+		Box2dPhysicsData brickData = new Box2dPhysicsData();
 		brickData.setRestitution(0f);
-		brickData.setMass(100f);
+		brickData.setMass(1f);
 
 		EntityBuilder brickBuilder = new EntityBuilder();
 		brickBuilder.addComponentBuilder(new CRender(m_material, 1f));
@@ -70,11 +70,11 @@ public class PhysicsTest {
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(0.5f, 0.5f, 0.5f), new Color(0.5f, 0.5f, 0.5f))));
+				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
 		Entity light = scene.createEntity("light", brick, lightBuilder);
 		// light.scripts().add(new XPython(m_lightScript));
 
-		PhysicsData groundData = new PhysicsData();
+		Box2dPhysicsData groundData = new Box2dPhysicsData();
 		groundData.setType(BodyType.STATIC);
 		groundData.setRestitution(0f);
 
@@ -102,12 +102,12 @@ public class PhysicsTest {
 				System.out.println("Created light number " + lightCount);
 			}
 			if (keyboard.isKeyPressed(keyboard.getKey("UP"))) {
-				CPhysics physicsComp = (CPhysics) brick.components().get(CPhysics.NAME);
-				physicsComp.applyForce(new Vector2f(0f, 1f));
+				CBox2dPhysics physicsComp = (CBox2dPhysics) brick.components().get(CBox2dPhysics.NAME);
+				physicsComp.applyForce(new Vector2f(0f, 20f));
 			}
 			if (keyboard.isKeyPressed(keyboard.getKey("DOWN"))) {
-				CPhysics physicsComp = (CPhysics) brick.components().get(CPhysics.NAME);
-				physicsComp.applyForce(new Vector2f(0f, -1f));
+				CBox2dPhysics physicsComp = (CBox2dPhysics) brick.components().get(CBox2dPhysics.NAME);
+				physicsComp.applyForce(new Vector2f(0f, -20f));
 			}
 			long startTime = System.nanoTime();
 			game.update(16f);
@@ -117,30 +117,30 @@ public class PhysicsTest {
 		}
 	}
 
-	private class CPhysicsBuilder implements ComponentBuilder<CPhysics> {
-		private PhysicsData m_data;
+	private class CPhysicsBuilder implements ComponentBuilder<CBox2dPhysics> {
+		private Box2dPhysicsData m_data;
 
 		public CPhysicsBuilder() {
-			m_data = new PhysicsData();
+			m_data = new Box2dPhysicsData();
 		}
 
-		public CPhysicsBuilder(PhysicsData data) {
+		public CPhysicsBuilder(Box2dPhysicsData data) {
 			m_data = data;
 		}
 
 		@Override
-		public CPhysics build() {
-			CPhysics physics = new CPhysics(m_data);
+		public CBox2dPhysics build() {
+			CBox2dPhysics physics = new CBox2dPhysics(m_data);
 			return physics;
 		}
 
 		@Override
 		public String getName() {
-			return CPhysics.NAME;
+			return CBox2dPhysics.NAME;
 		}
 	}
 
 	public static void main(String[] args) {
-		new PhysicsTest().start();
+		new Box2dPhysicsTest().start();
 	}
 }

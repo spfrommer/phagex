@@ -19,5 +19,6 @@
 	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
+	<classpathentry kind="lib" path="lib/physics/dyn4j-v3.1.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

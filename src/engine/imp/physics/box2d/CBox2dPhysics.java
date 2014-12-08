@@ -1,4 +1,4 @@
-package engine.imp.physics;
+package engine.imp.physics.box2d;
 
 import org.jbox2d.collision.shapes.MassData;
 import org.jbox2d.collision.shapes.Shape;
@@ -17,8 +17,8 @@ import engine.core.exceptions.ComponentException;
 /**
  * Contains data for the PhysicsSystem.
  */
-public class CPhysics implements Component {
-	public static final String NAME = "physics";
+public class CBox2dPhysics implements Component {
+	public static final String NAME = "box2dphysics";
 	// how the children should be linked to this Entity
 	public static final String TYPE = "physics_type";
 	public static final String BULLET = "physics_bullet";
@@ -32,9 +32,9 @@ public class CPhysics implements Component {
 
 	private static final String[] IDENTIFIERS = new String[] { TYPE, BULLET, FIXED_ROT, LINEAR_DAMPING,
 			ANGULAR_DAMPING, MASS, FRICTION, RESTITUTION };
-	private PhysicsSystem m_physics;
+	private Box2dPhysicsSystem m_physics;
 
-	private PhysicsData m_data;
+	private Box2dPhysicsData m_data;
 
 	// TODO: collision shape
 
@@ -43,8 +43,8 @@ public class CPhysics implements Component {
 	 * 
 	 * @param physics
 	 */
-	public CPhysics() {
-		m_data = new PhysicsData();
+	public CBox2dPhysics() {
+		m_data = new Box2dPhysicsData();
 	}
 
 	/**
@@ -52,8 +52,8 @@ public class CPhysics implements Component {
 	 * 
 	 * @param shape
 	 */
-	public CPhysics(Shape shape) {
-		m_data = new PhysicsData();
+	public CBox2dPhysics(Shape shape) {
+		m_data = new Box2dPhysicsData();
 		m_data.setShape(shape);
 	}
 
@@ -62,8 +62,8 @@ public class CPhysics implements Component {
 	 * 
 	 * @param data
 	 */
-	public CPhysics(PhysicsData data) {
-		m_data = new PhysicsData(data);
+	public CBox2dPhysics(Box2dPhysicsData data) {
+		m_data = new Box2dPhysicsData(data);
 	}
 
 	/**
@@ -71,14 +71,14 @@ public class CPhysics implements Component {
 	 * 
 	 * @param physics
 	 */
-	protected void setPhysicsSystem(PhysicsSystem physics) {
+	protected void setPhysicsSystem(Box2dPhysicsSystem physics) {
 		m_physics = physics;
 	}
 
 	/**
 	 * @return the PhysicsData that it was initialized with.
 	 */
-	protected PhysicsData getPhysicsData() {
+	protected Box2dPhysicsData getPhysicsData() {
 		return m_data;
 	}
 
@@ -433,11 +433,11 @@ public class CPhysics implements Component {
 	}
 
 	@Override
-	public ComponentBuilder<CPhysics> getBuilder() {
-		ComponentBuilder<CPhysics> builder = new ComponentBuilder<CPhysics>() {
+	public ComponentBuilder<CBox2dPhysics> getBuilder() {
+		ComponentBuilder<CBox2dPhysics> builder = new ComponentBuilder<CBox2dPhysics>() {
 			@Override
-			public CPhysics build() {
-				return new CPhysics(new PhysicsData(CPhysics.this));
+			public CBox2dPhysics build() {
+				return new CBox2dPhysics(new Box2dPhysicsData(CBox2dPhysics.this));
 			}
 
 			@Override

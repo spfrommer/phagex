@@ -1,4 +1,4 @@
-package engine.imp.physics;
+package engine.imp.physics.box2d;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,24 +28,24 @@ import engine.imp.render.RenderingSystem;
 /**
  * Manages the physics of a Game.
  */
-public class PhysicsSystem implements EntitySystem {
+public class Box2dPhysicsSystem implements EntitySystem {
 	public static final int VELOCITY_ITERATIONS = 10;
 	public static final int POSITION_ITERATIONS = 8;
 
-	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CPhysics.NAME },
-			new String[0], new String[0], true);
-	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CPhysics.NAME },
+	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(
+			new String[] { CBox2dPhysics.NAME }, new String[0], new String[0], true);
+	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CBox2dPhysics.NAME },
 			new String[0], new String[0], false);
 	private World m_world;
 
-	private Map<CPhysics, Body> m_bodies = new HashMap<CPhysics, Body>();
+	private Map<CBox2dPhysics, Body> m_bodies = new HashMap<CBox2dPhysics, Body>();
 
 	/**
 	 * Initializes a PhysicsSystem with a certain gravity.
 	 * 
 	 * @param gravity
 	 */
-	public PhysicsSystem(Vector2f gravity) {
+	public Box2dPhysicsSystem(Vector2f gravity) {
 		m_world = new World(new Vec2(gravity.getX(), gravity.getY()));
 	}
 
@@ -55,16 +55,16 @@ public class PhysicsSystem implements EntitySystem {
 	 * @param physics
 	 * @return
 	 */
-	protected Body getBody(CPhysics physics) {
+	protected Body getBody(CBox2dPhysics physics) {
 		return m_bodies.get(physics);
 	}
 
 	@Override
 	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
-		CPhysics entityPhysics = (CPhysics) entity.components().get(CPhysics.NAME);
+		CBox2dPhysics entityPhysics = (CBox2dPhysics) entity.components().get(CBox2dPhysics.NAME);
 		Transform2f worldTransform = scene.getWorldTransform(entity);
 
-		PhysicsData physics = entityPhysics.getPhysicsData();
+		Box2dPhysicsData physics = entityPhysics.getPhysicsData();
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.bullet = physics.isBullet();
 		bodyDef.allowSleep = physics.allowSleep();
@@ -121,7 +121,7 @@ public class PhysicsSystem implements EntitySystem {
 
 	@Override
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
-		CPhysics entityPhysics = (CPhysics) entity.components().get(CPhysics.NAME);
+		CBox2dPhysics entityPhysics = (CBox2dPhysics) entity.components().get(CBox2dPhysics.NAME);
 		m_bodies.remove(entityPhysics);
 	}
 
@@ -132,12 +132,12 @@ public class PhysicsSystem implements EntitySystem {
 
 	@Override
 	public void update(float time, Scene scene) {
-		m_world.step(0.16666f, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		m_world.step(time / 1000, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 	}
 
 	@Override
 	public void updateEntity(Entity entity, Scene scene) {
-		CPhysics entityPhysics = (CPhysics) entity.components().get(CPhysics.NAME);
+		CBox2dPhysics entityPhysics = (CBox2dPhysics) entity.components().get(CBox2dPhysics.NAME);
 		Body body = m_bodies.get(entityPhysics);
 		Vec2 pos = body.getPosition();
 		entity.getCTransform().quietSetTransform(
@@ -176,7 +176,7 @@ public class PhysicsSystem implements EntitySystem {
 
 		@Override
 		public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform, Scene scene) {
-			Body body = m_bodies.get(entity.components().get(CPhysics.NAME));
+			Body body = m_bodies.get(entity.components().get(CBox2dPhysics.NAME));
 			Transform2f worldTrans = scene.getWorldTransform(entity);
 			body.setTransform(new Vec2(worldTrans.getTranslation().getX(), worldTrans.getTranslation().getY()),
 					worldTrans.getRotation());
