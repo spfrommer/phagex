@@ -1,5 +1,6 @@
 package engine.test.physics;
 
+import org.dyn4j.geometry.Mass.Type;
 import org.dyn4j.geometry.Rectangle;
 
 import commons.Resource;
@@ -59,45 +60,28 @@ public class Dyn4jPhysicsTest {
 
 		EntityBuilder brickBuilder = new EntityBuilder();
 		brickBuilder.addComponentBuilder(new CRender(m_material, 1f));
-		brickBuilder.addComponentBuilder(new CPhysicsBuilder());
+		brickBuilder.addComponentBuilder(new CBrickBuilder());
 		Entity brick = scene.createEntity("brick", scene, brickBuilder);
-		brick.getCTransform().setTransform(
-				new Transform2f(new Vector2f(0f, 2f), (float) Math.PI / 4, new Vector2f(1f, 1f)));
+		brick.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, new Vector2f(1f, 1f)));
 		brick.scripts().add(new XPython(m_brickScript));
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
 				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
-		Entity light = scene.createEntity("light", brick, lightBuilder);
-		// light.scripts().add(new XPython(m_lightScript));
+		scene.createEntity("light", brick, lightBuilder);
 
 		EntityBuilder groundBuilder = new EntityBuilder();
 		groundBuilder.addComponentBuilder(new CRender(m_material, 1f));
-		groundBuilder.addComponentBuilder(new CPhysicsBuilder());
+		groundBuilder.addComponentBuilder(new CGroundBuilder());
 		groundBuilder.setTransform(new Transform2f(new Vector2f(0f, -2f), 0f, new Vector2f(2f, 1f)));
 		scene.createEntity("ground", scene, groundBuilder);
 
 		game.start();
 		float lastTime = 16f;
-		int lightCount = 0;
-		float lastLightCreate = System.nanoTime();
 		while (true) {
 			Keyboard keyboard = rendering.getKeyboard();
-			if (keyboard.isKeyPressed(keyboard.getKey('l')) && System.nanoTime() - lastLightCreate > 1000000000) {
-				lastLightCreate = System.nanoTime();
-				EntityBuilder lBuilder = new EntityBuilder();
-				lBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-						new Vector3f(0.01f, 0.01f, 3f), new Color((float) Math.random(), (float) Math.random(),
-								(float) Math.random()))));
-				Entity l = scene.createEntity("light" + lightCount, brick, lBuilder);
-				l.scripts().add(new XPython(m_lightScript));
-				lightCount++;
-				System.out.println("Created light number " + lightCount);
-			}
 			if (keyboard.isKeyPressed(keyboard.getKey("UP"))) {
 				CDyn4jPhysics physicsComp = (CDyn4jPhysics) brick.components().get(CDyn4jPhysics.NAME);
-				physicsComp.setMass(1);
-				System.out.println(physicsComp.getMass());
 				physicsComp.applyForce(new Vector2f(0f, 1f));
 				physicsComp.applyTorque(1f);
 			}
@@ -108,8 +92,8 @@ public class Dyn4jPhysicsTest {
 		}
 	}
 
-	private class CPhysicsBuilder implements ComponentBuilder<CDyn4jPhysics> {
-		public CPhysicsBuilder() {
+	private class CBrickBuilder implements ComponentBuilder<CDyn4jPhysics> {
+		public CBrickBuilder() {
 		}
 
 		@Override
@@ -117,6 +101,28 @@ public class Dyn4jPhysicsTest {
 			CDyn4jPhysics physics = new CDyn4jPhysics();
 			physics.setShape(new Rectangle(1, 1));
 			physics.setGravityScale(1);
+			physics.setMassType(Type.NORMAL);
+			physics.setDensity(5);
+			physics.setCollisionFriction(10);
+			return physics;
+		}
+
+		@Override
+		public String getName() {
+			return CDyn4jPhysics.NAME;
+		}
+	}
+
+	private class CGroundBuilder implements ComponentBuilder<CDyn4jPhysics> {
+		public CGroundBuilder() {
+		}
+
+		@Override
+		public CDyn4jPhysics build() {
+			CDyn4jPhysics physics = new CDyn4jPhysics();
+			physics.setShape(new Rectangle(2, 1));
+			physics.setGravityScale(1);
+			physics.setMassType(Type.INFINITE);
 			return physics;
 		}
 

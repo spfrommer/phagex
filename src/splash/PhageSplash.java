@@ -58,10 +58,10 @@ public class PhageSplash extends JFrame {
 				libLogoWidth, libLogoHeight);
 		this.add(jythonLogo);
 
-		JLabel slf4jLogo = new JLabel(new ImageIcon(scaleImage(readImage("/splash/slf.png"), libLogoWidth + 2,
+		JLabel slf4jLogo = new JLabel(new ImageIcon(scaleImage(readImage("/splash/slf.png"), libLogoWidth,
 				libLogoHeight)));
-		slf4jLogo.setBounds(libHorizontalOffset - 2, libVerticalOffset + (libLogoPadding + libLogoHeight) * 4,
-				libLogoWidth + 2, libLogoHeight);
+		slf4jLogo.setBounds(libHorizontalOffset, libVerticalOffset + (libLogoPadding + libLogoHeight) * 4,
+				libLogoWidth, libLogoHeight);
 		this.add(slf4jLogo);
 
 		char copyright = 169;

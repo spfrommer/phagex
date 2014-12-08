@@ -41,8 +41,15 @@ public class CDyn4jPhysics implements Component {
 	public CDyn4jPhysics() {
 		m_body = new Body();
 		m_fixture = new BodyFixture(new Rectangle(1, 1));
-		m_fixture.setDensity(1);
 		m_body.addFixture(m_fixture);
+
+		setCenter(new Vector2f(0f, 0f));
+
+		m_body.addFixture(m_fixture);
+
+		setDensity(1);
+		// setMass((float) m_fixture.createMass().getMass());
+		// setInertia((float) m_fixture.createMass().getInertia());
 	}
 
 	/**
@@ -210,12 +217,22 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
-	 * Sets the mass of this object.
+	 * Gets the density of the object.
 	 * 
-	 * @param mass
+	 * @return
 	 */
-	public void setMass(float mass) {
-		m_body.setMass(new Mass(m_body.getMass().getCenter(), mass, m_body.getMass().getInertia()));
+	public float getDensity() {
+		return (float) m_fixture.getDensity();
+	}
+
+	/**
+	 * Recalculates the mass and inertia given the density.
+	 * 
+	 * @param density
+	 */
+	public void setDensity(float density) {
+		m_fixture.setDensity(density);
+		m_body.setMass(m_fixture.createMass());
 	}
 
 	/**
@@ -228,12 +245,12 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
-	 * Sets the inertia of this object.
+	 * Sets the mass of this object.
 	 * 
-	 * @param inertia
+	 * @param mass
 	 */
-	public void setInertia(float inertia) {
-		m_body.setMass(new Mass(m_body.getMass().getCenter(), m_body.getMass().getMass(), inertia));
+	public void setMass(float mass) {
+		m_body.setMass(new Mass(m_body.getMass().getCenter(), mass, m_body.getMass().getInertia()));
 	}
 
 	/**
@@ -246,6 +263,22 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
+	 * Sets the inertia of this object.
+	 * 
+	 * @param inertia
+	 */
+	public void setInertia(float inertia) {
+		m_body.setMass(new Mass(m_body.getMass().getCenter(), m_body.getMass().getMass(), inertia));
+	}
+
+	/**
+	 * @return the mass type
+	 */
+	public Mass.Type getMassType() {
+		return m_body.getMass().getType();
+	}
+
+	/**
 	 * Sets the mass type
 	 * 
 	 * @param mt
@@ -255,10 +288,12 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
-	 * @return the mass type
+	 * returns if this structure is of type bullet - see setBullet(boolean isBullet).
+	 * 
+	 * @return
 	 */
-	public Mass.Type getMassType() {
-		return m_body.getMass().getType();
+	public boolean isBullet() {
+		return m_body.isBullet();
 	}
 
 	/**
@@ -273,25 +308,8 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
-	 * returns if this structure is of type bullet - see setBullet(boolean isBullet).
-	 * 
-	 * @return
-	 */
-	public boolean isBullet() {
-		return m_body.isBullet();
-	}
-
-	/**
-	 * Sets the offset of the center of the object.
-	 * 
-	 * @param center
-	 */
-	public void setCenter(Vector2f center) {
-		m_body.setMass(new Mass(PhysicsUtils.toDyn4j(center), m_body.getMass().getMass(), m_body.getMass().getInertia()));
-	}
-
-	/**
-	 * Returns the offset of the center of the structure from the middle of the image.
+	 * Returns the offset of the center from the middle of the object. This determines the point around which the object
+	 * will rotate.
 	 * 
 	 * @return
 	 */
@@ -300,18 +318,13 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
-	 * Sets the collision shape.
+	 * Sets the offset of the center from the middle of the object. This determines the point around which the object
+	 * will rotate.
 	 * 
-	 * @param convex
+	 * @param center
 	 */
-	public void setShape(Convex convex) {
-		m_body.removeAllFixtures();
-		float friction = getCollisionFriction();
-		float restitution = getRestitution();
-		m_fixture = new BodyFixture(convex);
-		m_fixture.setFriction(friction);
-		m_fixture.setRestitution(restitution);
-		m_body.addFixture(m_fixture);
+	public void setCenter(Vector2f center) {
+		m_body.setMass(new Mass(PhysicsUtils.toDyn4j(center), m_body.getMass().getMass(), m_body.getMass().getInertia()));
 	}
 
 	/**
@@ -324,13 +337,33 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
+	 * Sets the collision shape.
+	 * 
+	 * @param convex
+	 */
+	public void setShape(Convex convex) {
+		float oldMass = getMass();
+		float oldInertia = getInertia();
+		float friction = getCollisionFriction();
+		float restitution = getRestitution();
+
+		m_body.removeAllFixtures();
+		m_fixture = new BodyFixture(convex);
+		m_fixture.setFriction(friction);
+		m_fixture.setRestitution(restitution);
+		m_body.addFixture(m_fixture);
+
+		setMass(oldMass);
+		setInertia(oldInertia);
+	}
+
+	/**
 	 * Will apply a force to the structure - this will be processed upon the update by the physics engine.
 	 * 
 	 * @param force
 	 */
 	public void applyForce(Vector2f force) {
 		m_body.applyImpulse(PhysicsUtils.toDyn4j(force));
-		// m_body.applyForce(PhysicsUtils.toDyn4j(impulse));
 	}
 
 	/**

@@ -70,8 +70,7 @@ public class Dyn4jPhysicsSystem implements EntitySystem {
 
 	@Override
 	public void update(float time, Scene scene) {
-		System.out.println("Stepping");
-		m_world.step(1);
+		m_world.update(time / 1000);
 	}
 
 	@Override
@@ -82,7 +81,6 @@ public class Dyn4jPhysicsSystem implements EntitySystem {
 		TreeNode parent = entity.tree().getParent();
 
 		Vector2 trans = body.getTransform().getTranslation();
-		System.out.println(body.getTransform().getTranslation());
 		// Transform2f parentTransform = scene.getWorldTransform(parent);
 		// TODO: transforms relative to parent
 		entity.getCTransform().quietSetTransform(

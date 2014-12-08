@@ -1,11 +1,15 @@
 package engine.imp.render;
 
+import commons.Transform2f;
+
 import engine.core.Entity;
 import engine.core.EntitySystem;
 import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
+import glcommon.vector.Vector3f;
 import glextra.renderer.Light;
+import glextra.renderer.Light.PointLight;
 import glextra.renderer.Renderer2D;
 
 /**
@@ -51,12 +55,12 @@ public class LightingSystem implements EntitySystem {
 		Renderer2D renderer = m_render.getRenderer();
 
 		Light light = ((CLight) entity.components().get(CLight.NAME)).getLight();
-		/*Transform2f transform = scene.getWorldTransform(entity);
+		Transform2f transform = scene.getWorldTransform(entity);
 
 		if (light instanceof PointLight) {
 			((PointLight) light).setPosition(new Vector3f(transform.getTranslation().getX(), transform.getTranslation()
 					.getY(), 1f));
-		}*/
+		}
 
 		renderer.renderLight(light);
 	}
