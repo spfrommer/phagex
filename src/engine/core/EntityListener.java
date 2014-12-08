@@ -12,7 +12,6 @@ public interface EntityListener {
 	 * @param entity
 	 * @param child
 	 * @param scene
-	 *            TODO
 	 */
 	public void childAdded(Entity entity, Entity child, Scene scene);
 
@@ -22,7 +21,6 @@ public interface EntityListener {
 	 * @param entity
 	 * @param child
 	 * @param scene
-	 *            TODO
 	 */
 	public void childRemoved(Entity entity, Entity child, Scene scene);
 
@@ -32,13 +30,22 @@ public interface EntityListener {
 	 * @param entity
 	 * @param oldParent
 	 * @param newParent
-	 * @param oldTransform
-	 * @param newTransform
+	 * @param oldLocalTransform
+	 * @param newLocalTransform
+	 * @param oldWorldTransform
+	 * @param newWorldTransform
 	 * @param scene
-	 *            TODO
 	 */
-	public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldTransform,
-			Transform2f newTransform, Scene scene);
+	public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldLocalTransform,
+			Transform2f newLocalTransform, Transform2f oldWorldTransform, Transform2f newWorldTransform, Scene scene);
 
-	public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform, Scene scene);
+	/**
+	 * Called when the transform is set on an Entity.
+	 * 
+	 * @param entity
+	 * @param oldLocalTransform
+	 * @param newLocalTransform
+	 * @param scene
+	 */
+	public void transformSet(Entity entity, Transform2f oldLocalTransform, Transform2f newLocalTransform, Scene scene);
 }

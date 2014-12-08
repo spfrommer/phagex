@@ -28,7 +28,6 @@ public class CDyn4jPhysics implements Component {
 
 	private static final String[] IDENTIFIERS = new String[] { BULLET, LINEAR_DAMPING, ANGULAR_DAMPING, MASS, FRICTION,
 			RESTITUTION };
-	private Dyn4jPhysicsSystem m_physics;
 
 	private Body m_body;
 	private BodyFixture m_fixture;
@@ -50,15 +49,6 @@ public class CDyn4jPhysics implements Component {
 		setDensity(1);
 		// setMass((float) m_fixture.createMass().getMass());
 		// setInertia((float) m_fixture.createMass().getInertia());
-	}
-
-	/**
-	 * Sets the PhysicsSystem managing this CPhysics.
-	 * 
-	 * @param physics
-	 */
-	protected void setPhysicsSystem(Dyn4jPhysicsSystem physics) {
-		m_physics = physics;
 	}
 
 	/**

@@ -170,8 +170,9 @@ public class Box2dPhysicsSystem implements EntitySystem {
 		}
 
 		@Override
-		public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldTransform,
-				Transform2f newTransform, Scene scene) {
+		public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldLocalTransform,
+				Transform2f newLocalTransform, Transform2f oldWorldTransform, Transform2f newWorldTransform, Scene scene) {
+
 		}
 
 		@Override

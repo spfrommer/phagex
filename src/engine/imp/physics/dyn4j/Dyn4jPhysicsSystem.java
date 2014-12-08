@@ -51,8 +51,6 @@ public class Dyn4jPhysicsSystem implements EntitySystem {
 
 		body.setTransform(newTrans);
 
-		entityPhysics.setPhysicsSystem(this);
-
 		entity.addListener(new PhysicsListener());
 		m_world.addBody(body);
 	}
@@ -78,7 +76,7 @@ public class Dyn4jPhysicsSystem implements EntitySystem {
 		CDyn4jPhysics entityPhysics = (CDyn4jPhysics) entity.components().get(CDyn4jPhysics.NAME);
 
 		Body body = entityPhysics.getBody();
-		TreeNode parent = entity.tree().getParent();
+		// TreeNode parent = entity.tree().getParent();
 
 		Vector2 trans = body.getTransform().getTranslation();
 		// Transform2f parentTransform = scene.getWorldTransform(parent);
@@ -113,8 +111,8 @@ public class Dyn4jPhysicsSystem implements EntitySystem {
 		}
 
 		@Override
-		public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldTransform,
-				Transform2f newTransform, Scene scene) {
+		public void parentChanged(Entity entity, TreeNode oldParent, TreeNode newParent, Transform2f oldLocalTransform,
+				Transform2f newLocalTransform, Transform2f oldWorldTransform, Transform2f newWorldTransform, Scene scene) {
 		}
 
 		@Override

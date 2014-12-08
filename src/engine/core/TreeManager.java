@@ -5,8 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import commons.Transform2f;
-
 import engine.core.exceptions.EntityException;
 
 /**
@@ -49,19 +47,20 @@ public class TreeManager {
 	 * 
 	 * @param parent
 	 */
-	protected void setParent(TreeNode parent, Transform2f transform) {
+	protected void setParent(TreeNode parent/*, Transform2f transform*/) {
 		if (parent == null)
 			throw new EntityException("Cannot set parent to null!");
-		if (transform == null)
-			throw new EntityException("Transform cannot be null!");
+		// if (transform == null)
+		// throw new EntityException("Transform cannot be null!");
 
-		Transform2f oldTransform = m_entity.getCTransform().getTransform();
+		// Transform2f oldTransform = m_entity.getCTransform().getTransform();
 
 		m_parent = parent;
-		m_entity.getCTransform().quietSetTransform(transform);
+		// m_entity.getCTransform().quietSetTransform(transform);
 
-		for (EntityListener listener : m_entity.getListeners())
-			listener.parentChanged(m_entity, m_parent, parent, oldTransform, transform, m_entity.getScene());
+		// for (EntityListener listener : m_entity.getListeners())
+		// listener.parentChanged(m_entity, m_parent, parent, oldTransform, transform, m_entity.getScene());
+		// this no longer calls the listeners - it is done in Scene.moveEntity
 	}
 
 	/**

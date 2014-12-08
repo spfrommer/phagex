@@ -33,13 +33,11 @@ import gltools.input.Keyboard;
 public class Dyn4jPhysicsTest {
 	private MaterialFactory m_factory;
 	private Resource m_brickScript;
-	private Resource m_lightScript;
 	private Resource m_materialResource;
 	private Material m_material;
 
 	public Dyn4jPhysicsTest() {
 		m_brickScript = new Resource(new ClasspathResourceLocator(), "engine/test/physics/Script.py");
-		m_lightScript = new Resource(new ClasspathResourceLocator(), "engine/test/physics/LightScript.py");
 		m_materialResource = new Resource(new ClasspathResourceLocator(), "engine/test/physics/testtube.jpg");
 	}
 
@@ -70,11 +68,15 @@ public class Dyn4jPhysicsTest {
 				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
 		scene.createEntity("light", brick, lightBuilder);
 
+		Entity gParent = scene.createEntity("groundparent", scene);
+		gParent.getCTransform().translate(1f, 0f);
+
 		EntityBuilder groundBuilder = new EntityBuilder();
 		groundBuilder.addComponentBuilder(new CRender(m_material, 1f));
 		groundBuilder.addComponentBuilder(new CGroundBuilder());
 		groundBuilder.setTransform(new Transform2f(new Vector2f(0f, -2f), 0f, new Vector2f(2f, 1f)));
-		scene.createEntity("ground", scene, groundBuilder);
+		Entity ground = scene.createEntity("ground", gParent, groundBuilder);
+		ground.getCTransform().setTransform(new Transform2f(new Vector2f(0f, -1f), 0f, new Vector2f(2f, 1f)));
 
 		game.start();
 		float lastTime = 16f;

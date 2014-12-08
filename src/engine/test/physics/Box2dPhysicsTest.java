@@ -72,7 +72,7 @@ public class Box2dPhysicsTest {
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
 				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
 		Entity light = scene.createEntity("light", brick, lightBuilder);
-		// light.scripts().add(new XPython(m_lightScript));
+		light.scripts().add(new XPython(m_lightScript));
 
 		Box2dPhysicsData groundData = new Box2dPhysicsData();
 		groundData.setType(BodyType.STATIC);

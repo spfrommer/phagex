@@ -24,8 +24,8 @@ public class RenderingSystem implements EntitySystem {
 	public static final float DRAW_WIDTH = 1f;
 	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
 
-	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME },
-			new String[0], new String[0], true);
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[0], new String[0],
+			new String[0], true);
 
 	private Display m_display;
 	private Renderer2D m_renderer;

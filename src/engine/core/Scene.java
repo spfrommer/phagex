@@ -163,25 +163,34 @@ public class Scene implements TreeNode {
 
 		TreeNode oldParent = entity.tree().getParent();
 
-		Transform2f oldTrans = getWorldTransform(entity);
-		Transform2f chainTrans;
+		Transform2f oldWorldTrans = getWorldTransform(entity);
+		Transform2f oldLocalTrans = entity.getCTransform().getTransform();
+
+		Transform2f newParentWorldTrans;
 		if (newParent == this) {
-			chainTrans = new Transform2f();
+			newParentWorldTrans = new Transform2f();
 		} else {
-			chainTrans = getWorldTransform(newParent);
+			newParentWorldTrans = getWorldTransform(newParent);
 		}
 
-		Transform2f newTrans = new Transform2f();
-		newTrans.setTranslation(oldTrans.getTranslation().subtract(chainTrans.getTranslation()).toVector2f());
-		newTrans.setRotation(newTrans.getRotation() - oldTrans.getRotation());
-		Vector2f oldScale = oldTrans.getScale();
-		Vector2f chainScale = chainTrans.getScale();
-		newTrans.setScale(new Vector2f(oldScale.getX() / chainScale.getX(), oldScale.getY() / chainScale.getY()));
+		Transform2f newLocalTrans = new Transform2f();
+		newLocalTrans.setTranslation(oldWorldTrans.getTranslation().subtract(newParentWorldTrans.getTranslation())
+				.toVector2f());
+		newLocalTrans.setRotation(newLocalTrans.getRotation() - oldWorldTrans.getRotation());
+		Vector2f oldScale = oldWorldTrans.getScale();
+		Vector2f chainScale = newParentWorldTrans.getScale();
+		newLocalTrans.setScale(new Vector2f(oldScale.getX() / chainScale.getX(), oldScale.getY() / chainScale.getY()));
 
 		oldParent.removeChild(entity);
 		newParent.addChild(entity);
-		entity.tree().setParent(newParent, newTrans);
+		entity.tree().setParent(newParent/*, newLocalTrans*/);
+		entity.getCTransform().quietSetTransform(newLocalTrans);
 
+		Transform2f newWorldTrans = getWorldTransform(entity);
+
+		for (EntityListener listener : entity.getListeners())
+			listener.parentChanged(entity, oldParent, newParent, oldLocalTrans, newLocalTrans, oldWorldTrans,
+					newWorldTrans, this);
 		m_game.entityMoved(entity, oldParent, newParent, this);
 	}
 
@@ -192,6 +201,8 @@ public class Scene implements TreeNode {
 	public Transform2f getWorldTransform(TreeNode node) {
 		if (node == null)
 			throw new SceneException("Tried to transform a null parent!");
+		if (node instanceof Scene)
+			return new Transform2f();
 		if (!m_allEntities.contains(node))
 			throw new SceneException("Entity is not part of Scene - transform cannot be calculated!");
 		// List of entities in the chain
