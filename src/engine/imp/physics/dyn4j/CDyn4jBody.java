@@ -16,28 +16,30 @@ import engine.imp.physics.PhysicsUtils;
 /**
  * Contains data for the PhysicsSystem (Dyn4j backend). This code was adapted from the Phage2d project.
  */
-public class CDyn4jPhysics implements Component {
-	public static final String NAME = "dyn4jphysics";
+public class CDyn4jBody implements Component {
+	public static final String NAME = "physics_dyn4jBody";
 	public static final String BULLET = "physics_bullet";
 	public static final String LINEAR_DAMPING = "physics_linearDamping";
 	public static final String ANGULAR_DAMPING = "physics_angularDamping";
 	public static final String MASS = "physics_mass";
+	public static final String INERTIA = "physics_inertia";
+	public static final String DENSITY = "physics_density";
 	public static final String FRICTION = "physics_friction";
 	public static final String RESTITUTION = "physics_restitution";
 	public static final String SHAPE = "physics_shape";
 
-	private static final String[] IDENTIFIERS = new String[] { BULLET, LINEAR_DAMPING, ANGULAR_DAMPING, MASS, FRICTION,
-			RESTITUTION };
+	private static final String[] IDENTIFIERS = new String[] { BULLET, LINEAR_DAMPING, ANGULAR_DAMPING, MASS, INERTIA,
+			DENSITY, FRICTION, RESTITUTION };
 
 	private Body m_body;
 	private BodyFixture m_fixture;
 
 	/**
-	 * Creates a CDyn4jPhysics.
+	 * Creates a CDyn4jBody.
 	 * 
 	 * @param def
 	 */
-	public CDyn4jPhysics() {
+	public CDyn4jBody() {
 		m_body = new Body();
 		m_fixture = new BodyFixture(new Rectangle(1, 1));
 		m_body.addFixture(m_fixture);
@@ -47,8 +49,21 @@ public class CDyn4jPhysics implements Component {
 		m_body.addFixture(m_fixture);
 
 		setDensity(1);
-		// setMass((float) m_fixture.createMass().getMass());
-		// setInertia((float) m_fixture.createMass().getInertia());
+	}
+
+	/**
+	 * Creates a CDyn4jPhysics with a certain shape.
+	 * 
+	 * @param shape
+	 * 
+	 * @param def
+	 */
+	public CDyn4jBody(Convex shape) {
+		m_body = new Body();
+		setShape(shape);
+
+		setCenter(new Vector2f(0f, 0f));
+		setDensity(1);
 	}
 
 	/**
@@ -327,7 +342,7 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	/**
-	 * Sets the collision shape.
+	 * Sets the collision shape. This is a relatively expensive call, so don't use it frequently.
 	 * 
 	 * @param convex
 	 */
@@ -398,6 +413,10 @@ public class CDyn4jPhysics implements Component {
 			return getAngularDamping();
 		if (identifier.equals(MASS))
 			return getMass();
+		if (identifier.equals(INERTIA))
+			return getInertia();
+		if (identifier.equals(DENSITY))
+			return getDensity();
 		if (identifier.equals(FRICTION))
 			return getCollisionFriction();
 		if (identifier.equals(RESTITUTION))
@@ -423,6 +442,10 @@ public class CDyn4jPhysics implements Component {
 			setAngularDamping((Float) data);
 		} else if (identifier.equals(MASS)) {
 			setMass((Float) data);
+		} else if (identifier.equals(INERTIA)) {
+			setInertia((Float) data);
+		} else if (identifier.equals(DENSITY)) {
+			setDensity((Float) data);
 		} else if (identifier.equals(FRICTION)) {
 			setCollisionFriction((Float) data);
 		} else if (identifier.equals(RESTITUTION)) {
@@ -435,12 +458,24 @@ public class CDyn4jPhysics implements Component {
 	}
 
 	@Override
-	public ComponentBuilder<CDyn4jPhysics> getBuilder() {
-		ComponentBuilder<CDyn4jPhysics> builder = new ComponentBuilder<CDyn4jPhysics>() {
+	public ComponentBuilder<CDyn4jBody> getBuilder() {
+		ComponentBuilder<CDyn4jBody> builder = new ComponentBuilder<CDyn4jBody>() {
 			@Override
-			public CDyn4jPhysics build() {
-				// TODO: cloning
-				return new CDyn4jPhysics();
+			public CDyn4jBody build() {
+				CDyn4jBody newBody = new CDyn4jBody(getShape());
+				newBody.setAngularDamping(getAngularDamping());
+				newBody.setAsleep(isAsleep());
+				newBody.setBullet(isBullet());
+				newBody.setCenter(getCenter());
+				newBody.setCollisionFriction(getCollisionFriction());
+				newBody.setGravityScale(getGravityScale());
+				newBody.setMass(getMass());
+				newBody.setInertia(getInertia());
+				newBody.setMassType(getMassType());
+				newBody.setLinearDamping(getLinearDamping());
+				newBody.setAngularDamping(getAngularDamping());
+				newBody.setRestitution(getRestitution());
+				return newBody;
 			}
 
 			@Override

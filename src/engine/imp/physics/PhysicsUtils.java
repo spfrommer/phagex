@@ -17,6 +17,8 @@ public class PhysicsUtils {
 	 * @return the converted vector
 	 */
 	public static Vector2 toDyn4j(Vector2f vector) {
+		if (vector == null)
+			throw new PhysicsException("Vector2f cannot be null!");
 		return new Vector2(vector.getX(), vector.getY());
 	}
 
@@ -25,6 +27,8 @@ public class PhysicsUtils {
 	 * @return the converted vector
 	 */
 	public static Vector2f fromDyn4j(Vector2 vector) {
+		if (vector == null)
+			throw new PhysicsException("Dyn4j vector cannot be null!");
 		return new Vector2f((float) vector.x, (float) vector.y);
 	}
 }
