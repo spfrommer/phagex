@@ -81,4 +81,11 @@ public abstract class XScript {
 	 * @return
 	 */
 	public abstract XScript duplicate();
+
+	/**
+	 * Adds a ScriptObject to the Script.
+	 * 
+	 * @param object
+	 */
+	public abstract void addScriptObject(XScriptObject object);
 }

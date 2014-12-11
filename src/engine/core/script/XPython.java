@@ -103,4 +103,9 @@ public class XPython extends XScript {
 	public XPython duplicate() {
 		return new XPython(m_code);
 	}
+
+	@Override
+	public void addScriptObject(XScriptObject object) {
+		m_python.set(object.getName(), object.getObject());
+	}
 }

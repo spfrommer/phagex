@@ -11,6 +11,7 @@ import engine.core.script.XScriptContext;
  * Manages the Scripts in an Entity.
  */
 public class ScriptManager {
+	private Entity m_entity;
 	private List<XScript> m_scripts;
 
 	// the context the scripts are running under
@@ -22,6 +23,7 @@ public class ScriptManager {
 		Scene scene = entity.getScene();
 
 		m_context = new XScriptContext(scene.getGame(), scene, entity);
+		m_entity = entity;
 	}
 
 	/**
@@ -55,6 +57,7 @@ public class ScriptManager {
 
 		script.setContext(m_context);
 		m_scripts.add(script);
+		m_entity.getScene().getGame().scriptAdded(m_entity, script, m_entity.getScene());
 	}
 
 	/**

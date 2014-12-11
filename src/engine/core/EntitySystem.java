@@ -1,5 +1,7 @@
 package engine.core;
 
+import engine.core.script.XScript;
+
 /**
  * Acts as a centralized data manager. Allows for the modification of many Entities each update.
  */
@@ -31,6 +33,15 @@ public interface EntitySystem {
 	 * @param scene
 	 */
 	public void entityMoved(Entity entity, TreeNode oldParent, TreeNode newParent, Scene scene);
+
+	/**
+	 * Called when a script is added. Allows the EntitySystem to inject ScriptObjects.
+	 * 
+	 * @param entity
+	 * @param script
+	 * @param scene
+	 */
+	public void scriptAdded(Entity entity, XScript script, Scene scene);
 
 	/**
 	 * Called to update any centralized process - such as a physics World, for example.

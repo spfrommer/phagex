@@ -88,4 +88,8 @@ public class XJavaScript extends XScript {
 	public XJavaScript duplicate() {
 		return new XJavaScript(m_code);
 	}
+
+	@Override
+	public void addScriptObject(XScriptObject object) {
+	}
 }

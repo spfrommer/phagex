@@ -7,6 +7,7 @@ import engine.core.EntitySystem;
 import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
+import engine.core.script.XScript;
 import glcommon.vector.Vector3f;
 import glextra.renderer.Light;
 import glextra.renderer.Light.PointLight;
@@ -78,5 +79,9 @@ public class LightingSystem implements EntitySystem {
 	@Override
 	public SimpleEntityFilter getEntityEventFilter() {
 		return s_filter;
+	}
+
+	@Override
+	public void scriptAdded(Entity entity, XScript script, Scene scene) {
 	}
 }

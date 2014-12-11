@@ -8,6 +8,7 @@ import engine.core.EntitySystem;
 import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
+import engine.core.script.XScript;
 
 /**
  * Manages the Joints in a game.
@@ -61,5 +62,9 @@ public class Dyn4jJointSystem implements EntitySystem {
 	@Override
 	public EntityFilter getEntityEventFilter() {
 		return s_eventFilter;
+	}
+
+	@Override
+	public void scriptAdded(Entity entity, XScript script, Scene scene) {
 	}
 }

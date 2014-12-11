@@ -23,6 +23,7 @@ import engine.core.EntitySystem;
 import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
+import engine.core.script.XScript;
 import engine.imp.render.RenderingSystem;
 
 /**
@@ -183,5 +184,10 @@ public class Box2dPhysicsSystem implements EntitySystem {
 					worldTrans.getRotation());
 			// TODO: scaling
 		}
+	}
+
+	@Override
+	public void scriptAdded(Entity entity, XScript script, Scene scene) {
+		// TODO: raycast
 	}
 }

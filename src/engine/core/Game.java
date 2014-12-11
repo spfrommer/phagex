@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import engine.core.exceptions.GameException;
+import engine.core.script.XScript;
 
 /**
  * Contains the Scenes and the Systems.
@@ -60,6 +61,19 @@ public class Game {
 		for (EntitySystem system : m_systems) {
 			if (system.getEntityEventFilter().matches(entity))
 				system.entityMoved(entity, oldParent, newParent, scene);
+		}
+	}
+
+	/**
+	 * Called by an Entity.
+	 * 
+	 * @param entity
+	 * @param script
+	 * @param scene
+	 */
+	protected void scriptAdded(Entity entity, XScript script, Scene scene) {
+		for (EntitySystem system : m_systems) {
+			system.scriptAdded(entity, script, scene);
 		}
 	}
 

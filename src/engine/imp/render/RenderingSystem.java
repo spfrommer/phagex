@@ -9,6 +9,8 @@ import engine.core.EntitySystem;
 import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
+import engine.core.script.XScript;
+import engine.core.script.XScriptObject;
 import glextra.renderer.LWJGLRenderer2D;
 import glextra.renderer.Renderer2D;
 import gltools.display.Display;
@@ -18,7 +20,7 @@ import gltools.input.Keyboard;
 import gltools.input.Mouse;
 
 /**
- * Renders the Entities with a CRender to a Display.
+ * Renders the Entities with a CRender to a Display. Will also call mouse and keyboard events on the scripts.
  */
 public class RenderingSystem implements EntitySystem {
 	public static final float DRAW_WIDTH = 1f;
@@ -142,5 +144,11 @@ public class RenderingSystem implements EntitySystem {
 	@Override
 	public SimpleEntityFilter getEntityEventFilter() {
 		return s_filter;
+	}
+
+	@Override
+	public void scriptAdded(Entity entity, XScript script, Scene scene) {
+		script.addScriptObject(new XScriptObject("mouse", getMouse()));
+		script.addScriptObject(new XScriptObject("keyboard", getKeyboard()));
 	}
 }

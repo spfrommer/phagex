@@ -72,7 +72,7 @@ public class Dyn4jPhysicsTest {
 
 		EntityBuilder jointBuilder = new EntityBuilder();
 		jointBuilder.addComponentBuilder(new CJointBuilder(PhysicsFactory.createRevolute(brick1, brick2, new Vector2f(
-				2f, 2f))));
+				0f, 2f))));
 		scene.createEntity("joint", scene, jointBuilder);
 
 		EntityBuilder lightBuilder = new EntityBuilder();
