@@ -63,11 +63,6 @@ public class RenderTest {
 		game.start();
 		while (true) {
 			game.update(0.166666666f);
-			/*try {
-				Thread.sleep(16);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
 		}
 	}
 

@@ -4,10 +4,11 @@ def onSceneLoad():
 	logger.out('Scene loaded!')
 	
 def update(time):
-	transform.translate(0.001, 0.001);
-	transform.rotate(0.01);
-	transform.scale(0.999, 1.001);
-	logger.out(mouse.getX());
+	logger.out(mouse.getX())
+	if keyboard.isKeyPressed(keyboard.getKey("UP")) :
+		transform.translate(0, 0.01);
+	if keyboard.isKeyPressed(keyboard.getKey("DOWN")) :
+		transform.translate(0, -0.01);
 	
 def exit():
-	logger.out('Exiting!');
+	logger.out('Exiting!')
