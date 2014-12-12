@@ -29,11 +29,16 @@ public class RenderingSystem implements EntitySystem {
 	public static final float DRAW_WIDTH = 1f;
 	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
 
-	/*private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[0], new String[0],
-			new String[0], true);*/
-	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME },
+	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CCamera.NAME },
+			new String[0], new String[0], false);
+	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CRender.NAME },
 			new String[0], new String[0], false);
 	private HashMap<Integer, List<Entity>> m_entityLayers = new HashMap<Integer, List<Entity>>();
+
+	// holds the cameras in each Scene
+	private List<Entity> m_cameras = new ArrayList<Entity>();
+
+	private Entity m_currentCam;
 
 	private Display m_display;
 	private Renderer2D m_renderer;
@@ -87,14 +92,68 @@ public class RenderingSystem implements EntitySystem {
 		return m_display.getMouse();
 	}
 
+	protected void lookThroughCalled(CCamera camera) {
+		if (m_currentCam != null) {
+			CCamera currentCam = (CCamera) m_currentCam.components().get(CCamera.NAME);
+			currentCam.setLookThrough(false);
+		}
+
+		for (Entity e : m_cameras) {
+			if (e.components().get(CCamera.NAME) == camera) {
+				m_currentCam = e;
+				return;
+			}
+		}
+	}
+
+	@Override
+	public void sceneChanged(Scene oldScene, Scene newScene) {
+		m_cameras.clear();
+		List<Entity> newAll = newScene.getEntitiesByFilter(s_eventFilter);
+
+		for (Entity e : newAll) {
+			CCamera camera = (CCamera) e.components().get(CCamera.NAME);
+			camera.setRenderingSystem(this);
+			if (camera.isLookedThrough()) {
+				if (m_currentCam != null) {
+					CCamera current = (CCamera) m_currentCam.components().get(CCamera.NAME);
+					current.setLookThrough(false);
+				}
+				m_currentCam = e;
+			}
+
+			m_cameras.add(e);
+		}
+	}
+
 	@Override
 	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
+		CCamera camera = (CCamera) entity.components().get(CCamera.NAME);
+		camera.setRenderingSystem(this);
 
+		if (scene.isCurrent()) {
+			if (camera.isLookedThrough()) {
+				CCamera current = (CCamera) m_currentCam.components().get(CCamera.NAME);
+				current.setLookThrough(false);
+				m_currentCam = entity;
+			}
+
+			m_cameras.add(entity);
+		}
 	}
 
 	@Override
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
+		if (scene.isCurrent()) {
+			m_cameras.remove(entity);
 
+			if (m_currentCam == entity) {
+				Entity nextCam = m_cameras.get(0);
+				CCamera next = (CCamera) nextCam.components().get(CCamera.NAME);
+				next.setLookThrough(true);
+				m_currentCam = nextCam;
+			}
+		}
 	}
 
 	@Override
@@ -121,6 +180,17 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public void postUpdate(Scene scene) {
+		if (m_currentCam != null) {
+			CCamera cam = (CCamera) m_currentCam.components().get(CCamera.NAME);
+			Transform2f transform = scene.getWorldTransform(m_currentCam);
+
+			m_renderer.pushModel();
+
+			m_renderer.scale(cam.getScale(), cam.getScale());
+
+			m_renderer.translate(-transform.getTranslation().getX(), -transform.getTranslation().getY());
+		}
+
 		List<Integer> orderedLayers = new ArrayList<Integer>(m_entityLayers.keySet());
 		Collections.sort(orderedLayers);
 
@@ -142,6 +212,10 @@ public class RenderingSystem implements EntitySystem {
 			entities.clear();
 		}
 
+		if (m_currentCam != null) {
+			m_renderer.popModel();
+		}
+
 		m_renderer.finishGeometry();
 		m_renderer.finishLighted();
 		m_renderer.doLightingComputations();
@@ -150,12 +224,12 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public SimpleEntityFilter getUpdateFilter() {
-		return s_filter;
+		return s_updateFilter;
 	}
 
 	@Override
 	public SimpleEntityFilter getEntityEventFilter() {
-		return s_filter;
+		return s_eventFilter;
 	}
 
 	@Override

@@ -1,12 +1,11 @@
 package engine.core;
 
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import commons.Transform2f;
-import commons.matrix.Matrix;
-import commons.matrix.MatrixFactory;
 import commons.matrix.Vector2f;
 
 import engine.core.exceptions.EntityException;
@@ -214,18 +213,27 @@ public class Scene implements TreeNode {
 		}
 		Collections.reverse(entities);
 
-		Matrix transMatrix = MatrixFactory.identity(3);
+		AffineTransform at = new AffineTransform();
 		for (Entity e : entities) {
 			Transform2f trans = e.getCTransform().getTransform();
-			// translate
-			transMatrix = transMatrix.multiply(MatrixFactory.affineTranslate(trans.getTranslation()));
-			// rotate
-			transMatrix = transMatrix.multiply(MatrixFactory.affineRotation(trans.getRotation()));
-			// scale
-			transMatrix = transMatrix.multiply(MatrixFactory.affineScale(trans.getScale()));
+			at.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
+			at.rotate(trans.getRotation());
+			at.scale(trans.getScale().getX(), trans.getScale().getY());
 		}
 
-		return new Transform2f(transMatrix);
+		Vector2f translation = new Vector2f((float) at.getTranslateX(), (float) at.getTranslateY());
+		float rotation = (float) Math.atan2(at.getShearY(), at.getScaleY());
+		Vector2f scale = new Vector2f((float) (at.getScaleX() / Math.cos(rotation)),
+				(float) (at.getScaleY() / Math.cos(rotation)));
+
+		return new Transform2f(translation, rotation, scale);
+	}
+
+	/**
+	 * @return if this is the current Scene.
+	 */
+	public boolean isCurrent() {
+		return m_game.scenes().getCurrentScene() == this;
 	}
 
 	/**
@@ -262,6 +270,23 @@ public class Scene implements TreeNode {
 	 */
 	public List<Entity> getRootEntities() {
 		return new ArrayList<Entity>(m_rootEntities);
+	}
+
+	/**
+	 * @param filter
+	 * @return all Entities which match the EntityFilter
+	 */
+	public List<Entity> getEntitiesByFilter(EntityFilter filter) {
+		if (filter == null)
+			throw new SceneException("Cannot filter by null EntityFilter!");
+		List<Entity> filtered = new ArrayList<Entity>();
+
+		for (Entity e : m_allEntities) {
+			if (filter.matches(e))
+				filtered.add(e);
+		}
+
+		return filtered;
 	}
 
 	/**

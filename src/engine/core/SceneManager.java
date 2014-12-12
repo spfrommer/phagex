@@ -14,12 +14,16 @@ public class SceneManager {
 	private Map<String, Scene> m_scenes;
 
 	private Scene m_current;
+	private Game m_game;
 
 	/**
 	 * Makes a new SceneManager.
+	 * 
+	 * @param game
 	 */
-	public SceneManager() {
+	public SceneManager(Game game) {
 		m_scenes = new HashMap<String, Scene>();
+		m_game = game;
 	}
 
 	/**
@@ -69,7 +73,11 @@ public class SceneManager {
 	public void setCurrentScene(String name) {
 		if (!m_scenes.containsKey(name))
 			throw new SceneException("No Scene found for: " + name);
-		m_current = m_scenes.get(name);
+		Scene next = m_scenes.get(name);
+
+		m_game.sceneChanged(m_current, next);
+
+		m_current = next;
 		m_scenes.get(name).onSceneLoad();
 	}
 

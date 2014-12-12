@@ -32,6 +32,10 @@ public class LightingSystem implements EntitySystem {
 	}
 
 	@Override
+	public void sceneChanged(Scene oldScene, Scene newScene) {
+	}
+
+	@Override
 	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
 
 	}

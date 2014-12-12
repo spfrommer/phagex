@@ -17,8 +17,20 @@ public class Game {
 	 * Initializes a Game with no Scenes.
 	 */
 	public Game() {
-		m_scenes = new SceneManager();
 		m_systems = new ArrayList<EntitySystem>();
+		m_scenes = new SceneManager(this);
+	}
+
+	/**
+	 * Called by the Scene.
+	 * 
+	 * @param oldScene
+	 * @param newScene
+	 */
+	protected void sceneChanged(Scene oldScene, Scene newScene) {
+		for (EntitySystem system : m_systems) {
+			system.sceneChanged(oldScene, newScene);
+		}
 	}
 
 	/**

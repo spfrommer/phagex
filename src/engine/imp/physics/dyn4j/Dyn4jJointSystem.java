@@ -1,5 +1,7 @@
 package engine.imp.physics.dyn4j;
 
+import java.util.List;
+
 import org.dyn4j.dynamics.World;
 
 import engine.core.Entity;
@@ -25,17 +27,32 @@ public class Dyn4jJointSystem implements EntitySystem {
 	}
 
 	@Override
+	public void sceneChanged(Scene oldScene, Scene newScene) {
+		m_bodySystem.getWorld().removeAllJoints();
+		List<Entity> newAll = newScene.getEntitiesByFilter(s_eventFilter);
+		for (Entity e : newAll) {
+			CDyn4jJoint entityPhysics = (CDyn4jJoint) e.components().get(CDyn4jJoint.NAME);
+			World world = m_bodySystem.getWorld();
+			world.addJoint(entityPhysics.getJoint());
+		}
+	}
+
+	@Override
 	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
-		CDyn4jJoint entityPhysics = (CDyn4jJoint) entity.components().get(CDyn4jJoint.NAME);
-		World world = m_bodySystem.getWorld();
-		world.addJoint(entityPhysics.getJoint());
+		if (scene.isCurrent()) {
+			CDyn4jJoint entityPhysics = (CDyn4jJoint) entity.components().get(CDyn4jJoint.NAME);
+			World world = m_bodySystem.getWorld();
+			world.addJoint(entityPhysics.getJoint());
+		}
 	}
 
 	@Override
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
-		CDyn4jJoint entityPhysics = (CDyn4jJoint) entity.components().get(CDyn4jJoint.NAME);
-		World world = m_bodySystem.getWorld();
-		world.removeJoint(entityPhysics.getJoint());
+		if (scene.isCurrent()) {
+			CDyn4jJoint entityPhysics = (CDyn4jJoint) entity.components().get(CDyn4jJoint.NAME);
+			World world = m_bodySystem.getWorld();
+			world.removeJoint(entityPhysics.getJoint());
+		}
 	}
 
 	@Override

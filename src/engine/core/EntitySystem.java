@@ -7,6 +7,14 @@ import engine.core.script.XScript;
  */
 public interface EntitySystem {
 	/**
+	 * Called when the Scene changes.
+	 * 
+	 * @param oldScene
+	 * @param newScene
+	 */
+	public void sceneChanged(Scene oldScene, Scene newScene);
+
+	/**
 	 * Called when an Entity that matches the EntitySystem's EntityFilter is added to the Scene.
 	 * 
 	 * @param entity

@@ -1,5 +1,7 @@
 package engine.imp.physics.dyn4j;
 
+import java.util.List;
+
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Transform;
@@ -45,7 +47,22 @@ public class Dyn4jBodySystem implements EntitySystem {
 	}
 
 	@Override
+	public void sceneChanged(Scene oldScene, Scene newScene) {
+		m_world.removeAllBodies();
+		List<Entity> newAll = newScene.getEntitiesByFilter(s_eventFilter);
+		for (Entity e : newAll) {
+			addEntityToWorld(e, newScene);
+		}
+	}
+
+	@Override
 	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
+		if (scene.isCurrent()) {
+			addEntityToWorld(entity, scene);
+		}
+	}
+
+	private void addEntityToWorld(Entity entity, Scene scene) {
 		CDyn4jBody entityPhysics = (CDyn4jBody) entity.components().get(CDyn4jBody.NAME);
 		Body body = entityPhysics.getBody();
 
@@ -62,8 +79,10 @@ public class Dyn4jBodySystem implements EntitySystem {
 
 	@Override
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
-		CDyn4jBody entityPhysics = (CDyn4jBody) entity.components().get(CDyn4jBody.NAME);
-		m_world.removeBody(entityPhysics.getBody());
+		if (scene.isCurrent()) {
+			CDyn4jBody entityPhysics = (CDyn4jBody) entity.components().get(CDyn4jBody.NAME);
+			m_world.removeBody(entityPhysics.getBody());
+		}
 	}
 
 	@Override

@@ -3,10 +3,10 @@ package engine.core;
 /**
  * Returns true if any of the subfilters return true.
  */
-public class CompoundEntityFilter implements EntityFilter {
+public class CompositeEntityFilter implements EntityFilter {
 	private EntityFilter[] m_filters;
 
-	public CompoundEntityFilter(EntityFilter[] filters) {
+	public CompositeEntityFilter(EntityFilter[] filters) {
 		m_filters = filters;
 	}
 

@@ -61,6 +61,10 @@ public class Box2dPhysicsSystem implements EntitySystem {
 	}
 
 	@Override
+	public void sceneChanged(Scene oldScene, Scene newScene) {
+	}
+
+	@Override
 	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
 		CBox2dPhysics entityPhysics = (CBox2dPhysics) entity.components().get(CBox2dPhysics.NAME);
 		Transform2f worldTransform = scene.getWorldTransform(entity);

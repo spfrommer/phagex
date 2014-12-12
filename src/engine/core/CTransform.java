@@ -224,4 +224,9 @@ public class CTransform implements Component {
 		};
 		return builder;
 	}
+
+	@Override
+	public String toString() {
+		return m_transform.toString();
+	}
 }

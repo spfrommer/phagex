@@ -9,11 +9,13 @@ import engine.core.exceptions.ComponentException;
  */
 public class CCamera implements Component {
 	public static final String NAME = "camera";
-	public static final String SCALE = "scale";
+	public static final String SCALE = "camScale";
 	private static final String[] IDENTIFIERS = new String[] { SCALE };
 
 	private float m_scale;
 	private boolean m_lookThrough = false;
+
+	private RenderingSystem m_render;
 
 	/**
 	 * Constructs a CCamera with a scale of 1f.
@@ -33,6 +35,28 @@ public class CCamera implements Component {
 	}
 
 	/**
+	 * @param scale
+	 *            the scale - 1f is default
+	 * @param lookThrough
+	 *            whether the camera should be used to render the Scene
+	 */
+	public CCamera(float scale, boolean lookThrough) {
+		if (scale <= 0)
+			throw new RenderingException("Cannot have a scale of less than or equal to zero!");
+
+		m_scale = scale;
+		m_lookThrough = lookThrough;
+	}
+
+	/**
+	 * @param system
+	 *            the RenderingSystem to forward calls to
+	 */
+	protected void setRenderingSystem(RenderingSystem system) {
+		m_render = system;
+	}
+
+	/**
 	 * @param lookThrough
 	 *            whether the Camera is being used to render the Scene.
 	 */
@@ -41,10 +65,13 @@ public class CCamera implements Component {
 	}
 
 	/**
-	 * Sets the camera to be looked through. This is undone if lookThrough is called on another CCamera.
+	 * Sets the camera to be looked through. This is undone if lookThrough is called on another CCamera. Only call this
+	 * after the Game has been started.
 	 */
 	public void lookThrough() {
 		m_lookThrough = true;
+		if (m_render != null)
+			m_render.lookThroughCalled(this);
 	}
 
 	/**
@@ -112,7 +139,7 @@ public class CCamera implements Component {
 		ComponentBuilder<CCamera> builder = new ComponentBuilder<CCamera>() {
 			@Override
 			public CCamera build() {
-				return new CCamera(m_scale);
+				return new CCamera(m_scale, m_lookThrough);
 			}
 
 			@Override

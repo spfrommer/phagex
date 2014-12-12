@@ -2,12 +2,15 @@ package engine.test.render;
 
 import commons.Resource;
 import commons.ResourceLocator.ClasspathResourceLocator;
+import commons.Transform2f;
+import commons.matrix.Vector2f;
 
 import engine.core.Entity;
 import engine.core.EntityBuilder;
 import engine.core.Game;
 import engine.core.Scene;
 import engine.core.script.XPython;
+import engine.imp.render.CCamera;
 import engine.imp.render.CLight;
 import engine.imp.render.CRender;
 import engine.imp.render.LightFactory;
@@ -47,20 +50,30 @@ public class RenderTest {
 
 		EntityBuilder lightBuilder = new EntityBuilder();
 		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(1f, 0.5f, 0.5f), new Color(1f, 0f, 0f))));
+				new Vector3f(1f, 0.5f, 0.5f), new Color(0.7f, 0.7f, 1f))));
 		scene.createEntity("light", scene, lightBuilder);
 
+		EntityBuilder backgroundBuilder = new EntityBuilder();
+		backgroundBuilder.addComponentBuilder(new CRender(m_material, 0, 1f));
+		backgroundBuilder.setTransform(new Transform2f(new Vector2f(0f, 0f), 0f, new Vector2f(2f, 2f)));
+		scene.createEntity("background", scene, backgroundBuilder);
+
 		EntityBuilder parentBuilder = new EntityBuilder();
-		parentBuilder.addComponentBuilder(new CRender(m_material, 0, 1f));
+		parentBuilder.addComponentBuilder(new CRender(m_material, 1, 1f));
 		Entity parent = scene.createEntity("test", scene, parentBuilder);
 		parent.scripts().add(new XPython(m_codeResource));
 
 		EntityBuilder childBuilder = new EntityBuilder();
-		childBuilder.addComponentBuilder(new CRender(m_material, 0, 1f));
+		childBuilder.addComponentBuilder(new CRender(m_material, 1, 1f));
 		Entity child = scene.createEntity("child", parent, childBuilder);
 		child.getCTransform().translate(0.5f, 0.5f);
 
+		EntityBuilder cameraBuilder = new EntityBuilder();
+		cameraBuilder.addComponentBuilder(new CCamera(0.5f, true));
+		scene.createEntity("camera", child, cameraBuilder);
+
 		game.start();
+
 		while (true) {
 			game.update(0.166666666f);
 		}
@@ -69,4 +82,5 @@ public class RenderTest {
 	public static void main(String[] args) {
 		new RenderTest().start();
 	}
+
 }

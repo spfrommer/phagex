@@ -8,6 +8,10 @@ def update(time):
 		transform.translate(0, 0.01);
 	if keyboard.isKeyPressed(keyboard.getKey("DOWN")) :
 		transform.translate(0, -0.01);
+	if keyboard.isKeyPressed(keyboard.getKey("RIGHT")) :
+		transform.rotate(-0.01)
+	if keyboard.isKeyPressed(keyboard.getKey("LEFT")) :
+		transform.rotate(0.01)
 	
 def exit():
 	logger.out('Exiting!')
