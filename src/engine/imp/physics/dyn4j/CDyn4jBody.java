@@ -17,19 +17,20 @@ import engine.imp.physics.PhysicsUtils;
  * Contains data for the PhysicsSystem (Dyn4j backend). This code was adapted from the Phage2d project.
  */
 public class CDyn4jBody implements Component {
-	public static final String NAME = "physics_dyn4jBody";
-	public static final String BULLET = "physics_bullet";
-	public static final String LINEAR_DAMPING = "physics_linearDamping";
-	public static final String ANGULAR_DAMPING = "physics_angularDamping";
-	public static final String MASS = "physics_mass";
-	public static final String INERTIA = "physics_inertia";
-	public static final String DENSITY = "physics_density";
-	public static final String FRICTION = "physics_friction";
-	public static final String RESTITUTION = "physics_restitution";
-	public static final String SHAPE = "physics_shape";
+	public static final String NAME = "dyn4jBody";
+	public static final String BULLET = "bullet";
+	public static final String LINEAR_DAMPING = "linearDamping";
+	public static final String ANGULAR_DAMPING = "angularDamping";
+	public static final String MASS_TYPE = "massType";
+	public static final String MASS = "mass";
+	public static final String INERTIA = "inertia";
+	public static final String DENSITY = "density";
+	public static final String FRICTION = "friction";
+	public static final String RESTITUTION = "restitution";
+	public static final String SHAPE = "shape";
 
-	private static final String[] IDENTIFIERS = new String[] { BULLET, LINEAR_DAMPING, ANGULAR_DAMPING, MASS, INERTIA,
-			DENSITY, FRICTION, RESTITUTION };
+	private static final String[] IDENTIFIERS = new String[] { BULLET, LINEAR_DAMPING, ANGULAR_DAMPING, MASS_TYPE,
+			MASS, INERTIA, DENSITY, FRICTION, RESTITUTION };
 
 	private Body m_body;
 	private BodyFixture m_fixture;
@@ -411,6 +412,8 @@ public class CDyn4jBody implements Component {
 			return getLinearDamping();
 		if (identifier.equals(ANGULAR_DAMPING))
 			return getAngularDamping();
+		if (identifier.equals(MASS_TYPE))
+			return getMassType();
 		if (identifier.equals(MASS))
 			return getMass();
 		if (identifier.equals(INERTIA))
@@ -440,6 +443,8 @@ public class CDyn4jBody implements Component {
 			setLinearDamping((Float) data);
 		} else if (identifier.equals(ANGULAR_DAMPING)) {
 			setAngularDamping((Float) data);
+		} else if (identifier.equals(MASS_TYPE)) {
+			setMassType((Mass.Type) data);
 		} else if (identifier.equals(MASS)) {
 			setMass((Float) data);
 		} else if (identifier.equals(INERTIA)) {

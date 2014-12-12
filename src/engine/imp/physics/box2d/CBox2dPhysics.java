@@ -20,15 +20,15 @@ import engine.core.exceptions.ComponentException;
 public class CBox2dPhysics implements Component {
 	public static final String NAME = "box2dphysics";
 	// how the children should be linked to this Entity
-	public static final String TYPE = "physics_type";
-	public static final String BULLET = "physics_bullet";
-	public static final String FIXED_ROT = "physics_fixedRot";
-	public static final String LINEAR_DAMPING = "physics_linearDamping";
-	public static final String ANGULAR_DAMPING = "physics_angularDamping";
-	public static final String MASS = "physics_mass";
-	public static final String FRICTION = "physics_friction";
-	public static final String RESTITUTION = "physics_restitution";
-	public static final String SHAPE = "physics_shape";
+	public static final String TYPE = "box2d_type";
+	public static final String BULLET = "box2d_bullet";
+	public static final String FIXED_ROT = "box2d_fixedRot";
+	public static final String LINEAR_DAMPING = "box2d_linearDamping";
+	public static final String ANGULAR_DAMPING = "box2d_angularDamping";
+	public static final String MASS = "box2d_mass";
+	public static final String FRICTION = "box2d_friction";
+	public static final String RESTITUTION = "box2d_restitution";
+	public static final String SHAPE = "box2d_shape";
 
 	private static final String[] IDENTIFIERS = new String[] { TYPE, BULLET, FIXED_ROT, LINEAR_DAMPING,
 			ANGULAR_DAMPING, MASS, FRICTION, RESTITUTION };

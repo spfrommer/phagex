@@ -51,12 +51,12 @@ public class RenderTest {
 		scene.createEntity("light", scene, lightBuilder);
 
 		EntityBuilder parentBuilder = new EntityBuilder();
-		parentBuilder.addComponentBuilder(new CRender(m_material, 1f));
+		parentBuilder.addComponentBuilder(new CRender(m_material, 0, 1f));
 		Entity parent = scene.createEntity("test", scene, parentBuilder);
 		parent.scripts().add(new XPython(m_codeResource));
 
 		EntityBuilder childBuilder = new EntityBuilder();
-		childBuilder.addComponentBuilder(new CRender(m_material, 1f));
+		childBuilder.addComponentBuilder(new CRender(m_material, 0, 1f));
 		Entity child = scene.createEntity("child", parent, childBuilder);
 		child.getCTransform().translate(0.5f, 0.5f);
 

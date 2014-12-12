@@ -1,6 +1,9 @@
 package engine.imp.render;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import commons.Transform2f;
 
@@ -26,8 +29,11 @@ public class RenderingSystem implements EntitySystem {
 	public static final float DRAW_WIDTH = 1f;
 	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
 
-	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[0], new String[0],
-			new String[0], true);
+	/*private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[0], new String[0],
+			new String[0], true);*/
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME },
+			new String[0], new String[0], false);
+	private HashMap<Integer, List<Entity>> m_entityLayers = new HashMap<Integer, List<Entity>>();
 
 	private Display m_display;
 	private Renderer2D m_renderer;
@@ -105,31 +111,37 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public void updateEntity(Entity entity, Scene scene) {
-		Transform2f transform = entity.getCTransform().getTransform();
-		boolean hasCRender = entity.components().has(CRender.NAME);
-		if (hasCRender) {
-			CRender render = (CRender) entity.components().get(CRender.NAME);
-			m_renderer.setMaterial(render.getMaterial());
-		}
+		CRender render = (CRender) entity.components().get(CRender.NAME);
+		int layer = render.getLayer();
+		if (!m_entityLayers.containsKey(layer))
+			m_entityLayers.put(layer, new ArrayList<Entity>());
 
-		m_renderer.pushModel();
-		m_renderer.translate(transform.getTranslation().getX(), transform.getTranslation().getY());
-		m_renderer.rotate(transform.getRotation());
-		m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
-
-		if (hasCRender)
-			m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH);
-
-		Set<Entity> children = entity.tree().getChildren();
-		for (Entity child : children) {
-			updateEntity(child, scene);
-		}
-
-		m_renderer.popModel();
+		m_entityLayers.get(layer).add(entity);
 	}
 
 	@Override
 	public void postUpdate(Scene scene) {
+		List<Integer> orderedLayers = new ArrayList<Integer>(m_entityLayers.keySet());
+		Collections.sort(orderedLayers);
+
+		for (Integer layer : orderedLayers) {
+			List<Entity> entities = m_entityLayers.get(layer);
+			for (Entity e : entities) {
+				Transform2f transform = scene.getWorldTransform(e);
+				m_renderer.setMaterial(((CRender) e.components().get(CRender.NAME)).getMaterial());
+
+				m_renderer.pushModel();
+				m_renderer.translate(transform.getTranslation().getX(), transform.getTranslation().getY());
+				m_renderer.rotate(transform.getRotation());
+				m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
+
+				m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH);
+
+				m_renderer.popModel();
+			}
+			entities.clear();
+		}
+
 		m_renderer.finishGeometry();
 		m_renderer.finishLighted();
 		m_renderer.doLightingComputations();

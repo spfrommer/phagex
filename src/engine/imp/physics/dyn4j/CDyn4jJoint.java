@@ -12,11 +12,11 @@ import engine.imp.physics.PhysicsException;
 import engine.imp.physics.PhysicsUtils;
 
 public class CDyn4jJoint implements Component {
-	public static final String NAME = "physics_joint";
-	public static final String JOINT = "physics_joint";
-	public static final String ANCHOR1 = "physics_anchor1";
-	public static final String ANCHOR2 = "physics_anchor2";
-	public static final String COLLISION_ALLOWED = "physics_collisionAllowed";
+	public static final String NAME = "joint";
+	public static final String JOINT = "joint";
+	public static final String ANCHOR1 = "anchor1";
+	public static final String ANCHOR2 = "anchor2";
+	public static final String COLLISION_ALLOWED = "collisionAllowed";
 
 	public static final String[] IDENTIFIERS = new String[] { JOINT, ANCHOR1, ANCHOR2, COLLISION_ALLOWED };
 
