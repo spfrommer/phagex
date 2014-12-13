@@ -43,6 +43,11 @@ public class RenderingSystem implements EntitySystem {
 	private Display m_display;
 	private Renderer2D m_renderer;
 
+	private WorldMouse m_mouse;
+
+	private float m_width;
+	private float m_height;
+
 	/**
 	 * @param width
 	 *            the width of the screen's coordinate system, in meters
@@ -62,6 +67,9 @@ public class RenderingSystem implements EntitySystem {
 		m_renderer.init(widthHalf, widthHalf, heightHalf, heightHalf, window);
 
 		m_display = window;
+		m_width = width;
+		m_height = height;
+		m_mouse = new WorldMouse(m_display, this);
 	}
 
 	/**
@@ -83,6 +91,20 @@ public class RenderingSystem implements EntitySystem {
 	 */
 	protected Entity getCamera() {
 		return m_currentCam;
+	}
+
+	/**
+	 * @return the width of the frame in units, not pixels
+	 */
+	protected float getWidth() {
+		return m_width;
+	}
+
+	/**
+	 * @return the height of the frame in units, not pixels
+	 */
+	protected float getHeight() {
+		return m_height;
 	}
 
 	/**
@@ -259,8 +281,7 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public void scriptAdded(Entity entity, XScript script, Scene scene) {
-		// Mouse mouse = getMouse();
-		script.addScriptObject(new XScriptObject("mouse", getMouse()));
+		script.addScriptObject(new XScriptObject("mouse", m_mouse));
 		script.addScriptObject(new XScriptObject("keyboard", getKeyboard()));
 	}
 }

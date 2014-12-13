@@ -87,7 +87,7 @@ public class RenderTest {
 		lake.getCTransform().translate(0f, -0.8f);
 
 		EntityBuilder cameraBuilder = new EntityBuilder();
-		cameraBuilder.addComponentBuilder(new CCamera(1f, true));
+		cameraBuilder.addComponentBuilder(new CCamera(0.5f, true));
 		Entity camera = scene.createEntity("camera", scene, cameraBuilder);
 		camera.scripts().add(new XPython(m_codeResource));
 		/*EntityBuilder backgroundBuilder = new EntityBuilder();
