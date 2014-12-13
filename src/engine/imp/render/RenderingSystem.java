@@ -180,7 +180,7 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public void postUpdate(Scene scene) {
-		if (m_currentCam != null) {
+		/*if (m_currentCam != null) {
 			CCamera cam = (CCamera) m_currentCam.components().get(CCamera.NAME);
 			Transform2f transform = scene.getWorldTransform(m_currentCam);
 
@@ -189,7 +189,7 @@ public class RenderingSystem implements EntitySystem {
 			m_renderer.scale(cam.getScale(), cam.getScale());
 
 			m_renderer.translate(-transform.getTranslation().getX(), -transform.getTranslation().getY());
-		}
+		}*/
 
 		List<Integer> orderedLayers = new ArrayList<Integer>(m_entityLayers.keySet());
 		Collections.sort(orderedLayers);
@@ -198,12 +198,30 @@ public class RenderingSystem implements EntitySystem {
 			List<Entity> entities = m_entityLayers.get(layer);
 			for (Entity e : entities) {
 				Transform2f transform = scene.getWorldTransform(e);
-				m_renderer.setMaterial(((CRender) e.components().get(CRender.NAME)).getMaterial());
+				CRender crender = (CRender) e.components().get(CRender.NAME);
+				m_renderer.setMaterial(crender.getMaterial());
 
 				m_renderer.pushModel();
-				m_renderer.translate(transform.getTranslation().getX(), transform.getTranslation().getY());
-				m_renderer.rotate(transform.getRotation());
-				m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
+
+				if (m_currentCam != null) {
+					CCamera cam = (CCamera) m_currentCam.components().get(CCamera.NAME);
+					Transform2f camTrans = scene.getWorldTransform(m_currentCam);
+					float depth = crender.getDepth();
+
+					float transX = (transform.getTranslation().getX() - camTrans.getTranslation().getX()) / depth;
+					float transY = (transform.getTranslation().getY() - camTrans.getTranslation().getY()) / depth;
+
+					m_renderer.scale(cam.getScale(), cam.getScale());
+
+					m_renderer.translate(transX, transY);
+					m_renderer.scale(1f / depth, 1f / depth);
+					m_renderer.rotate(transform.getRotation());
+					m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
+				} else {
+					m_renderer.translate(transform.getTranslation().getX(), transform.getTranslation().getY());
+					m_renderer.rotate(transform.getRotation());
+					m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
+				}
 
 				m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH);
 
@@ -212,9 +230,9 @@ public class RenderingSystem implements EntitySystem {
 			entities.clear();
 		}
 
-		if (m_currentCam != null) {
+		/*if (m_currentCam != null) {
 			m_renderer.popModel();
-		}
+		}*/
 
 		m_renderer.finishGeometry();
 		m_renderer.finishLighted();
@@ -234,6 +252,7 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public void scriptAdded(Entity entity, XScript script, Scene scene) {
+		// Mouse mouse = getMouse();
 		script.addScriptObject(new XScriptObject("mouse", getMouse()));
 		script.addScriptObject(new XScriptObject("keyboard", getKeyboard()));
 	}

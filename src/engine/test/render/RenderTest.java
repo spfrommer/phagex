@@ -54,7 +54,7 @@ public class RenderTest {
 		scene.createEntity("light", scene, lightBuilder);
 
 		EntityBuilder backgroundBuilder = new EntityBuilder();
-		backgroundBuilder.addComponentBuilder(new CRender(m_material, 0, 1f));
+		backgroundBuilder.addComponentBuilder(new CRender(m_material, 0, 2f));
 		backgroundBuilder.setTransform(new Transform2f(new Vector2f(0f, 0f), 0f, new Vector2f(2f, 2f)));
 		scene.createEntity("background", scene, backgroundBuilder);
 
