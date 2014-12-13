@@ -186,6 +186,24 @@ public class CDyn4jBody implements Component {
 	}
 
 	/**
+	 * Sets the x component of the linear velocity.
+	 * 
+	 * @param velocityX
+	 */
+	public void setVelocityX(float velocityX) {
+		m_body.setLinearVelocity(velocityX, m_body.getLinearVelocity().y);
+	}
+
+	/**
+	 * Sets the y component of the linear velocity.
+	 * 
+	 * @param velocityY
+	 */
+	public void setVelocityY(float velocityY) {
+		m_body.setLinearVelocity(m_body.getLinearVelocity().y, velocityY);
+	}
+
+	/**
 	 * Returns the angular, or rotational, velocity of this object.
 	 * 
 	 * @return

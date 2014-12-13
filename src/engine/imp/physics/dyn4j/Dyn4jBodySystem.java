@@ -145,6 +145,7 @@ public class Dyn4jBodySystem implements EntitySystem {
 			newTrans.setTranslation(worldTrans.getTranslation().getX(), worldTrans.getTranslation().getY());
 			newTrans.setRotation(worldTrans.getRotation());
 			body.setTransform(newTrans);
+			body.setAsleep(false);
 			// TODO: scaling
 		}
 	}
