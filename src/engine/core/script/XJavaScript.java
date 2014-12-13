@@ -39,6 +39,10 @@ public class XJavaScript extends XScript {
 		m_jsScope = makeScope(m_jsContext);
 	}
 
+	@Override
+	public void init() {
+	}
+
 	private Scriptable makeScope(Context context) {
 		XScriptContext c = this.context();
 

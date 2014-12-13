@@ -12,6 +12,7 @@ import engine.core.EntitySystem;
 import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
+import engine.core.asset.AssetManager;
 import engine.core.script.XScript;
 import engine.core.script.XScriptObject;
 import glextra.renderer.LWJGLRenderer2D;
@@ -267,6 +268,7 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public void scriptAdded(Entity entity, XScript script, Scene scene) {
+		script.addScriptObject(new XScriptObject("assets", AssetManager.instance()));
 		script.addScriptObject(new XScriptObject("mouse", m_mouse));
 		script.addScriptObject(new XScriptObject("keyboard", getKeyboard()));
 	}

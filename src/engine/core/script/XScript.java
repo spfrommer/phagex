@@ -51,6 +51,11 @@ public abstract class XScript {
 	public abstract void onContextSet();
 
 	/**
+	 * Called after the fields have been set by the EntitySystems.
+	 */
+	public abstract void init();
+
+	/**
 	 * Called when the Scene this Entity is a part of is made the main Scene of the game.
 	 */
 	public abstract void onSceneLoad();

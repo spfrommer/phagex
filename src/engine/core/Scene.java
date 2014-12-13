@@ -52,7 +52,9 @@ public class Scene implements TreeNode {
 	 * @param time
 	 */
 	public void updateScripts(float time) {
-		for (Entity entity : m_allEntities)
+		// so that created Entities work
+		List<Entity> clone = new ArrayList<Entity>(m_allEntities);
+		for (Entity entity : clone)
 			entity.updateScripts(time);
 	}
 

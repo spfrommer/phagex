@@ -58,6 +58,7 @@ public class ScriptManager {
 		script.setContext(m_context);
 		m_scripts.add(script);
 		m_entity.getScene().getGame().scriptAdded(m_entity, script, m_entity.getScene());
+		script.init();
 	}
 
 	/**

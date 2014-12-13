@@ -51,7 +51,10 @@ public class XPython extends XScript {
 		List<Component> allComps = context.entity.components().all();
 		for (Component c : allComps)
 			m_python.set(c.getName(), c);
+	}
 
+	@Override
+	public void init() {
 		m_python.exec(m_code);
 
 		m_sceneLoad = m_python.get(XScript.SCENE_LOAD);
