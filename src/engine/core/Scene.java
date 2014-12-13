@@ -206,7 +206,7 @@ public class Scene implements TreeNode {
 	 */
 	public Transform2f getWorldTransform(TreeNode node) {
 		if (node == null)
-			throw new SceneException("Tried to transform a null parent!");
+			throw new SceneException("Tried to transform a null entity!");
 		if (node instanceof Scene)
 			return new Transform2f();
 		if (!m_allEntities.contains(node))
@@ -221,19 +221,31 @@ public class Scene implements TreeNode {
 		Collections.reverse(entities);
 
 		AffineTransform at = new AffineTransform();
+		float totalRot = 0;
 		for (Entity e : entities) {
 			Transform2f trans = e.getCTransform().getTransform();
 			at.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
 			at.rotate(trans.getRotation());
 			at.scale(trans.getScale().getX(), trans.getScale().getY());
+			totalRot += trans.getRotation();
 		}
 
 		Vector2f translation = new Vector2f((float) at.getTranslateX(), (float) at.getTranslateY());
-		float rotation = (float) Math.atan2(at.getShearY(), at.getScaleY());
+		// float rotation = (float) Math.atan2(at.getShearY(), at.getScaleY());
+		float rotation = totalRot;
 		Vector2f scale = new Vector2f((float) (at.getScaleX() / Math.cos(rotation)),
 				(float) (at.getScaleY() / Math.cos(rotation)));
 
 		return new Transform2f(translation, rotation, scale);
+	}
+
+	public static void main(String[] args) {
+		Scene s = new Scene(new Game());
+		Entity e = s.createEntity("test", s);
+		e.getCTransform().setTransform(
+				new Transform2f(new Vector2f(1f, 1f), (float) -Math.PI / 4, new Vector2f(2f, 1f)));
+		Transform2f trans = s.getWorldTransform(e);
+		System.out.println(trans);
 	}
 
 	/**

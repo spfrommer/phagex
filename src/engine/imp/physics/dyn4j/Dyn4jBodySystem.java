@@ -102,7 +102,6 @@ public class Dyn4jBodySystem implements EntitySystem {
 		Body body = entityPhysics.getBody();
 
 		Vector2 trans = body.getTransform().getTranslation();
-
 		// TODO: transforms relative to parent
 		entity.getCTransform().quietSetTransform(
 				new Transform2f(PhysicsUtils.fromDyn4j(trans), (float) body.getTransform().getRotation(), entity

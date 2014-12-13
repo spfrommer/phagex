@@ -59,7 +59,12 @@ public class LightingSystem implements EntitySystem {
 	public void updateEntity(Entity entity, Scene scene, float time) {
 		Renderer2D renderer = m_render.getRenderer();
 
-		Vector2f camTranslate = scene.getWorldTransform(m_render.getCamera()).getTranslation();
+		Vector2f camTranslate = null;
+		if (m_render.getCamera() != null) {
+			camTranslate = scene.getWorldTransform(m_render.getCamera()).getTranslation();
+		} else {
+			camTranslate = new Vector2f(0f, 0f);
+		}
 
 		Light light = ((CLight) entity.components().get(CLight.NAME)).getLight();
 		Vector2f translate = scene.getWorldTransform(entity).getTranslation();

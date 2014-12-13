@@ -4,7 +4,6 @@ def onSceneLoad():
 	logger.out('Scene loaded!')
 	
 def update(time):
-	logger.out(mouse.getWorldX());
 	if keyboard.isKeyPressed(keyboard.getKey("UP")) :
 		transform.translate(0, 0.01)
 	if keyboard.isKeyPressed(keyboard.getKey("DOWN")) :
@@ -13,6 +12,10 @@ def update(time):
 		transform.translate(0.01, 0)
 	if keyboard.isKeyPressed(keyboard.getKey("LEFT")) :
 		transform.translate(-0.01, 0)
+	if keyboard.isKeyPressed(keyboard.getKey("D")) :
+		transform.rotate(-0.01);
+	if keyboard.isKeyPressed(keyboard.getKey("A")) :
+		transform.rotate(0.01);
 	
 def exit():
 	logger.out('Exiting!')

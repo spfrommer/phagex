@@ -113,6 +113,8 @@ public class RenderTest {
 		Entity icicle = scene.createEntity("icicle1", scene, bIcicle);
 		icicle.getCTransform().setTransform(
 				new Transform2f(new Vector2f(0.5f, 0.6f), (float) Math.PI, new Vector2f(0.5f, 1f)));
+		icicle.scripts().add(new XPython(m_codeResource));
+
 		Entity lake = scene.createEntity("lake", scene, bLake);
 		lake.getCTransform().translate(0f, -0.8f);
 
@@ -126,13 +128,12 @@ public class RenderTest {
 
 		EntityBuilder cameraBuilder = new EntityBuilder();
 		cameraBuilder.addComponentBuilder(new CCamera(0.5f, true));
-		Entity camera = scene.createEntity("camera", scene, cameraBuilder);
-		camera.scripts().add(new XPython(m_codeResource));
+		scene.createEntity("camera", scene, cameraBuilder);
 
 		game.start();
 
 		while (true) {
-			game.update(0.0166666666f);
+			game.update(16f);
 		}
 	}
 
