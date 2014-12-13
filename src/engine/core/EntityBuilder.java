@@ -9,6 +9,8 @@ import commons.Transform2f;
 
 import engine.core.exceptions.ComponentException;
 import engine.core.exceptions.EntityException;
+import engine.core.exceptions.XScriptException;
+import engine.core.script.XScript;
 
 /**
  * Builds an Entity from a bunch of ComponentBuilders. CTransform and CScriptData builders should not be added, as they
@@ -17,15 +19,18 @@ import engine.core.exceptions.EntityException;
  */
 public class EntityBuilder {
 	private List<ComponentBuilder<? extends Component>> m_builders;
+	protected List<XScript> m_scripts;
 	private TagList m_tags = new TagList();
 	private Transform2f m_transform = new Transform2f();
-	private Map<String, EntityBuilder> m_childBuilders = new HashMap<String, EntityBuilder>();
+	private Map<String, EntityBuilder> m_childBuilders;
 
 	/**
 	 * Initializes an EntityBuilder.
 	 */
 	public EntityBuilder() {
 		m_builders = new ArrayList<ComponentBuilder<? extends Component>>();
+		m_childBuilders = new HashMap<String, EntityBuilder>();
+		m_scripts = new ArrayList<XScript>();
 	}
 
 	/**
@@ -141,12 +146,42 @@ public class EntityBuilder {
 	}
 
 	/**
+	 * Adds a XScript to the EntityBuilder.
+	 * 
+	 * @param script
+	 */
+	public void addScript(XScript script) {
+		if (script == null)
+			throw new XScriptException("Adding null XScript!");
+
+		m_scripts.add(script);
+	}
+
+	/**
+	 * Removes a XScript from the EntityBuilder.
+	 * 
+	 * @param script
+	 */
+	public void removeScript(XScript script) {
+		if (script == null)
+			throw new XScriptException("Removing null XScript!");
+		if (!m_scripts.contains(script))
+			throw new XScriptException("Removing nonexistant XScript!");
+
+		m_scripts.remove(script);
+	}
+
+	/**
 	 * Returns the individual ComponentBuilders.
 	 * 
 	 * @return
 	 */
 	protected List<ComponentBuilder<? extends Component>> getComponentBuilders() {
 		return m_builders;
+	}
+
+	protected List<XScript> getScripts() {
+		return m_scripts;
 	}
 
 	/**

@@ -12,6 +12,7 @@ import commons.matrix.Vector2f;
 
 import engine.core.exceptions.EntityException;
 import engine.core.exceptions.SceneException;
+import engine.core.script.XScript;
 
 /**
  * Creates, destroys, and moves Entities in the tree.
@@ -86,6 +87,10 @@ public class Scene implements TreeNode {
 		}
 
 		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), builder.getTransform());
+		List<XScript> scripts = builder.getScripts();
+		for (XScript script : scripts)
+			entity.scripts().add(script);
+
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		m_game.entityAdded(entity, parent, this);

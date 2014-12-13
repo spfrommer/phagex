@@ -32,7 +32,7 @@ import glextra.material.Material;
  */
 public class RenderTest {
 	private MaterialFactory m_factory;
-	private Resource m_codeResource;
+	private Resource m_script;
 
 	private Resource m_rIcicle;
 	private Material m_icicle;
@@ -46,7 +46,7 @@ public class RenderTest {
 	private Animation m_animation;
 
 	public RenderTest() {
-		m_codeResource = new Resource(new ClasspathResourceLocator(), "engine/test/render/Script.py");
+		m_script = new Resource(new ClasspathResourceLocator(), "engine/test/render/Script.py");
 		m_rIcicle = new Resource(new ClasspathResourceLocator(), "engine/test/render/cave_icicle_1_0.png");
 		m_rLake = new Resource(new ClasspathResourceLocator(), "engine/test/render/cave_lake_1_0.png");
 		m_rPlatform1 = new Resource(new ClasspathResourceLocator(), "engine/test/render/cave_platform_1_0.png");
@@ -88,6 +88,8 @@ public class RenderTest {
 
 		EntityBuilder bIcicle = new EntityBuilder();
 		bIcicle.addComponentBuilder(new CRender(m_icicle, 2, 1f));
+		bIcicle.addScript(new XPython(m_script));
+
 		EntityBuilder bLake = new EntityBuilder();
 		CRender clake = new CRender(m_lake, 2, 1f);
 		clake.setRepeatX(2);
@@ -113,7 +115,6 @@ public class RenderTest {
 		Entity icicle = scene.createEntity("icicle1", scene, bIcicle);
 		icicle.getCTransform().setTransform(
 				new Transform2f(new Vector2f(0.5f, 0.6f), (float) Math.PI, new Vector2f(0.5f, 1f)));
-		icicle.scripts().add(new XPython(m_codeResource));
 
 		Entity lake = scene.createEntity("lake", scene, bLake);
 		lake.getCTransform().translate(0f, -0.8f);
