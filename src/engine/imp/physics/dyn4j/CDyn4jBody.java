@@ -237,8 +237,10 @@ public class CDyn4jBody implements Component {
 	 * @param density
 	 */
 	public void setDensity(float density) {
+		Mass.Type type = getMassType();
 		m_fixture.setDensity(density);
 		m_body.setMass(m_fixture.createMass());
+		setMassType(type);
 	}
 
 	/**
@@ -256,7 +258,9 @@ public class CDyn4jBody implements Component {
 	 * @param mass
 	 */
 	public void setMass(float mass) {
-		m_body.setMass(new Mass(m_body.getMass().getCenter(), mass, m_body.getMass().getInertia()));
+		Mass massObj = new Mass(m_body.getMass().getCenter(), mass, m_body.getMass().getInertia());
+		massObj.setType(m_body.getMass().getType());
+		m_body.setMass(massObj);
 	}
 
 	/**
@@ -274,7 +278,9 @@ public class CDyn4jBody implements Component {
 	 * @param inertia
 	 */
 	public void setInertia(float inertia) {
-		m_body.setMass(new Mass(m_body.getMass().getCenter(), m_body.getMass().getMass(), inertia));
+		Mass mass = new Mass(m_body.getMass().getCenter(), m_body.getMass().getMass(), inertia);
+		mass.setType(m_body.getMass().getType());
+		m_body.setMass(mass);
 	}
 
 	/**
@@ -290,7 +296,9 @@ public class CDyn4jBody implements Component {
 	 * @param mt
 	 */
 	public void setMassType(Mass.Type mt) {
-		m_body.setMassType(mt);
+		Mass mass = new Mass(m_body.getMass().getCenter(), m_body.getMass().getMass(), m_body.getMass().getInertia());
+		mass.setType(mt);
+		m_body.setMass(mass);
 	}
 
 	/**
