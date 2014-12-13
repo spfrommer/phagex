@@ -60,11 +60,11 @@ public class Dyn4jJointSystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time, Scene scene) {
+	public void update(Scene scene, float time) {
 	}
 
 	@Override
-	public void updateEntity(Entity entity, Scene scene) {
+	public void updateEntity(Entity entity, Scene scene, float time) {
 	}
 
 	@Override

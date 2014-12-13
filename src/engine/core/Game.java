@@ -106,12 +106,12 @@ public class Game {
 		List<Entity> entities = current.getAllEntities();
 
 		for (EntitySystem system : m_systems)
-			system.update(time, current);
+			system.update(current, time);
 
 		for (Entity e : entities) {
 			for (EntitySystem system : m_systems) {
 				if (system.getUpdateFilter().matches(e))
-					system.updateEntity(e, current);
+					system.updateEntity(e, current, time);
 			}
 		}
 		for (EntitySystem system : m_systems)

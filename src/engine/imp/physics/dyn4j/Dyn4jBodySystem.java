@@ -91,12 +91,12 @@ public class Dyn4jBodySystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time, Scene scene) {
+	public void update(Scene scene, float time) {
 		m_world.update(time / 1000);
 	}
 
 	@Override
-	public void updateEntity(Entity entity, Scene scene) {
+	public void updateEntity(Entity entity, Scene scene, float time) {
 		CDyn4jBody entityPhysics = (CDyn4jBody) entity.components().get(CDyn4jBody.NAME);
 
 		Body body = entityPhysics.getBody();

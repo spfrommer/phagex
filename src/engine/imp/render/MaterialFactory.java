@@ -61,7 +61,33 @@ public class MaterialFactory {
 	}
 
 	/**
-	 * Creates a white Material.
+	 * Creates an unlighted colored Material.
+	 * 
+	 * @param color
+	 * @return
+	 */
+	public Material createUnlighted(Color color) {
+		Material mat = makeDeferred();
+		mat.setColor("materialDiffuseColor", color);
+		mat.setBoolean("useLighting", false);
+		return mat;
+	}
+
+	/**
+	 * Creates an lighted colored Material.
+	 * 
+	 * @param color
+	 * @return
+	 */
+	public Material createLighted(Color color) {
+		Material mat = makeDeferred();
+		mat.setColor("materialDiffuseColor", color);
+		mat.setBoolean("useLighting", true);
+		return mat;
+	}
+
+	/**
+	 * Creates a white unlighted Material.
 	 * 
 	 * @return
 	 */

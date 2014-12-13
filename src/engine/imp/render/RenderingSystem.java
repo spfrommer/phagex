@@ -191,14 +191,14 @@ public class RenderingSystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time, Scene scene) {
+	public void update(Scene scene, float time) {
 		m_renderer.clear();
 		m_renderer.startLighted();
 		m_renderer.startGeometry();
 	}
 
 	@Override
-	public void updateEntity(Entity entity, Scene scene) {
+	public void updateEntity(Entity entity, Scene scene, float time) {
 		CRender render = (CRender) entity.components().get(CRender.NAME);
 		int layer = render.getLayer();
 		if (!m_entityLayers.containsKey(layer))

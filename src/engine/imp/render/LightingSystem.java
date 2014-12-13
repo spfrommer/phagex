@@ -51,12 +51,12 @@ public class LightingSystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time, Scene scene) {
+	public void update(Scene scene, float time) {
 
 	}
 
 	@Override
-	public void updateEntity(Entity entity, Scene scene) {
+	public void updateEntity(Entity entity, Scene scene, float time) {
 		Renderer2D renderer = m_render.getRenderer();
 
 		Vector2f camTranslate = scene.getWorldTransform(m_render.getCamera()).getTranslation();

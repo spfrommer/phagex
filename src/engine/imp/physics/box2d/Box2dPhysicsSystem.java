@@ -136,12 +136,12 @@ public class Box2dPhysicsSystem implements EntitySystem {
 	}
 
 	@Override
-	public void update(float time, Scene scene) {
+	public void update(Scene scene, float time) {
 		m_world.step(time / 1000, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 	}
 
 	@Override
-	public void updateEntity(Entity entity, Scene scene) {
+	public void updateEntity(Entity entity, Scene scene, float time) {
 		CBox2dPhysics entityPhysics = (CBox2dPhysics) entity.components().get(CBox2dPhysics.NAME);
 		Body body = m_bodies.get(entityPhysics);
 		Vec2 pos = body.getPosition();
