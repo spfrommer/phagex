@@ -90,15 +90,22 @@ public class RenderTest {
 		bIcicle.addComponentBuilder(new CRender(m_icicle, 2, 1f));
 		EntityBuilder bLake = new EntityBuilder();
 		bLake.addComponentBuilder(new CRender(m_lake, 2, 1f));
+
+		EntityBuilder bBackground = new EntityBuilder();
+
 		EntityBuilder bPlatform1 = new EntityBuilder();
 		bPlatform1.addComponentBuilder(new CRender(m_platform1, 0, 2f));
-		EntityBuilder bPlatform4 = new EntityBuilder();
-		bPlatform4.addComponentBuilder(new CRender(m_platform4, 0, 2f));
+		bPlatform1.setTransform(new Transform2f(new Vector2f(-0.3f, 0f), 0f, new Vector2f(2f, 2f)));
 
-		Entity platform1 = scene.createEntity("platform1", scene, bPlatform1);
-		platform1.getCTransform().setTransform(new Transform2f(new Vector2f(-0.3f, 0f), 0f, new Vector2f(2f, 2f)));
-		Entity platform2 = scene.createEntity("platform2", scene, bPlatform4);
-		platform2.getCTransform().setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(2f, 2f)));
+		EntityBuilder bPlatform2 = new EntityBuilder();
+		bPlatform2.addComponentBuilder(new CRender(m_platform4, 0, 2f));
+		bPlatform2.setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(2f, 2f)));
+
+		bBackground.addChildBuilder("platform1", bPlatform1);
+		bBackground.addChildBuilder("platform2", bPlatform2);
+
+		Entity background = scene.createEntity("background", scene, bBackground);
+		background.getCTransform().translate(1f, 0f);
 
 		Entity icicle = scene.createEntity("icicle1", scene, bIcicle);
 		icicle.getCTransform().setTransform(

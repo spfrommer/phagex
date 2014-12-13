@@ -4,6 +4,8 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import commons.Transform2f;
 import commons.matrix.Vector2f;
@@ -87,6 +89,11 @@ public class Scene implements TreeNode {
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		m_game.entityAdded(entity, parent, this);
+		Map<String, EntityBuilder> children = builder.getEntityBuilders();
+		Set<String> keys = children.keySet();
+		for (String childName : keys) {
+			createEntity(childName, entity, children.get(childName));
+		}
 		return entity;
 	}
 

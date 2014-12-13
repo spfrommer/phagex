@@ -1,11 +1,14 @@
 package engine.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import commons.Transform2f;
 
 import engine.core.exceptions.ComponentException;
+import engine.core.exceptions.EntityException;
 
 /**
  * Builds an Entity from a bunch of ComponentBuilders. CTransform and CScriptData builders should not be added, as they
@@ -16,6 +19,7 @@ public class EntityBuilder {
 	private List<ComponentBuilder<? extends Component>> m_builders;
 	private TagList m_tags = new TagList();
 	private Transform2f m_transform = new Transform2f();
+	private Map<String, EntityBuilder> m_childBuilders = new HashMap<String, EntityBuilder>();
 
 	/**
 	 * Initializes an EntityBuilder.
@@ -54,6 +58,32 @@ public class EntityBuilder {
 	 */
 	public void setTransform(Transform2f transform) {
 		m_transform = transform;
+	}
+
+	/**
+	 * Adds a child builder.
+	 * 
+	 * @param builder
+	 */
+	public void addChildBuilder(String name, EntityBuilder builder) {
+		if (builder == null)
+			throw new EntityException("Cannot add null child builder!");
+
+		m_childBuilders.put(name, builder);
+	}
+
+	/**
+	 * Removes a child builder.
+	 * 
+	 * @param builder
+	 */
+	public void removeChildBuilder(String name, EntityBuilder builder) {
+		if (builder == null)
+			throw new EntityException("Cannot remove a null child builder!");
+		if (!m_childBuilders.containsKey(name))
+			throw new EntityException("Cannot remove a nonexistant builder!");
+
+		m_childBuilders.remove(name);
 	}
 
 	/**
@@ -115,5 +145,12 @@ public class EntityBuilder {
 	 */
 	protected List<ComponentBuilder<? extends Component>> getComponentBuilders() {
 		return m_builders;
+	}
+
+	/**
+	 * @return the EntityBuilders for the children
+	 */
+	protected Map<String, EntityBuilder> getEntityBuilders() {
+		return m_childBuilders;
 	}
 }
