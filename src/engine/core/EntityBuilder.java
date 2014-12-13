@@ -63,6 +63,7 @@ public class EntityBuilder {
 	/**
 	 * Adds a child builder.
 	 * 
+	 * @param name
 	 * @param builder
 	 */
 	public void addChildBuilder(String name, EntityBuilder builder) {
@@ -75,6 +76,7 @@ public class EntityBuilder {
 	/**
 	 * Removes a child builder.
 	 * 
+	 * @param name
 	 * @param builder
 	 */
 	public void removeChildBuilder(String name, EntityBuilder builder) {
