@@ -79,6 +79,13 @@ public class RenderingSystem implements EntitySystem {
 	}
 
 	/**
+	 * @return the current camera
+	 */
+	protected Entity getCamera() {
+		return m_currentCam;
+	}
+
+	/**
 	 * @return the Keyboard associated with the Display
 	 */
 	public Keyboard getKeyboard() {

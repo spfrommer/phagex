@@ -5,13 +5,13 @@ def onSceneLoad():
 	
 def update(time):
 	if keyboard.isKeyPressed(keyboard.getKey("UP")) :
-		transform.translate(0, 0.01);
+		transform.translate(0, 0.01)
 	if keyboard.isKeyPressed(keyboard.getKey("DOWN")) :
-		transform.translate(0, -0.01);
+		transform.translate(0, -0.01)
 	if keyboard.isKeyPressed(keyboard.getKey("RIGHT")) :
-		transform.rotate(-0.01)
+		transform.translate(0.01, 0)
 	if keyboard.isKeyPressed(keyboard.getKey("LEFT")) :
-		transform.rotate(0.01)
+		transform.translate(-0.01, 0)
 	
 def exit():
 	logger.out('Exiting!')

@@ -61,28 +61,6 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Creates a child Entity of a parent container. The Entity is empty.
-	 * 
-	 * @param name
-	 * 
-	 * @param parent
-	 * @return
-	 */
-	public Entity createEntity(String name, TreeNode parent) {
-		if (parent == null)
-			throw new SceneException("Cannot create an Entity with a null parent!");
-		if (name == null)
-			throw new SceneException("Cannot create an Entity with a null name!");
-		if (!m_allEntities.contains(parent) && !(this == parent))
-			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
-		Entity entity = new Entity(name, this, parent, new ArrayList<Component>());
-		parent.addChild(entity);
-		m_allEntities.add(entity);
-		m_game.entityAdded(entity, parent, this);
-		return entity;
-	}
-
-	/**
 	 * Creates a child Entity of a parent container. The Entity has the Components specified in the builder as well as a
 	 * CTransform and a CScriptData.
 	 * 
@@ -106,6 +84,28 @@ public class Scene implements TreeNode {
 		}
 
 		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), builder.getTransform());
+		parent.addChild(entity);
+		m_allEntities.add(entity);
+		m_game.entityAdded(entity, parent, this);
+		return entity;
+	}
+
+	/**
+	 * Creates a child Entity of a parent container. The Entity is empty.
+	 * 
+	 * @param name
+	 * 
+	 * @param parent
+	 * @return
+	 */
+	public Entity createEntity(String name, TreeNode parent) {
+		if (parent == null)
+			throw new SceneException("Cannot create an Entity with a null parent!");
+		if (name == null)
+			throw new SceneException("Cannot create an Entity with a null name!");
+		if (!m_allEntities.contains(parent) && !(this == parent))
+			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
+		Entity entity = new Entity(name, this, parent, new ArrayList<Component>());
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		m_game.entityAdded(entity, parent, this);
