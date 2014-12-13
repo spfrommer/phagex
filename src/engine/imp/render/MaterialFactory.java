@@ -5,6 +5,7 @@ import glextra.material.Material;
 import glextra.material.MaterialXMLLoader;
 import gltools.texture.Texture2D;
 import gltools.texture.TextureFactory;
+import gltools.texture.TextureWrapMode;
 
 import java.io.IOException;
 
@@ -120,8 +121,14 @@ public class MaterialFactory {
 	 */
 	private Texture2D makeTexture(Resource resource) {
 		try {
-			return TextureFactory.s_loadTexture(m_system.getRenderer().getGL(), resource.getResource(),
+			Texture2D texture = TextureFactory.s_loadTexture(m_system.getRenderer().getGL(), resource.getResource(),
 					new GLResourceLocator(resource.getLocator()));
+			texture.bind(m_system.getRenderer().getGL());
+			texture.setTWrapMode(TextureWrapMode.REPEAT);
+			texture.setSWrapMode(TextureWrapMode.REPEAT);
+			texture.loadParams(m_system.getRenderer().getGL());
+			texture.unbind(m_system.getRenderer().getGL());
+			return texture;
 		} catch (IOException e) {
 			throw new RenderingException("Material could not be created: " + resource.getResource(), e);
 		}

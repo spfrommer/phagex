@@ -89,7 +89,10 @@ public class RenderTest {
 		EntityBuilder bIcicle = new EntityBuilder();
 		bIcicle.addComponentBuilder(new CRender(m_icicle, 2, 1f));
 		EntityBuilder bLake = new EntityBuilder();
-		bLake.addComponentBuilder(new CRender(m_lake, 2, 1f));
+		CRender clake = new CRender(m_lake, 2, 1f);
+		clake.setRepeatX(2);
+		clake.setRepeatY(2);
+		bLake.addComponentBuilder(clake);
 
 		EntityBuilder bBackground = new EntityBuilder();
 
@@ -130,6 +133,11 @@ public class RenderTest {
 
 		while (true) {
 			game.update(0.0166666666f);
+			try {
+				Thread.sleep(16);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

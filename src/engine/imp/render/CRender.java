@@ -13,11 +13,15 @@ public class CRender implements Component {
 	public static final String MATERIAL = "material";
 	public static final String DEPTH = "depth";
 	public static final String LAYER = "layer";
-	private static final String[] IDENTIFIERS = new String[] { MATERIAL, DEPTH, LAYER };
+	public static final String REPEAT_X = "repeatx";
+	public static final String REPEAT_Y = "repeaty";
+	private static final String[] IDENTIFIERS = new String[] { MATERIAL, DEPTH, LAYER, REPEAT_X, REPEAT_Y };
 
 	private Material m_material;
 	private float m_depth;
 	private int m_layer;
+	private float m_repeatX = 1;
+	private float m_repeatY = 1;
 
 	/**
 	 * Creates a CRender with the given Material, a layer of 0, and a parallax depth of 1.
@@ -139,6 +143,48 @@ public class CRender implements Component {
 		m_layer = layer;
 	}
 
+	/**
+	 * @return how often the texture should be repeated ("tiled") in the x direction. It will still fit into the alloted
+	 *         scale.
+	 */
+	public float getRepeatX() {
+		return m_repeatX;
+	}
+
+	/**
+	 * Sets how often the texture should be repeated ("tiled") in the x direction. It will still fit into the alloted
+	 * scale.
+	 * 
+	 * @param repeatX
+	 * @return
+	 */
+	public void setRepeatX(float repeatX) {
+		if (repeatX <= 0)
+			throw new RenderingException("Repeat must be greater than zero!");
+		m_repeatX = repeatX;
+	}
+
+	/**
+	 * @return how often the texture should be repeated ("tiled") in the y direction. It will still fit into the alloted
+	 *         scale.
+	 */
+	public float getRepeatY() {
+		return m_repeatY;
+	}
+
+	/**
+	 * Sets how often the texture should be repeated ("tiled") in the y direction. It will still fit into the alloted
+	 * scale.
+	 * 
+	 * @param repeatY
+	 * @return
+	 */
+	public void setRepeatY(float repeatY) {
+		if (repeatY <= 0)
+			throw new RenderingException("Repeat must be greater than zero!");
+		m_repeatY = repeatY;
+	}
+
 	@Override
 	public String getName() {
 		return NAME;
@@ -158,6 +204,10 @@ public class CRender implements Component {
 			return m_material;
 		if (identifier.equals(DEPTH))
 			return m_depth;
+		if (identifier.equals(REPEAT_X))
+			return m_repeatX;
+		if (identifier.equals(REPEAT_Y))
+			return m_repeatY;
 
 		throw new ComponentException("No such identifier!");
 	}
@@ -173,6 +223,10 @@ public class CRender implements Component {
 			m_material = (Material) data;
 		} else if (identifier.equals(DEPTH)) {
 			m_depth = (Float) data;
+		} else if (identifier.equals(REPEAT_X)) {
+			m_repeatX = (Float) data;
+		} else if (identifier.equals(REPEAT_Y)) {
+			m_repeatY = (Float) data;
 		} else {
 			throw new ComponentException("No data for identifier: " + identifier);
 		}
@@ -183,7 +237,10 @@ public class CRender implements Component {
 		ComponentBuilder<CRender> builder = new ComponentBuilder<CRender>() {
 			@Override
 			public CRender build() {
-				return new CRender(m_material, m_layer, m_depth);
+				CRender newRender = new CRender(m_material, m_layer, m_depth);
+				newRender.setRepeatX(m_repeatX);
+				newRender.setRepeatY(m_repeatY);
+				return newRender;
 			}
 
 			@Override

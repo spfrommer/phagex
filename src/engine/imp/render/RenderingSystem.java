@@ -209,17 +209,6 @@ public class RenderingSystem implements EntitySystem {
 
 	@Override
 	public void postUpdate(Scene scene) {
-		/*if (m_currentCam != null) {
-			CCamera cam = (CCamera) m_currentCam.components().get(CCamera.NAME);
-			Transform2f transform = scene.getWorldTransform(m_currentCam);
-
-			m_renderer.pushModel();
-
-			m_renderer.scale(cam.getScale(), cam.getScale());
-
-			m_renderer.translate(-transform.getTranslation().getX(), -transform.getTranslation().getY());
-		}*/
-
 		List<Integer> orderedLayers = new ArrayList<Integer>(m_entityLayers.keySet());
 		Collections.sort(orderedLayers);
 
@@ -252,16 +241,13 @@ public class RenderingSystem implements EntitySystem {
 					m_renderer.scale(transform.getScale().getX(), transform.getScale().getY());
 				}
 
-				m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH);
+				m_renderer.fillRect(-HALF_DRAW_WIDTH, -HALF_DRAW_WIDTH, DRAW_WIDTH, DRAW_WIDTH, crender.getRepeatX(),
+						crender.getRepeatY());
 
 				m_renderer.popModel();
 			}
 			entities.clear();
 		}
-
-		/*if (m_currentCam != null) {
-			m_renderer.popModel();
-		}*/
 
 		m_renderer.finishGeometry();
 		m_renderer.finishLighted();
