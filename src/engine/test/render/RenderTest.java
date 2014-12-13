@@ -7,6 +7,7 @@ import commons.Resource;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
+import commons.matrix.Vector3f;
 
 import engine.core.Entity;
 import engine.core.EntityBuilder;
@@ -24,7 +25,6 @@ import engine.imp.render.LightingSystem;
 import engine.imp.render.MaterialFactory;
 import engine.imp.render.RenderingSystem;
 import glcommon.Color;
-import glcommon.vector.Vector3f;
 import glextra.material.Material;
 
 /**
@@ -119,7 +119,7 @@ public class RenderTest {
 		EntityBuilder bRedSquare = new EntityBuilder();
 		CAnimation animator = new CAnimation();
 		animator.addAnimation("glow", m_animation);
-		animator.setCurrentAnimation("glow");
+		animator.playAnimation("glow");
 		bRedSquare.addComponentBuilder(animator);
 		bRedSquare.addComponentBuilder(new CRender(m_factory.create(), 1, 1.5f));
 		scene.createEntity("RedSquare", scene, bRedSquare);
@@ -133,11 +133,6 @@ public class RenderTest {
 
 		while (true) {
 			game.update(0.0166666666f);
-			try {
-				Thread.sleep(16);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 

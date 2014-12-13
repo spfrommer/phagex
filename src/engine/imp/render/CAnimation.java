@@ -86,8 +86,9 @@ public class CAnimation implements Component {
 	 * 
 	 * @param name
 	 */
-	public void setCurrentAnimation(String name) {
+	public void playAnimation(String name) {
 		m_current = getAnimation(name);
+		m_current.setCurrentFrame(0);
 		m_currentName = name;
 		m_timeElapsed = 0;
 	}
@@ -145,7 +146,7 @@ public class CAnimation implements Component {
 				for (String s : key) {
 					animation.addAnimation(s, new Animation(getAnimation(s)));
 				}
-				animation.setCurrentAnimation(m_currentName);
+				animation.playAnimation(m_currentName);
 				return animation;
 			}
 

@@ -55,7 +55,7 @@ public class AnimationSystem implements EntitySystem {
 					break iterate;
 				}
 			}
-			animation.setCurrentAnimation(selected);
+			animation.playAnimation(selected);
 			current = animation.getCurrentAnimation();
 		}
 

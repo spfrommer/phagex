@@ -8,6 +8,7 @@ import commons.Resource;
 import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
+import commons.matrix.Vector3f;
 
 import engine.core.ComponentBuilder;
 import engine.core.Entity;
@@ -26,7 +27,6 @@ import engine.imp.render.LightingSystem;
 import engine.imp.render.MaterialFactory;
 import engine.imp.render.RenderingSystem;
 import glcommon.Color;
-import glcommon.vector.Vector3f;
 import glextra.material.Material;
 import gltools.input.Keyboard;
 
