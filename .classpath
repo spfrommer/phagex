@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="lib/gltools/logback-core-1.1.2.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/lwjgl.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/scripting/bsh-2.0b4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
