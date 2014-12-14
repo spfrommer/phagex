@@ -208,7 +208,7 @@ public class Scene implements TreeNode {
 
 		oldParent.removeChild(entity);
 		newParent.addChild(entity);
-		entity.tree().setParent(newParent/*, newLocalTrans*/);
+		entity.tree().setParent(newParent);
 		entity.getCTransform().quietSetTransform(newLocalTrans);
 
 		Transform2f newWorldTrans = getWorldTransform(entity);
@@ -257,15 +257,6 @@ public class Scene implements TreeNode {
 		return new Transform2f(translation, rotation, scale);
 	}
 
-	public static void main(String[] args) {
-		Scene s = new Scene(new Game());
-		Entity e = s.createEntity("test", s);
-		e.getCTransform().setTransform(
-				new Transform2f(new Vector2f(1f, 1f), (float) -Math.PI / 4, new Vector2f(2f, 1f)));
-		Transform2f trans = s.getWorldTransform(e);
-		System.out.println(trans);
-	}
-
 	/**
 	 * @return if this is the current Scene.
 	 */
@@ -306,7 +297,7 @@ public class Scene implements TreeNode {
 	 * @param name
 	 * @return
 	 */
-	public Entity getChild(String name) {
+	public Entity getRootEntity(String name) {
 		if (!m_rootEntities.containsKey(name))
 			throw new SceneException("No Entity for name: " + name);
 
