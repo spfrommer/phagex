@@ -4,8 +4,23 @@ package commons.matrix;
  * An immutable 2d column Vector.
  */
 public class Vector2f extends Matrix {
+	/**
+	 * Creates a Vector2f.
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	public Vector2f(float x, float y) {
 		super(2, 1, new float[] { x, y });
+	}
+
+	/**
+	 * Creates a unit vector from the angle.
+	 * 
+	 * @param angle
+	 */
+	public Vector2f(float angle) {
+		super(2, 1, new float[] { (float) -Math.sin(angle), (float) Math.cos(angle) });
 	}
 
 	/**
@@ -35,6 +50,16 @@ public class Vector2f extends Matrix {
 	 */
 	public float length() {
 		return (float) Math.sqrt(getX() * getX() + getY() * getY());
+	}
+
+	/**
+	 * Scales the Vector2f to the appropriate length and returns the scaled Vector2f.
+	 * 
+	 * @param length
+	 * @return the scaled Vector2f
+	 */
+	public Vector2f setLength(float length) {
+		return this.scalarMultiply(length / this.length()).toVector2f();
 	}
 
 	/**
