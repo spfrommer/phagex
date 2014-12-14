@@ -4,6 +4,7 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Mass;
+import org.dyn4j.geometry.Mass.Type;
 import org.dyn4j.geometry.Rectangle;
 
 import commons.matrix.Vector2f;
@@ -42,13 +43,12 @@ public class CDyn4jBody implements Component {
 	 */
 	public CDyn4jBody() {
 		m_body = new Body();
-		m_fixture = new BodyFixture(new Rectangle(1, 1));
-		m_body.addFixture(m_fixture);
+		// m_fixture = new BodyFixture(new Rectangle(1, 1));
+		// m_body.addFixture(m_fixture);
 
-		setCenter(new Vector2f(0f, 0f));
-
-		m_body.addFixture(m_fixture);
-
+		setShape(new Rectangle(1, 1));
+		setMassType(Type.NORMAL);
+		setGravityScale(1);
 		setDensity(1);
 	}
 
@@ -61,9 +61,10 @@ public class CDyn4jBody implements Component {
 	 */
 	public CDyn4jBody(Convex shape) {
 		m_body = new Body();
-		setShape(shape);
 
-		setCenter(new Vector2f(0f, 0f));
+		setShape(shape);
+		setMassType(Type.NORMAL);
+		setGravityScale(1);
 		setDensity(1);
 	}
 
@@ -374,19 +375,25 @@ public class CDyn4jBody implements Component {
 	 * @param convex
 	 */
 	public void setShape(Convex convex) {
-		float oldMass = getMass();
-		float oldInertia = getInertia();
-		float friction = getCollisionFriction();
-		float restitution = getRestitution();
+		if (m_fixture != null) {
+			float oldMass = getMass();
+			float oldInertia = getInertia();
+			float friction = getCollisionFriction();
+			float restitution = getRestitution();
 
-		m_body.removeAllFixtures();
-		m_fixture = new BodyFixture(convex);
-		m_fixture.setFriction(friction);
-		m_fixture.setRestitution(restitution);
-		m_body.addFixture(m_fixture);
+			m_body.removeAllFixtures();
+			m_fixture = new BodyFixture(convex);
+			m_fixture.setFriction(friction);
+			m_fixture.setRestitution(restitution);
+			m_body.addFixture(m_fixture);
 
-		setMass(oldMass);
-		setInertia(oldInertia);
+			setMass(oldMass);
+			setInertia(oldInertia);
+		} else {
+			m_fixture = new BodyFixture(convex);
+			m_body.addFixture(m_fixture);
+			m_body.setMass(m_fixture.createMass());
+		}
 	}
 
 	/**

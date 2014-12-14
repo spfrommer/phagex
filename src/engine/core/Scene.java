@@ -91,7 +91,7 @@ public class Scene implements TreeNode {
 		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), builder.getTransform());
 		List<XScript> scripts = builder.getScripts();
 		for (XScript script : scripts)
-			entity.scripts().add(script);
+			entity.scripts().add(script.duplicate());
 
 		parent.addChild(entity);
 		m_allEntities.add(entity);
@@ -127,19 +127,29 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Removes an Entity from the Scene.
+	 * Removes an Entity from the Scene. Only use this method if you want to add the Entity back again later.
 	 * 
 	 * @param entity
-	 * @param destroy
-	 *            whether or not the Entity should be completely destroyed to speed up garbage collection. Unless you
-	 *            want to reuse the Entity later, set this flag to true.
 	 */
-	public void destroyEntity(Entity entity, boolean destroy) {
+	public void removeEntity(Entity entity) {
+		if (!m_allEntities.contains(entity))
+			throw new SceneException("Trying to remove an Entity not in the Scene!");
+
+		entity.tree().getParent().removeChild(entity);
+		recursiveRemove(entity, entity.tree().getParent(), false);
+	}
+
+	/**
+	 * Removes an Entity from the Scene and destroys it completely to speed up garbage collection.
+	 * 
+	 * @param entity
+	 */
+	public void destroyEntity(Entity entity) {
 		if (!m_allEntities.contains(entity))
 			throw new SceneException("Trying to destroy an Entity not in the Scene!");
 
 		entity.tree().getParent().removeChild(entity);
-		recursiveRemove(entity, entity.tree().getParent(), destroy);
+		recursiveRemove(entity, entity.tree().getParent(), true);
 	}
 
 	/**

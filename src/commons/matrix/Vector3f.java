@@ -30,6 +30,13 @@ public class Vector3f extends Matrix {
 	}
 
 	/**
+	 * @return the length of the Vector3f
+	 */
+	public float length() {
+		return (float) Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+	}
+
+	/**
 	 * Returns a Vector2f from the x and y components of this Vector.
 	 * 
 	 * @return

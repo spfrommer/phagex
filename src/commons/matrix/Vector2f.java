@@ -31,6 +31,20 @@ public class Vector2f extends Matrix {
 	}
 
 	/**
+	 * @return the length of the Vector2f
+	 */
+	public float length() {
+		return (float) Math.sqrt(getX() * getX() + getY() * getY());
+	}
+
+	/**
+	 * @return the angle in radians, with zero being north and positive going counter clockwise
+	 */
+	public float angle() {
+		return (float) Math.atan2(-getX(), getY());
+	}
+
+	/**
 	 * Returns the z dimension of the cross product of 2 vectors in the 2d plane (the x and y dimensions are obviously
 	 * zero).
 	 * 

@@ -72,6 +72,7 @@ public class ScriptManager {
 		if (!m_scripts.contains(script))
 			throw new XScriptException("Trying to remove nonexistant Script!");
 
+		script.exit();
 		script.deactivateContext();
 		m_scripts.remove(script);
 	}
