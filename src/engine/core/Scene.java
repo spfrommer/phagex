@@ -2,7 +2,9 @@ package engine.core;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,9 +21,10 @@ import engine.core.script.XScript;
  */
 public class Scene implements TreeNode {
 	// the top level entities are practically the children of the EntityContainer aspect of the Scene
-	private List<Entity> m_rootEntities;
+	private Map<String, Entity> m_rootEntities;
+	// private List<Entity> m_rootEntities;
 	private List<Entity> m_allEntities;
-	private List<String> m_childNames;
+	// private List<String> m_childNames;
 	private Game m_game;
 
 	private String m_name;
@@ -32,9 +35,8 @@ public class Scene implements TreeNode {
 	 * @param game
 	 */
 	public Scene(Game game) {
-		m_rootEntities = new ArrayList<Entity>();
+		m_rootEntities = new HashMap<String, Entity>();
 		m_allEntities = new ArrayList<Entity>();
-		m_childNames = new ArrayList<String>();
 		m_game = game;
 	}
 
@@ -248,7 +250,6 @@ public class Scene implements TreeNode {
 		}
 
 		Vector2f translation = new Vector2f((float) at.getTranslateX(), (float) at.getTranslateY());
-		// float rotation = (float) Math.atan2(at.getShearY(), at.getScaleY());
 		float rotation = totalRot;
 		Vector2f scale = new Vector2f((float) (at.getScaleX() / Math.cos(rotation)),
 				(float) (at.getScaleY() / Math.cos(rotation)));
@@ -291,21 +292,25 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Gets the top level Entities in the Scene.
-	 * 
-	 * @return
-	 */
-	protected List<Entity> directGetRootEntities() {
-		return m_rootEntities;
-	}
-
-	/**
 	 * Gets all the top level Entities in the Scene.
 	 * 
 	 * @return
 	 */
-	public List<Entity> getRootEntities() {
-		return new ArrayList<Entity>(m_rootEntities);
+	public Collection<Entity> getRootEntities() {
+		return m_rootEntities.values();
+	}
+
+	/**
+	 * Gets a top-level entity by its name.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public Entity getChild(String name) {
+		if (!m_rootEntities.containsKey(name))
+			throw new SceneException("No Entity for name: " + name);
+
+		return m_rootEntities.get(name);
 	}
 
 	/**
@@ -330,12 +335,13 @@ public class Scene implements TreeNode {
 	 */
 	@Override
 	public void addChild(Entity entity) {
-		if (m_rootEntities.contains(entity))
+		if (m_rootEntities.containsValue(entity))
 			throw new SceneException("Entity is already in Scene!");
-		if (m_childNames.contains(entity.getName()))
+		if (m_rootEntities.containsKey(entity.getName()))
 			throw new EntityException("No two children with the same name allowed!");
-		m_childNames.add(entity.getName());
-		m_rootEntities.add(entity);
+		// m_childNames.add(entity.getName());
+		// m_rootEntities.add(entity);
+		m_rootEntities.put(entity.getName(), entity);
 	}
 
 	/**
@@ -344,18 +350,18 @@ public class Scene implements TreeNode {
 	 */
 	@Override
 	public void removeChild(Entity entity) {
-		if (!m_rootEntities.contains(entity))
+		if (!m_rootEntities.containsKey(entity.getName()))
 			throw new SceneException("Trying to remove an Entity not in the top level!");
-		m_childNames.remove(entity.getName());
-		m_rootEntities.remove(entity);
+
+		m_rootEntities.remove(entity.getName());
 	}
 
 	@Override
 	public void childNameChanged(TreeNode child, String oldName, String newName) {
-		if (m_childNames.contains(newName))
+		if (m_rootEntities.containsKey(newName))
 			throw new EntityException("No two children with the same name allowed!");
-		m_childNames.remove(oldName);
-		m_childNames.add(newName);
+		m_rootEntities.remove(oldName);
+		m_rootEntities.put(newName, (Entity) child);
 	}
 
 	@Override
