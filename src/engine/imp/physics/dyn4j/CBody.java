@@ -17,8 +17,8 @@ import engine.imp.physics.PhysicsUtils;
 /**
  * Contains data for the PhysicsSystem (Dyn4j backend). This code was adapted from the Phage2d project.
  */
-public class CDyn4jBody implements Component {
-	public static final String NAME = "dyn4jBody";
+public class CBody implements Component {
+	public static final String NAME = "body";
 	public static final String BULLET = "bullet";
 	public static final String LINEAR_DAMPING = "linearDamping";
 	public static final String ANGULAR_DAMPING = "angularDamping";
@@ -41,7 +41,7 @@ public class CDyn4jBody implements Component {
 	 * 
 	 * @param def
 	 */
-	public CDyn4jBody() {
+	public CBody() {
 		m_body = new Body();
 		// m_fixture = new BodyFixture(new Rectangle(1, 1));
 		// m_body.addFixture(m_fixture);
@@ -59,7 +59,7 @@ public class CDyn4jBody implements Component {
 	 * 
 	 * @param def
 	 */
-	public CDyn4jBody(Convex shape) {
+	public CBody(Convex shape) {
 		m_body = new Body();
 
 		setShape(shape);
@@ -496,11 +496,11 @@ public class CDyn4jBody implements Component {
 	}
 
 	@Override
-	public ComponentBuilder<CDyn4jBody> getBuilder() {
-		ComponentBuilder<CDyn4jBody> builder = new ComponentBuilder<CDyn4jBody>() {
+	public ComponentBuilder<CBody> getBuilder() {
+		ComponentBuilder<CBody> builder = new ComponentBuilder<CBody>() {
 			@Override
-			public CDyn4jBody build() {
-				CDyn4jBody newBody = new CDyn4jBody(getShape());
+			public CBody build() {
+				CBody newBody = new CBody(getShape());
 				newBody.setAngularDamping(getAngularDamping());
 				newBody.setAsleep(isAsleep());
 				newBody.setBullet(isBullet());

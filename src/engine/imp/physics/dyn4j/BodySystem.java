@@ -22,10 +22,10 @@ import engine.imp.physics.PhysicsUtils;
 /**
  * Manages the bodies of a Game.
  */
-public class Dyn4jBodySystem implements EntitySystem {
-	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CDyn4jBody.NAME },
+public class BodySystem implements EntitySystem {
+	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CBody.NAME },
 			new String[0], new String[0], true);
-	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CDyn4jBody.NAME },
+	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CBody.NAME },
 			new String[0], new String[0], false);
 	private World m_world;
 
@@ -34,7 +34,7 @@ public class Dyn4jBodySystem implements EntitySystem {
 	 * 
 	 * @param gravity
 	 */
-	public Dyn4jBodySystem(Vector2f gravity) {
+	public BodySystem(Vector2f gravity) {
 		m_world = new World();
 		m_world.setGravity(new Vector2(gravity.getX(), gravity.getY()));
 	}
@@ -63,7 +63,7 @@ public class Dyn4jBodySystem implements EntitySystem {
 	}
 
 	private void addEntityToWorld(Entity entity, Scene scene) {
-		CDyn4jBody entityPhysics = (CDyn4jBody) entity.components().get(CDyn4jBody.NAME);
+		CBody entityPhysics = (CBody) entity.components().get(CBody.NAME);
 		Body body = entityPhysics.getBody();
 
 		Transform2f worldTransform = scene.getWorldTransform(entity);
@@ -80,7 +80,7 @@ public class Dyn4jBodySystem implements EntitySystem {
 	@Override
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
 		if (scene.isCurrent()) {
-			CDyn4jBody entityPhysics = (CDyn4jBody) entity.components().get(CDyn4jBody.NAME);
+			CBody entityPhysics = (CBody) entity.components().get(CBody.NAME);
 			m_world.removeBody(entityPhysics.getBody());
 		}
 	}
@@ -97,7 +97,7 @@ public class Dyn4jBodySystem implements EntitySystem {
 
 	@Override
 	public void updateEntity(Entity entity, Scene scene, float time) {
-		CDyn4jBody entityPhysics = (CDyn4jBody) entity.components().get(CDyn4jBody.NAME);
+		CBody entityPhysics = (CBody) entity.components().get(CBody.NAME);
 
 		Body body = entityPhysics.getBody();
 
@@ -139,7 +139,7 @@ public class Dyn4jBodySystem implements EntitySystem {
 
 		@Override
 		public void transformSet(Entity entity, Transform2f oldTransform, Transform2f newTransform, Scene scene) {
-			Body body = ((CDyn4jBody) entity.components().get(CDyn4jBody.NAME)).getBody();
+			Body body = ((CBody) entity.components().get(CBody.NAME)).getBody();
 			Transform2f worldTrans = scene.getWorldTransform(entity);
 			Transform newTrans = new Transform();
 			newTrans.setTranslation(worldTrans.getTranslation().getX(), worldTrans.getTranslation().getY());

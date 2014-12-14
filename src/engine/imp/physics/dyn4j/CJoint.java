@@ -11,7 +11,7 @@ import engine.core.exceptions.ComponentException;
 import engine.imp.physics.PhysicsException;
 import engine.imp.physics.PhysicsUtils;
 
-public class CDyn4jJoint implements Component {
+public class CJoint implements Component {
 	public static final String NAME = "joint";
 	public static final String JOINT = "joint";
 	public static final String ANCHOR1 = "anchor1";
@@ -22,7 +22,7 @@ public class CDyn4jJoint implements Component {
 
 	private Joint m_joint;
 
-	public CDyn4jJoint(Joint joint) {
+	public CJoint(Joint joint) {
 		if (joint == null)
 			throw new PhysicsException("Joint cannot be null!");
 		m_joint = joint;
@@ -123,11 +123,11 @@ public class CDyn4jJoint implements Component {
 	}
 
 	@Override
-	public ComponentBuilder<CDyn4jJoint> getBuilder() {
-		ComponentBuilder<CDyn4jJoint> builder = new ComponentBuilder<CDyn4jJoint>() {
+	public ComponentBuilder<CJoint> getBuilder() {
+		ComponentBuilder<CJoint> builder = new ComponentBuilder<CJoint>() {
 			@Override
-			public CDyn4jJoint build() {
-				return new CDyn4jJoint(m_joint);
+			public CJoint build() {
+				return new CJoint(m_joint);
 			}
 
 			@Override

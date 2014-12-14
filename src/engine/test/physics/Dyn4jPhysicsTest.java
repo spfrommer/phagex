@@ -15,10 +15,10 @@ import engine.core.Entity;
 import engine.core.EntityBuilder;
 import engine.core.Game;
 import engine.core.Scene;
-import engine.imp.physics.dyn4j.CDyn4jBody;
-import engine.imp.physics.dyn4j.CDyn4jJoint;
-import engine.imp.physics.dyn4j.Dyn4jBodySystem;
-import engine.imp.physics.dyn4j.Dyn4jJointSystem;
+import engine.imp.physics.dyn4j.BodySystem;
+import engine.imp.physics.dyn4j.CBody;
+import engine.imp.physics.dyn4j.CJoint;
+import engine.imp.physics.dyn4j.JointSystem;
 import engine.imp.physics.dyn4j.PhysicsFactory;
 import engine.imp.render.CLight;
 import engine.imp.render.CRender;
@@ -31,7 +31,8 @@ import glextra.material.Material;
 import gltools.input.Keyboard;
 
 /**
- * Tests the Dyn4j physics.
+ * Tests the Dyn4j physics. THIS IS NOT A GOOD WAY TO LEARN HOW TO STRUCTURE YOUR PROJECT. Look at the platformer game
+ * for that (seperate project).
  */
 public class Dyn4jPhysicsTest {
 	private MaterialFactory m_factory;
@@ -48,8 +49,8 @@ public class Dyn4jPhysicsTest {
 		Game game = new Game();
 		RenderingSystem rendering = new RenderingSystem(20f, 20f);
 		LightingSystem lighting = new LightingSystem(rendering);
-		Dyn4jBodySystem bodies = new Dyn4jBodySystem(new Vector2f(0f, -10f));
-		Dyn4jJointSystem joints = new Dyn4jJointSystem(bodies);
+		BodySystem bodies = new BodySystem(new Vector2f(0f, -10f));
+		JointSystem joints = new JointSystem(bodies);
 		game.addSystem(rendering);
 		game.addSystem(lighting);
 		game.addSystem(bodies);
@@ -67,7 +68,7 @@ public class Dyn4jPhysicsTest {
 		Entity brick1 = scene.createEntity("brick1", scene, brickBuilder);
 		brick1.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, new Vector2f(1f, 1f)));
 		Entity brick2 = scene.createEntity("brick2", scene, brickBuilder);
-		brick1.fields().set(CDyn4jBody.DENSITY, 100f);
+		brick1.fields().set(CBody.DENSITY, 100f);
 		brick2.getCTransform().setTransform(new Transform2f(new Vector2f(4f, 2f), 0f, new Vector2f(1f, 1f)));
 
 		EntityBuilder jointBuilder = new EntityBuilder();
@@ -92,7 +93,7 @@ public class Dyn4jPhysicsTest {
 		while (true) {
 			Keyboard keyboard = rendering.getKeyboard();
 			if (keyboard.isKeyPressed(keyboard.getKey("UP"))) {
-				CDyn4jBody physicsComp = (CDyn4jBody) brick1.components().get(CDyn4jBody.NAME);
+				CBody physicsComp = (CBody) brick1.components().get(CBody.NAME);
 				physicsComp.applyForce(new Vector2f(0f, 1f));
 				physicsComp.applyTorque(1f);
 			}
@@ -103,13 +104,13 @@ public class Dyn4jPhysicsTest {
 		}
 	}
 
-	private class CBrickBuilder implements ComponentBuilder<CDyn4jBody> {
+	private class CBrickBuilder implements ComponentBuilder<CBody> {
 		public CBrickBuilder() {
 		}
 
 		@Override
-		public CDyn4jBody build() {
-			CDyn4jBody physics = new CDyn4jBody();
+		public CBody build() {
+			CBody physics = new CBody();
 			physics.setShape(new Rectangle(1, 1));
 			physics.setGravityScale(1);
 			physics.setMassType(Type.NORMAL);
@@ -120,11 +121,11 @@ public class Dyn4jPhysicsTest {
 
 		@Override
 		public String getName() {
-			return CDyn4jBody.NAME;
+			return CBody.NAME;
 		}
 	}
 
-	private class CJointBuilder implements ComponentBuilder<CDyn4jJoint> {
+	private class CJointBuilder implements ComponentBuilder<CJoint> {
 		private Joint m_joint;
 
 		public CJointBuilder(Joint joint) {
@@ -132,20 +133,20 @@ public class Dyn4jPhysicsTest {
 		}
 
 		@Override
-		public CDyn4jJoint build() {
-			return new CDyn4jJoint(m_joint);
+		public CJoint build() {
+			return new CJoint(m_joint);
 		}
 
 		@Override
 		public String getName() {
-			return CDyn4jJoint.NAME;
+			return CJoint.NAME;
 		}
 	}
 
-	private class CGroundBuilder implements ComponentBuilder<CDyn4jBody> {
+	private class CGroundBuilder implements ComponentBuilder<CBody> {
 		@Override
-		public CDyn4jBody build() {
-			CDyn4jBody physics = new CDyn4jBody();
+		public CBody build() {
+			CBody physics = new CBody();
 			physics.setShape(new Rectangle(2, 1));
 			physics.setGravityScale(1);
 			physics.setMassType(Type.INFINITE);
@@ -154,7 +155,7 @@ public class Dyn4jPhysicsTest {
 
 		@Override
 		public String getName() {
-			return CDyn4jBody.NAME;
+			return CBody.NAME;
 		}
 	}
 

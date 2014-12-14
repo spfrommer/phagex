@@ -34,8 +34,8 @@ public class PhysicsFactory {
 		if (worldAnchor == null)
 			throw new PhysicsException("Cannot create revolute joint with null Anchor!");
 
-		CDyn4jBody b1 = (CDyn4jBody) body1.components().get(CDyn4jBody.NAME);
-		CDyn4jBody b2 = (CDyn4jBody) body2.components().get(CDyn4jBody.NAME);
+		CBody b1 = (CBody) body1.components().get(CBody.NAME);
+		CBody b2 = (CBody) body2.components().get(CBody.NAME);
 		Vector2 a = PhysicsUtils.toDyn4j(worldAnchor);
 		return new WeldJoint(b1.getBody(), b2.getBody(), a);
 	}
@@ -54,8 +54,8 @@ public class PhysicsFactory {
 		if (worldAnchor == null)
 			throw new PhysicsException("Cannot create revolute joint with null Anchor!");
 
-		CDyn4jBody b1 = (CDyn4jBody) body1.components().get(CDyn4jBody.NAME);
-		CDyn4jBody b2 = (CDyn4jBody) body2.components().get(CDyn4jBody.NAME);
+		CBody b1 = (CBody) body1.components().get(CBody.NAME);
+		CBody b2 = (CBody) body2.components().get(CBody.NAME);
 		Vector2 a = PhysicsUtils.toDyn4j(worldAnchor);
 		return new RevoluteJoint(b1.getBody(), b2.getBody(), a);
 	}
@@ -74,8 +74,8 @@ public class PhysicsFactory {
 		if (body1 == null || body2 == null)
 			throw new PhysicsException("Cannot create revolute joint with null Body!");
 
-		CDyn4jBody b1 = (CDyn4jBody) body1.components().get(CDyn4jBody.NAME);
-		CDyn4jBody b2 = (CDyn4jBody) body2.components().get(CDyn4jBody.NAME);
+		CBody b1 = (CBody) body1.components().get(CBody.NAME);
+		CBody b2 = (CBody) body2.components().get(CBody.NAME);
 		Vector2 a1 = PhysicsUtils.toDyn4j(worldAnchor1);
 		Vector2 a2 = PhysicsUtils.toDyn4j(worldAnchor2);
 		return new DistanceJoint(b1.getBody(), b2.getBody(), a1, a2);

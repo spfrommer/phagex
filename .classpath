@@ -3,9 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1-javadoc.jar"/>
-	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1-sources.jar"/>
-	<classpathentry kind="lib" path="lib/physics/jbox2d-library-2.2.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>

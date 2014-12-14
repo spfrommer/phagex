@@ -15,14 +15,14 @@ import engine.core.script.XScript;
 /**
  * Manages the Joints in a game.
  */
-public class Dyn4jJointSystem implements EntitySystem {
-	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CDyn4jJoint.NAME },
+public class JointSystem implements EntitySystem {
+	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CJoint.NAME },
 			new String[0], new String[0], true);
-	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CDyn4jJoint.NAME },
+	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CJoint.NAME },
 			new String[0], new String[0], false);
-	private Dyn4jBodySystem m_bodySystem;
+	private BodySystem m_bodySystem;
 
-	public Dyn4jJointSystem(Dyn4jBodySystem bodySystem) {
+	public JointSystem(BodySystem bodySystem) {
 		m_bodySystem = bodySystem;
 	}
 
@@ -31,7 +31,7 @@ public class Dyn4jJointSystem implements EntitySystem {
 		m_bodySystem.getWorld().removeAllJoints();
 		List<Entity> newAll = newScene.getEntitiesByFilter(s_eventFilter);
 		for (Entity e : newAll) {
-			CDyn4jJoint entityPhysics = (CDyn4jJoint) e.components().get(CDyn4jJoint.NAME);
+			CJoint entityPhysics = (CJoint) e.components().get(CJoint.NAME);
 			World world = m_bodySystem.getWorld();
 			world.addJoint(entityPhysics.getJoint());
 		}
@@ -40,7 +40,7 @@ public class Dyn4jJointSystem implements EntitySystem {
 	@Override
 	public void entityAdded(Entity entity, TreeNode parent, Scene scene) {
 		if (scene.isCurrent()) {
-			CDyn4jJoint entityPhysics = (CDyn4jJoint) entity.components().get(CDyn4jJoint.NAME);
+			CJoint entityPhysics = (CJoint) entity.components().get(CJoint.NAME);
 			World world = m_bodySystem.getWorld();
 			world.addJoint(entityPhysics.getJoint());
 		}
@@ -49,7 +49,7 @@ public class Dyn4jJointSystem implements EntitySystem {
 	@Override
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
 		if (scene.isCurrent()) {
-			CDyn4jJoint entityPhysics = (CDyn4jJoint) entity.components().get(CDyn4jJoint.NAME);
+			CJoint entityPhysics = (CJoint) entity.components().get(CJoint.NAME);
 			World world = m_bodySystem.getWorld();
 			world.removeJoint(entityPhysics.getJoint());
 		}
