@@ -1,6 +1,7 @@
 package commons;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * Contains methods for getting resources.
@@ -18,9 +19,19 @@ public class ResourceFactory {
 	public static String readString(Resource resource) {
 		if (resource == null)
 			throw new ResourceException("Cannot read a null resource!");
-		Scanner scanner = new Scanner(resource.open(), "UTF-8");
-		String string = scanner.useDelimiter("\\A").next();
-		scanner.close();
-		return string;
+		try {
+			StringBuilder text = new StringBuilder();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(resource.open()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				text.append(line).append('\n');
+			}
+			reader.close();
+
+			return text.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
