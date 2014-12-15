@@ -11,17 +11,19 @@ import glextra.material.Material;
 public class CRender implements Component {
 	public static final String NAME = "render";
 	public static final String MATERIAL = "material";
-	public static final String DEPTH = "depth";
 	public static final String LAYER = "layer";
-	public static final String REPEAT_X = "repeatx";
-	public static final String REPEAT_Y = "repeaty";
-	private static final String[] IDENTIFIERS = new String[] { MATERIAL, DEPTH, LAYER, REPEAT_X, REPEAT_Y };
+	public static final String DEPTH = "depth";
+	public static final String REPEAT_X = "repeatX";
+	public static final String REPEAT_Y = "repeatY";
+	public static final String IS_VISIBLE = "isVisible";
+	private static final String[] IDENTIFIERS = new String[] { MATERIAL, LAYER, DEPTH, REPEAT_X, REPEAT_Y, IS_VISIBLE };
 
 	private Material m_material;
 	private float m_depth;
 	private int m_layer;
 	private float m_repeatX = 1;
 	private float m_repeatY = 1;
+	private boolean m_isVisible = true;
 
 	/**
 	 * Creates a CRender with the given Material, a layer of 0, and a parallax depth of 1.
@@ -185,6 +187,22 @@ public class CRender implements Component {
 		m_repeatY = repeatY;
 	}
 
+	/**
+	 * @return whether this Entity should be rendered
+	 */
+	public boolean isVisible() {
+		return m_isVisible;
+	}
+
+	/**
+	 * Sets whether this Entity should be rendered.
+	 * 
+	 * @param visible
+	 */
+	public void setVisible(boolean visible) {
+		m_isVisible = visible;
+	}
+
 	@Override
 	public String getName() {
 		return NAME;
@@ -202,12 +220,16 @@ public class CRender implements Component {
 
 		if (identifier.equals(MATERIAL))
 			return m_material;
+		if (identifier.equals(LAYER))
+			return m_layer;
 		if (identifier.equals(DEPTH))
 			return m_depth;
 		if (identifier.equals(REPEAT_X))
 			return m_repeatX;
 		if (identifier.equals(REPEAT_Y))
 			return m_repeatY;
+		if (identifier.equals(IS_VISIBLE))
+			return m_isVisible;
 
 		throw new ComponentException("No such identifier!");
 	}
@@ -221,12 +243,16 @@ public class CRender implements Component {
 
 		if (identifier.equals(MATERIAL)) {
 			m_material = (Material) data;
+		} else if (identifier.equals(LAYER)) {
+			m_layer = (Integer) data;
 		} else if (identifier.equals(DEPTH)) {
 			m_depth = (Float) data;
 		} else if (identifier.equals(REPEAT_X)) {
 			m_repeatX = (Float) data;
 		} else if (identifier.equals(REPEAT_Y)) {
 			m_repeatY = (Float) data;
+		} else if (identifier.equals(IS_VISIBLE)) {
+			m_isVisible = (Boolean) data;
 		} else {
 			throw new ComponentException("No data for identifier: " + identifier);
 		}
@@ -240,6 +266,7 @@ public class CRender implements Component {
 				CRender newRender = new CRender(m_material, m_layer, m_depth);
 				newRender.setRepeatX(m_repeatX);
 				newRender.setRepeatY(m_repeatY);
+				newRender.setVisible(m_isVisible);
 				return newRender;
 			}
 

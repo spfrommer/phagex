@@ -218,6 +218,9 @@ public class RenderingSystem implements EntitySystem {
 			for (Entity e : entities) {
 				Transform2f transform = scene.getWorldTransform(e);
 				CRender crender = (CRender) e.components().get(CRender.NAME);
+				if (!crender.isVisible())
+					continue;
+
 				m_renderer.setMaterial(crender.getMaterial());
 
 				m_renderer.pushModel();
