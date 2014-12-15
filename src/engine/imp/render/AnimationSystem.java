@@ -1,6 +1,6 @@
 package engine.imp.render;
 
-import java.util.Set;
+import commons.Logger;
 
 import engine.core.Entity;
 import engine.core.EntityFilter;
@@ -9,6 +9,7 @@ import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
 import engine.core.script.XScript;
+import gltools.texture.Texture2D;
 
 /**
  * Updates animations.
@@ -46,22 +47,24 @@ public class AnimationSystem implements EntitySystem {
 		CRender render = (CRender) entity.components().get(CRender.NAME);
 		CAnimation animation = (CAnimation) entity.components().get(CAnimation.NAME);
 		Animation current = animation.getCurrentAnimation();
-		if (current == null) {
-			Set<String> names = animation.allNames();
-			String selected = null;
-			iterate: {
-				for (String s : names) {
-					selected = s;
-					break iterate;
-				}
-			}
-			animation.playAnimation(selected);
-			current = animation.getCurrentAnimation();
-		}
+		if (current == null)
+			return;
 
 		float timePerFrame = current.getTimePerFrame();
+		// if on first frame
+		if (current.isFirstFrame()) {
+			if (current.isFinished()) {
+				Logger.instance().warn("No frames in animation on Entity: " + entity);
+				return;
+			}
+			Texture2D texture = current.getFrames().get(0);
+			render.getMaterial().setTexture2D(MaterialFactory.MATERIAL_DIFFUSE_TEXTURE, texture);
+			current.setFirstFrame(false);
+		}
+
 		animation.setTimeElapsed(animation.getTimeElapsed() + time);
 		float elapsed = animation.getTimeElapsed();
+
 		while (elapsed >= timePerFrame) {
 			if (current.isFinished()) {
 				if (current.isRepeating()) {
@@ -73,7 +76,8 @@ public class AnimationSystem implements EntitySystem {
 			}
 			int nextFrame = current.getCurrentFrame() + 1;
 			current.setCurrentFrame(nextFrame);
-			render.setMaterial(current.getFrames().get(nextFrame));
+			Texture2D texture = current.getFrames().get(nextFrame);
+			render.getMaterial().setTexture2D(MaterialFactory.MATERIAL_DIFFUSE_TEXTURE, texture);
 			elapsed -= timePerFrame;
 			animation.setTimeElapsed(elapsed);
 		}

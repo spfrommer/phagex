@@ -1,6 +1,6 @@
 package engine.imp.render;
 
-import glextra.material.Material;
+import gltools.texture.Texture2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,21 +9,23 @@ import java.util.List;
  * Contains the data for one Animation.
  */
 public class Animation {
-	private List<Material> m_frames;
+	private List<Texture2D> m_frames;
 
 	// time since last update
 	private int m_currentFrame;
 
-	// time for a frame in second
+	// time for a frame in milliseconds
 	private float m_timePerFrame;
 	private boolean m_repeat;
+
+	private boolean m_isFirstFrame = true;
 
 	/**
 	 * Initializes an Animation with frames.
 	 * 
 	 * @param frames
 	 */
-	public Animation(List<Material> frames) {
+	public Animation(List<Texture2D> frames) {
 		if (frames == null)
 			throw new AnimationException("Frames cannot be null!");
 		m_frames = frames;
@@ -38,14 +40,30 @@ public class Animation {
 	 * @param animation
 	 */
 	public Animation(Animation animation) {
-		m_frames = new ArrayList<Material>();
-		for (Material m : animation.m_frames) {
+		m_frames = new ArrayList<Texture2D>();
+		for (Texture2D m : animation.m_frames) {
 			m_frames.add(m);
 		}
 
 		m_currentFrame = 0;
 		m_timePerFrame = animation.getTimePerFrame();
 		m_repeat = animation.isRepeating();
+	}
+
+	/**
+	 * Sets whether this is the "starter" frame - not used for repeats, only set once
+	 * 
+	 * @param first
+	 */
+	protected void setFirstFrame(boolean first) {
+		m_isFirstFrame = first;
+	}
+
+	/**
+	 * @return whether this is the "starter" frame - not used for repeats, only set once
+	 */
+	protected boolean isFirstFrame() {
+		return m_isFirstFrame;
 	}
 
 	/**
@@ -67,14 +85,14 @@ public class Animation {
 	}
 
 	/**
-	 * @return the time spent on each frame of the animation
+	 * @return the time spent on each frame of the animation in milliseconds
 	 */
 	public float getTimePerFrame() {
 		return m_timePerFrame;
 	}
 
 	/**
-	 * Sets the time spent on each frame of the animation.
+	 * Sets the time spent on each frame of the animation in milliseconds.
 	 * 
 	 * @param timePerFrame
 	 */
@@ -110,7 +128,7 @@ public class Animation {
 	/**
 	 * @return a modifieable List of the frames
 	 */
-	public List<Material> getFrames() {
+	public List<Texture2D> getFrames() {
 		return m_frames;
 	}
 }

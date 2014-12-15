@@ -26,9 +26,11 @@ import engine.imp.render.MaterialFactory;
 import engine.imp.render.RenderingSystem;
 import glcommon.Color;
 import glextra.material.Material;
+import gltools.texture.Texture2D;
 
 /**
- * Tests the rendering. Uses art from the public domain Glitch game.
+ * Tests the rendering. Uses art from the public domain Glitch game. THIS IS NOT A GOOD WAY TO LEARN HOW TO STRUCTURE
+ * YOUR PROJECT. Look at the platformer game for that (seperate project).
  */
 public class RenderTest {
 	private MaterialFactory m_factory;
@@ -43,14 +45,24 @@ public class RenderTest {
 	private Resource m_rPlatform4;
 	private Material m_platform4;
 
+	private Resource m_rFrame1;
+	private Resource m_rFrame2;
+	private Resource m_rFrame3;
+	private Resource m_rFrame4;
+
 	private Animation m_animation;
 
 	public RenderTest() {
-		m_script = new Resource(new ClasspathResourceLocator(), "engine/test/render/Script.py");
-		m_rIcicle = new Resource(new ClasspathResourceLocator(), "engine/test/render/cave_icicle_1_0.png");
-		m_rLake = new Resource(new ClasspathResourceLocator(), "engine/test/render/cave_lake_1_0.png");
-		m_rPlatform1 = new Resource(new ClasspathResourceLocator(), "engine/test/render/cave_platform_1_0.png");
-		m_rPlatform4 = new Resource(new ClasspathResourceLocator(), "engine/test/render/cave_platform_4_0.png");
+		ClasspathResourceLocator locator = new ClasspathResourceLocator();
+		m_script = new Resource(locator, "engine/test/render/Script.py");
+		m_rIcicle = new Resource(locator, "engine/test/render/cave_icicle_1_0.png");
+		m_rLake = new Resource(locator, "engine/test/render/cave_lake_1_0.png");
+		m_rPlatform1 = new Resource(locator, "engine/test/render/cave_platform_1_0.png");
+		m_rPlatform4 = new Resource(locator, "engine/test/render/cave_platform_4_0.png");
+		m_rFrame1 = new Resource(locator, "engine/test/render/treads1.png");
+		m_rFrame2 = new Resource(locator, "engine/test/render/treads2.png");
+		m_rFrame3 = new Resource(locator, "engine/test/render/treads3.png");
+		m_rFrame4 = new Resource(locator, "engine/test/render/treads4.png");
 
 	}
 
@@ -69,14 +81,15 @@ public class RenderTest {
 		m_platform1 = m_factory.createLighted(m_rPlatform1);
 		m_platform4 = m_factory.createLighted(m_rPlatform4);
 
-		List<Material> frames = new ArrayList<Material>();
-		for (int r = 0; r < 100; r++) {
-			Material material = m_factory.createLighted(new Color(r / 100f, 0f, 0f));
-			frames.add(material);
-		}
+		List<Texture2D> frames = new ArrayList<Texture2D>();
+		frames.add(m_factory.createTexture(m_rFrame1));
+		frames.add(m_factory.createTexture(m_rFrame2));
+		frames.add(m_factory.createTexture(m_rFrame3));
+		frames.add(m_factory.createTexture(m_rFrame4));
+
 		m_animation = new Animation(frames);
 		m_animation.setRepeating(true);
-		m_animation.setTimePerFrame(0.01f);
+		m_animation.setTimePerFrame(100f);
 
 		Scene scene = new Scene(game);
 		game.scenes().addScene(scene, "main");
@@ -119,13 +132,13 @@ public class RenderTest {
 		Entity lake = scene.createEntity("lake", scene, bLake);
 		lake.getCTransform().translate(0f, -0.8f);
 
-		EntityBuilder bRedSquare = new EntityBuilder();
+		EntityBuilder bTreads = new EntityBuilder();
 		CAnimation animator = new CAnimation();
 		animator.addAnimation("glow", m_animation);
 		animator.playAnimation("glow");
-		bRedSquare.addComponentBuilder(animator);
-		bRedSquare.addComponentBuilder(new CRender(m_factory.create(), 1, 1.5f));
-		scene.createEntity("RedSquare", scene, bRedSquare);
+		bTreads.addComponentBuilder(animator);
+		bTreads.addComponentBuilder(new CRender(m_factory.create(), 1, 1.5f));
+		scene.createEntity("treads", scene, bTreads);
 
 		EntityBuilder cameraBuilder = new EntityBuilder();
 		cameraBuilder.addComponentBuilder(new CCamera(0.5f, true));

@@ -17,7 +17,10 @@ import commons.ResourceLocator.ClasspathResourceLocator;
  * A MaterialFactory bound to a RenderSystem for the Display.
  */
 public class MaterialFactory {
-	public static String MATERIAL_LOC = "Materials/M2D/2d.mat";
+	public static final String MATERIAL_LOC = "Materials/M2D/2d.mat";
+	public static final String MATERIAL_DIFFUSE_TEXTURE = "materialDiffuseTexture";
+	public static final String MATERIAL_DIFFUSE_COLOR = "materialDiffuseColor";
+	public static final String USE_LIGHTING = "useLighting";
 
 	private RenderingSystem m_system;
 	private Resource m_deferred = new Resource(new ClasspathResourceLocator(), MATERIAL_LOC);
@@ -38,10 +41,10 @@ public class MaterialFactory {
 	 * @return
 	 */
 	public Material createUnlighted(Resource resource) {
-		Material mat = makeDeferred();
+		Material mat = createDeferred();
 
-		mat.setTexture2D("materialDiffuseTexture", makeTexture(resource));
-		mat.setBoolean("useLighting", false);
+		mat.setTexture2D(MATERIAL_DIFFUSE_TEXTURE, createTexture(resource));
+		mat.setBoolean(USE_LIGHTING, false);
 
 		return mat;
 	}
@@ -53,10 +56,10 @@ public class MaterialFactory {
 	 * @return
 	 */
 	public Material createLighted(Resource resource) {
-		Material mat = makeDeferred();
+		Material mat = createDeferred();
 
-		mat.setTexture2D("materialDiffuseTexture", makeTexture(resource));
-		mat.setBoolean("useLighting", true);
+		mat.setTexture2D(MATERIAL_DIFFUSE_TEXTURE, createTexture(resource));
+		mat.setBoolean(USE_LIGHTING, true);
 
 		return mat;
 	}
@@ -68,9 +71,9 @@ public class MaterialFactory {
 	 * @return
 	 */
 	public Material createUnlighted(Color color) {
-		Material mat = makeDeferred();
-		mat.setColor("materialDiffuseColor", color);
-		mat.setBoolean("useLighting", false);
+		Material mat = createDeferred();
+		mat.setColor(MATERIAL_DIFFUSE_COLOR, color);
+		mat.setBoolean(USE_LIGHTING, false);
 		return mat;
 	}
 
@@ -81,9 +84,9 @@ public class MaterialFactory {
 	 * @return
 	 */
 	public Material createLighted(Color color) {
-		Material mat = makeDeferred();
-		mat.setColor("materialDiffuseColor", color);
-		mat.setBoolean("useLighting", true);
+		Material mat = createDeferred();
+		mat.setColor(MATERIAL_DIFFUSE_COLOR, color);
+		mat.setBoolean(USE_LIGHTING, true);
 		return mat;
 	}
 
@@ -93,9 +96,9 @@ public class MaterialFactory {
 	 * @return
 	 */
 	public Material create() {
-		Material mat = makeDeferred();
-		mat.setColor("materialDiffuseColor", new Color(1, 1, 1));
-		mat.setBoolean("useLighting", false);
+		Material mat = createDeferred();
+		mat.setColor(MATERIAL_DIFFUSE_COLOR, new Color(1, 1, 1));
+		mat.setBoolean(USE_LIGHTING, false);
 		return mat;
 	}
 
@@ -104,7 +107,7 @@ public class MaterialFactory {
 	 * 
 	 * @return
 	 */
-	private Material makeDeferred() {
+	private Material createDeferred() {
 		try {
 			return (MaterialXMLLoader.s_load(m_system.getDisplay().getGL(), m_deferred.getResource(),
 					new GLResourceLocator(m_deferred.getLocator()))).get(0);
@@ -119,7 +122,7 @@ public class MaterialFactory {
 	 * @param resource
 	 * @return
 	 */
-	private Texture2D makeTexture(Resource resource) {
+	public Texture2D createTexture(Resource resource) {
 		try {
 			Texture2D texture = TextureFactory.s_loadTexture(m_system.getRenderer().getGL(), resource.getResource(),
 					new GLResourceLocator(resource.getLocator()));

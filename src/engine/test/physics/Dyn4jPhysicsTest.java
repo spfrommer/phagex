@@ -32,7 +32,7 @@ import gltools.input.Keyboard;
 
 /**
  * Tests the Dyn4j physics. THIS IS NOT A GOOD WAY TO LEARN HOW TO STRUCTURE YOUR PROJECT. Look at the platformer game
- * for that (seperate project).
+ * for that (a seperate project).
  */
 public class Dyn4jPhysicsTest {
 	private MaterialFactory m_factory;
