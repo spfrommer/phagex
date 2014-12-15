@@ -146,8 +146,12 @@ public class RenderTest {
 
 		game.start();
 
+		float lastTime = 16f;
 		while (true) {
-			game.update(16f);
+			long startTime = System.nanoTime();
+			game.update(lastTime);
+			long endTime = System.nanoTime();
+			lastTime = (endTime - startTime) / 1000000;
 		}
 	}
 
