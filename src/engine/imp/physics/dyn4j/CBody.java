@@ -184,6 +184,7 @@ public class CBody implements Component {
 	 */
 	public void setVelocity(Vector2f velocity) {
 		m_body.setLinearVelocity(velocity.getX(), velocity.getY());
+		m_body.setAsleep(false);
 	}
 
 	/**
@@ -193,6 +194,7 @@ public class CBody implements Component {
 	 */
 	public void setVelocityX(float velocityX) {
 		m_body.setLinearVelocity(velocityX, m_body.getLinearVelocity().y);
+		m_body.setAsleep(false);
 	}
 
 	/**
@@ -202,6 +204,7 @@ public class CBody implements Component {
 	 */
 	public void setVelocityY(float velocityY) {
 		m_body.setLinearVelocity(m_body.getLinearVelocity().y, velocityY);
+		m_body.setAsleep(false);
 	}
 
 	/**
@@ -220,6 +223,7 @@ public class CBody implements Component {
 	 */
 	public void setRotationalVelocity(float rotationalVelocity) {
 		m_body.setAngularVelocity(rotationalVelocity);
+		m_body.setAsleep(false);
 	}
 
 	/**
