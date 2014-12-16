@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
+import commons.GLResourceLocator;
+import commons.Resource;
+import commons.ResourceLocator.ClasspathResourceLocator;
 import commons.Transform2f;
 
 import engine.core.Entity;
@@ -15,21 +19,23 @@ import engine.core.TreeNode;
 import engine.core.asset.AssetManager;
 import engine.core.script.XScript;
 import engine.core.script.XScriptObject;
+import glcommon.Color;
+import glextra.material.Material;
+import glextra.material.MaterialXMLLoader;
 import glextra.renderer.LWJGLRenderer2D;
 import glextra.renderer.Renderer2D;
 import gltools.display.Display;
 import gltools.display.Window;
+import gltools.gl.GL;
 import gltools.gl.lwjgl.glfw.GLFWWindow;
 import gltools.input.Keyboard;
 import gltools.input.Mouse;
+import gltools.texture.Texture2D;
 
 /**
  * Renders the Entities with a CRender to a Display. Will also call mouse and keyboard events on the scripts.
  */
 public class RenderingSystem implements EntitySystem {
-	public static final float DRAW_WIDTH = 1f;
-	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
-
 	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CCamera.NAME },
 			new String[0], new String[0], false);
 	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CRender.NAME },
@@ -38,7 +44,6 @@ public class RenderingSystem implements EntitySystem {
 
 	// holds the cameras in each Scene
 	private List<Entity> m_cameras = new ArrayList<Entity>();
-
 	private Entity m_currentCam;
 
 	private Display m_display;
@@ -48,6 +53,17 @@ public class RenderingSystem implements EntitySystem {
 
 	private float m_width;
 	private float m_height;
+
+	public static final float DRAW_WIDTH = 1f;
+	public static final float HALF_DRAW_WIDTH = 0.5f * DRAW_WIDTH;
+
+	public static final String DEFAULT_MATERIAL_LOC = "Materials/M2D/2d.mat";
+	public static final String MATERIAL_DIFFUSE_TEXTURE = "materialDiffuseTexture";
+	public static final String MATERIAL_NORMAL_MAP = "materialNormalMap";
+	public static final String MATERIAL_DIFFUSE_COLOR = "materialDiffuseColor";
+	public static final String USE_LIGHTING = "useLighting";
+
+	private HashMap<MaterialKey, Material> m_materials = new HashMap<MaterialKey, Material>();
 
 	/**
 	 * @param width
@@ -71,19 +87,90 @@ public class RenderingSystem implements EntitySystem {
 		m_width = width;
 		m_height = height;
 		m_mouse = new WorldMouse(m_display, this);
+
+		initMaterials(window.getGL());
+	}
+
+	private void initMaterials(GL gl) {
+		Resource deferred = new Resource(new ClasspathResourceLocator(), DEFAULT_MATERIAL_LOC);
+
+		Material lighted = createDeferred(deferred);
+		lighted.setBoolean(USE_LIGHTING, true);
+		m_materials.put(new MaterialKey(false, false, true), lighted);
+
+		Material unlighted = createDeferred(deferred);
+		unlighted.setBoolean(USE_LIGHTING, false);
+		m_materials.put(new MaterialKey(false, false, false), unlighted);
+
+		Material lColored = createDeferred(deferred);
+		lColored.setBoolean(USE_LIGHTING, true);
+		lColored.setColor(MATERIAL_DIFFUSE_COLOR, new Color(1, 1, 1));
+		m_materials.put(new MaterialKey(true, false, true), lColored);
+
+		Material uColored = createDeferred(deferred);
+		uColored.setBoolean(USE_LIGHTING, false);
+		uColored.setColor(MATERIAL_DIFFUSE_COLOR, new Color(1, 1, 1));
+		m_materials.put(new MaterialKey(true, false, false), uColored);
+
+		Texture2D blank = new Texture2D();
+		blank.setWidth(1);
+		blank.setHeight(1);
+		blank.bind(gl, 0);
+		blank.load(gl);
+		blank.unbind(gl);
+
+		Material lNormaled = createDeferred(deferred);
+		lNormaled.setBoolean(USE_LIGHTING, true);
+		lNormaled.setTexture2D(MATERIAL_NORMAL_MAP, blank);
+		m_materials.put(new MaterialKey(false, true, true), lNormaled);
+
+		Material uNormaled = createDeferred(deferred);
+		uNormaled.setBoolean(USE_LIGHTING, false);
+		uNormaled.setTexture2D(MATERIAL_NORMAL_MAP, blank);
+		m_materials.put(new MaterialKey(false, true, false), uNormaled);
+
+		Material lcNormaled = createDeferred(deferred);
+		lcNormaled.setBoolean(USE_LIGHTING, true);
+		lcNormaled.setTexture2D(MATERIAL_NORMAL_MAP, blank);
+		lcNormaled.setColor(MATERIAL_DIFFUSE_COLOR, new Color(1, 1, 1));
+		m_materials.put(new MaterialKey(true, true, true), lcNormaled);
+
+		Material ucNormaled = createDeferred(deferred);
+		lcNormaled.setBoolean(USE_LIGHTING, false);
+		lcNormaled.setTexture2D(MATERIAL_NORMAL_MAP, blank);
+		lcNormaled.setColor(MATERIAL_DIFFUSE_COLOR, new Color(1, 1, 1));
+		m_materials.put(new MaterialKey(true, true, false), ucNormaled);
 	}
 
 	/**
+	 * Makes a deferred Material.
+	 * 
+	 * @return
+	 */
+	private Material createDeferred(Resource resource) {
+		try {
+			return (MaterialXMLLoader.s_load(m_renderer.getGL(), resource.getResource(),
+					new GLResourceLocator(resource.getLocator()))).get(0);
+		} catch (Exception e) {
+			throw new RenderingException("Deferred could not be created: " + DEFAULT_MATERIAL_LOC, e);
+		}
+	}
+
+	/**
+	 * TODO: hide this
+	 * 
 	 * @return the Display to draw on
 	 */
-	protected Display getDisplay() {
+	public Display getDisplay() {
 		return m_display;
 	}
 
 	/**
+	 * TODO: hide this
+	 * 
 	 * @return the renderer
 	 */
-	protected Renderer2D getRenderer() {
+	public Renderer2D getRenderer() {
 		return m_renderer;
 	}
 
@@ -221,7 +308,22 @@ public class RenderingSystem implements EntitySystem {
 				if (!crender.isVisible())
 					continue;
 
-				m_renderer.setMaterial(crender.getMaterial());
+				Material2D mat2d = crender.getMaterial();
+				Texture2D texture = mat2d.getTexture();
+				Texture2D normal = mat2d.getNormalTexture();
+				Color color = mat2d.getColor();
+				boolean isLighted = mat2d.isLighted();
+				MaterialKey key = new MaterialKey(color != null, normal != null, isLighted);
+				Material mat = m_materials.get(key);
+
+				if (texture != null)
+					mat.setTexture2D(MATERIAL_DIFFUSE_TEXTURE, texture);
+				if (normal != null)
+					mat.setTexture2D(MATERIAL_NORMAL_MAP, normal);
+				if (color != null)
+					mat.setColor(MATERIAL_DIFFUSE_COLOR, color);
+
+				m_renderer.setMaterial(mat);
 
 				m_renderer.pushModel();
 
@@ -274,5 +376,36 @@ public class RenderingSystem implements EntitySystem {
 		script.addScriptObject(new XScriptObject("assets", AssetManager.instance()));
 		script.addScriptObject(new XScriptObject("mouse", m_mouse));
 		script.addScriptObject(new XScriptObject("keyboard", getKeyboard()));
+	}
+
+	private class MaterialKey {
+		boolean isColored;
+		boolean isNormaled;
+		boolean isLighted;
+
+		public MaterialKey(boolean isColored, boolean isNormaled, boolean isLighted) {
+			this.isColored = isColored;
+			this.isNormaled = isNormaled;
+			this.isLighted = isLighted;
+		}
+
+		@Override
+		public boolean equals(Object object) {
+			if (!(object instanceof MaterialKey))
+				return false;
+			MaterialKey key = (MaterialKey) object;
+			boolean equals = isColored == key.isColored && isNormaled == key.isNormaled && isLighted == key.isLighted;
+			return equals;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(isColored, isNormaled, isLighted);
+		}
+
+		@Override
+		public String toString() {
+			return "Colored: " + isColored + ", Normaled: " + isNormaled + ", Lighted: " + isLighted;
+		}
 	}
 }

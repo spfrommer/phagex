@@ -51,4 +51,35 @@ public class Resource {
 	public InputStream open() {
 		return m_locator.getResource(m_resource);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((m_locator == null) ? 0 : m_locator.hashCode());
+		result = prime * result + ((m_resource == null) ? 0 : m_resource.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Resource other = (Resource) obj;
+		if (m_locator == null) {
+			if (other.m_locator != null)
+				return false;
+		} else if (!m_locator.equals(other.m_locator))
+			return false;
+		if (m_resource == null) {
+			if (other.m_resource != null)
+				return false;
+		} else if (!m_resource.equals(other.m_resource))
+			return false;
+		return true;
+	}
 }

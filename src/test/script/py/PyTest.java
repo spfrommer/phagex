@@ -1,12 +1,11 @@
-package engine.test.script.py;
+package test.script.py;
 
 import commons.Resource;
-import commons.ResourceFactory;
 import commons.ResourceLocator.ClasspathResourceLocator;
-
 import engine.core.Entity;
 import engine.core.Game;
 import engine.core.Scene;
+import engine.core.asset.ResourceFactory;
 import engine.core.script.XPython;
 
 public class PyTest {

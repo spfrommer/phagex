@@ -6,7 +6,6 @@
 	<classpathentry kind="lib" path="lib/scripting/js-14.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/js.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/jython-standalone-2.7-b1.jar"/>
-	<classpathentry kind="lib" path="lib/physics/dyn4j-v3.1.8.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/disruptor.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/gltools-0.1.1a.jar"/>
@@ -18,5 +17,7 @@
 	<classpathentry kind="lib" path="lib/gltools/lwjgl.jar"/>
 	<classpathentry kind="lib" path="lib/gltools/slf4j-api-1.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/scripting/bsh-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/dyn4j-v3.1.8.jar"/>
+	<classpathentry kind="lib" path="lib/jsoup-1.8.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

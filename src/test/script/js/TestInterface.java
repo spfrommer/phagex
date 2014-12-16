@@ -1,4 +1,4 @@
-package engine.test.script.js;
+package test.script.js;
 
 public interface TestInterface {
 	public String print();

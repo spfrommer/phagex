@@ -3,7 +3,6 @@ package engine.imp.render;
 import engine.core.Component;
 import engine.core.ComponentBuilder;
 import engine.core.exceptions.ComponentException;
-import glextra.material.Material;
 
 /**
  * Contains the data for the RenderSystem.
@@ -18,7 +17,7 @@ public class CRender implements Component {
 	public static final String IS_VISIBLE = "isVisible";
 	private static final String[] IDENTIFIERS = new String[] { MATERIAL, LAYER, DEPTH, REPEAT_X, REPEAT_Y, IS_VISIBLE };
 
-	private Material m_material;
+	private Material2D m_material;
 	private float m_depth;
 	private int m_layer;
 	private float m_repeatX = 1;
@@ -26,11 +25,11 @@ public class CRender implements Component {
 	private boolean m_isVisible = true;
 
 	/**
-	 * Creates a CRender with the given Material, a layer of 0, and a parallax depth of 1.
+	 * Creates a CRender with the given Material2D, a layer of 0, and a parallax depth of 1.
 	 * 
 	 * @param material
 	 */
-	public CRender(Material material) {
+	public CRender(Material2D material) {
 		if (material == null)
 			throw new RenderingException("Cannot create with null Material!");
 		m_material = material;
@@ -39,33 +38,18 @@ public class CRender implements Component {
 	}
 
 	/**
-	 * Creates a CRender with the given Material and layer, with a parallax depth of 1.
+	 * Creates a CRender with the given Material 2Dand layer, with a parallax depth of 1.
 	 * 
 	 * @param material
 	 * @param layer
 	 */
-	public CRender(Material material, int layer) {
+	public CRender(Material2D material, int layer) {
 		if (material == null)
 			throw new RenderingException("Cannot create with null Material!");
 		if (layer < 0)
 			throw new RenderingException("Layer must be greater or equal to zero!");
 		m_material = material;
 		m_layer = layer;
-	}
-
-	/**
-	 * Creates a CRender with a given Material and parallax depth, with a layer of 0.
-	 * 
-	 * @param material
-	 * @param depth
-	 */
-	public CRender(Material material, float depth) {
-		if (material == null)
-			throw new RenderingException("Cannot create with null Material!");
-		if (depth <= 0)
-			throw new RenderingException("Depth must be greater than zero!");
-		m_material = material;
-		m_depth = depth;
 	}
 
 	/**
@@ -77,7 +61,7 @@ public class CRender implements Component {
 	 * @param depth
 	 *            the depth of the paralax rendering; 1 is the normal plane
 	 */
-	public CRender(Material material, int layer, float depth) {
+	public CRender(Material2D material, int layer, float depth) {
 		if (material == null)
 			throw new RenderingException("Cannot create with null Material!");
 		if (depth <= 0)
@@ -92,7 +76,7 @@ public class CRender implements Component {
 	/**
 	 * @return the Material
 	 */
-	public Material getMaterial() {
+	public Material2D getMaterial() {
 		return m_material;
 	}
 
@@ -101,9 +85,9 @@ public class CRender implements Component {
 	 * 
 	 * @param material
 	 */
-	public void setMaterial(Material material) {
+	public void setMaterial(Material2D material) {
 		if (material == null)
-			throw new RenderingException("Cannot set a null Material!");
+			throw new RenderingException("Cannot set a null Material2D!");
 		m_material = material;
 	}
 
@@ -242,7 +226,7 @@ public class CRender implements Component {
 			throw new ComponentException("Cannot set null data for identifier: " + identifier);
 
 		if (identifier.equals(MATERIAL)) {
-			m_material = (Material) data;
+			m_material = (Material2D) data;
 		} else if (identifier.equals(LAYER)) {
 			m_layer = (Integer) data;
 		} else if (identifier.equals(DEPTH)) {

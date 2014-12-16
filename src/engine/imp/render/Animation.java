@@ -1,7 +1,5 @@
 package engine.imp.render;
 
-import gltools.texture.Texture2D;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +7,12 @@ import java.util.List;
  * Contains the data for one Animation.
  */
 public class Animation {
-	private List<Texture2D> m_frames;
+	private List<Frame> m_frames;
 
 	// time since last update
 	private int m_currentFrame;
 
-	// time for a frame in milliseconds
-	private float m_timePerFrame;
 	private boolean m_repeat;
-
 	private boolean m_isFirstFrame = true;
 
 	/**
@@ -25,12 +20,11 @@ public class Animation {
 	 * 
 	 * @param frames
 	 */
-	public Animation(List<Texture2D> frames) {
+	public Animation(List<Frame> frames) {
 		if (frames == null)
 			throw new AnimationException("Frames cannot be null!");
 		m_frames = frames;
 		m_currentFrame = 0;
-		m_timePerFrame = 0.01f;
 		m_repeat = false;
 	}
 
@@ -40,13 +34,12 @@ public class Animation {
 	 * @param animation
 	 */
 	public Animation(Animation animation) {
-		m_frames = new ArrayList<Texture2D>();
-		for (Texture2D m : animation.m_frames) {
-			m_frames.add(m);
+		m_frames = new ArrayList<Frame>();
+		for (Frame frame : animation.getFrames()) {
+			m_frames.add(new Frame(frame));
 		}
 
 		m_currentFrame = 0;
-		m_timePerFrame = animation.getTimePerFrame();
 		m_repeat = animation.isRepeating();
 	}
 
@@ -85,21 +78,10 @@ public class Animation {
 	}
 
 	/**
-	 * @return the time spent on each frame of the animation in milliseconds
+	 * @return the current Frame in the Animation
 	 */
-	public float getTimePerFrame() {
-		return m_timePerFrame;
-	}
-
-	/**
-	 * Sets the time spent on each frame of the animation in milliseconds.
-	 * 
-	 * @param timePerFrame
-	 */
-	public void setTimePerFrame(float timePerFrame) {
-		if (timePerFrame <= 0)
-			throw new AnimationException("Time per frame must be greater than zero!");
-		m_timePerFrame = timePerFrame;
+	public Frame currentFrame() {
+		return m_frames.get(m_currentFrame);
 	}
 
 	/**
@@ -128,7 +110,7 @@ public class Animation {
 	/**
 	 * @return a modifieable List of the frames
 	 */
-	public List<Texture2D> getFrames() {
+	public List<Frame> getFrames() {
 		return m_frames;
 	}
 }

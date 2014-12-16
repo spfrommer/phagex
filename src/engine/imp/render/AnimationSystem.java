@@ -9,7 +9,6 @@ import engine.core.Scene;
 import engine.core.SimpleEntityFilter;
 import engine.core.TreeNode;
 import engine.core.script.XScript;
-import gltools.texture.Texture2D;
 
 /**
  * Updates animations.
@@ -50,36 +49,40 @@ public class AnimationSystem implements EntitySystem {
 		if (current == null)
 			return;
 
-		float timePerFrame = current.getTimePerFrame();
 		// if on first frame
 		if (current.isFirstFrame()) {
 			if (current.isFinished()) {
 				Logger.instance().warn("No frames in animation on Entity: " + entity);
 				return;
 			}
-			Texture2D texture = current.getFrames().get(0);
-			render.getMaterial().setTexture2D(MaterialFactory.MATERIAL_DIFFUSE_TEXTURE, texture);
+			Material2D material = current.getFrames().get(0).getMaterial();
+			render.setMaterial(material);
 			current.setFirstFrame(false);
 		}
 
 		animation.setTimeElapsed(animation.getTimeElapsed() + time);
 		float elapsed = animation.getTimeElapsed();
 
-		while (elapsed >= timePerFrame) {
+		Frame frame = current.currentFrame();
+
+		while (elapsed >= frame.getTime()) {
+			int nextFrame = current.getCurrentFrame() + 1;
 			if (current.isFinished()) {
 				if (current.isRepeating()) {
-					current.setCurrentFrame(0);
+					nextFrame = 0;
 				} else {
 					animation.setTimeElapsed(0f);
 					return;
 				}
 			}
-			int nextFrame = current.getCurrentFrame() + 1;
+
 			current.setCurrentFrame(nextFrame);
-			Texture2D texture = current.getFrames().get(nextFrame);
-			render.getMaterial().setTexture2D(MaterialFactory.MATERIAL_DIFFUSE_TEXTURE, texture);
-			elapsed -= timePerFrame;
+			Frame next = current.currentFrame();
+			Material2D material = next.getMaterial();
+			render.setMaterial(material);
+			elapsed -= frame.getTime();
 			animation.setTimeElapsed(elapsed);
+			frame = next;
 		}
 	}
 

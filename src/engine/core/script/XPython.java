@@ -9,9 +9,8 @@ import org.python.util.PythonInterpreter;
 
 import commons.Logger;
 import commons.Resource;
-import commons.ResourceFactory;
-
 import engine.core.Component;
+import engine.core.asset.ResourceFactory;
 import engine.core.exceptions.XScriptException;
 
 public class XPython extends XScript {

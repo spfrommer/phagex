@@ -1,4 +1,4 @@
-package engine.test.physics;
+package test.physics;
 
 import org.dyn4j.dynamics.joint.Joint;
 import org.dyn4j.geometry.Mass.Type;
@@ -15,6 +15,8 @@ import engine.core.Entity;
 import engine.core.EntityBuilder;
 import engine.core.Game;
 import engine.core.Scene;
+import engine.core.asset.AssetManager;
+import engine.core.script.XPython;
 import engine.imp.physics.dyn4j.BodySystem;
 import engine.imp.physics.dyn4j.CBody;
 import engine.imp.physics.dyn4j.CJoint;
@@ -24,25 +26,15 @@ import engine.imp.render.CLight;
 import engine.imp.render.CRender;
 import engine.imp.render.LightFactory;
 import engine.imp.render.LightingSystem;
-import engine.imp.render.MaterialFactory;
+import engine.imp.render.Material2D;
 import engine.imp.render.RenderingSystem;
 import glcommon.Color;
-import glextra.material.Material;
-import gltools.input.Keyboard;
 
 /**
- * Tests the Dyn4j physics. THIS IS NOT A GOOD WAY TO LEARN HOW TO STRUCTURE YOUR PROJECT. Look at the platformer game
- * for that (a seperate project).
+ * Tests the Dyn4j physics.
  */
 public class Dyn4jPhysicsTest {
-	private MaterialFactory m_factory;
-	// private Resource m_brickScript;
-	private Resource m_materialResource;
-	private Material m_material;
-
 	public Dyn4jPhysicsTest() {
-		// m_brickScript = new Resource(new ClasspathResourceLocator(), "engine/test/physics/Script.py");
-		m_materialResource = new Resource(new ClasspathResourceLocator(), "engine/test/physics/testtube.jpg");
 	}
 
 	public void start() {
@@ -56,14 +48,46 @@ public class Dyn4jPhysicsTest {
 		game.addSystem(bodies);
 		game.addSystem(joints);
 
-		m_factory = new MaterialFactory(rendering);
-		m_material = m_factory.createLighted(m_materialResource);
+		loadAssets(rendering);
 
 		Scene scene = new Scene(game);
 		game.scenes().addScene(scene, "main");
 
+		EntityBuilder lightBuilder = new EntityBuilder();
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
+				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
+		scene.createEntity("light", scene, lightBuilder);
+
+		makeScene(scene);
+
+		game.start();
+		float lastTime = 16f;
+		while (true) {
+			long startTime = System.nanoTime();
+			game.update(lastTime);
+			long endTime = System.nanoTime();
+			lastTime = (endTime - startTime) / 1000000;
+		}
+	}
+
+	private void loadAssets(RenderingSystem system) {
+		AssetManager manager = AssetManager.init(system.getRenderer().getGL());
+
+		ClasspathResourceLocator locator = new ClasspathResourceLocator();
+		Resource brickScript = new Resource(locator, "test/physics/BrickScript.py");
+		Resource lightScript = new Resource(locator, "test/physics/LightScript.py");
+		Resource testTube = new Resource(locator, "test/physics/testtube.jpg");
+
+		manager.load("brick_script", brickScript, XPython.class);
+		manager.load("light_script", lightScript, XPython.class);
+		manager.load("testtube", testTube, Material2D.class);
+	}
+
+	private void makeScene(Scene scene) {
+		AssetManager manager = AssetManager.instance();
+
 		EntityBuilder brickBuilder = new EntityBuilder();
-		brickBuilder.addComponentBuilder(new CRender(m_material, 1f));
+		brickBuilder.addComponentBuilder(new CRender(manager.get("testtube", Material2D.class)));
 		brickBuilder.addComponentBuilder(new CBrickBuilder());
 		Entity brick1 = scene.createEntity("brick1", scene, brickBuilder);
 		brick1.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, new Vector2f(1f, 1f)));
@@ -76,32 +100,12 @@ public class Dyn4jPhysicsTest {
 				0f, 2f))));
 		scene.createEntity("joint", scene, jointBuilder);
 
-		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
-		scene.createEntity("light", brick1, lightBuilder);
-
 		EntityBuilder groundBuilder = new EntityBuilder();
-		groundBuilder.addComponentBuilder(new CRender(m_material, 1f));
+		groundBuilder.addComponentBuilder(new CRender(manager.get("testtube", Material2D.class)));
 		groundBuilder.addComponentBuilder(new CGroundBuilder());
 		groundBuilder.setTransform(new Transform2f(new Vector2f(0f, -2f), 0f, new Vector2f(2f, 1f)));
 		Entity ground = scene.createEntity("ground", scene, groundBuilder);
 		ground.getCTransform().setTransform(new Transform2f(new Vector2f(0f, -1f), 0f, new Vector2f(2f, 1f)));
-
-		game.start();
-		float lastTime = 16f;
-		while (true) {
-			Keyboard keyboard = rendering.getKeyboard();
-			if (keyboard.isKeyPressed(keyboard.getKey("UP"))) {
-				CBody physicsComp = (CBody) brick1.components().get(CBody.NAME);
-				physicsComp.applyForce(new Vector2f(0f, 1f));
-				physicsComp.applyTorque(1f);
-			}
-			long startTime = System.nanoTime();
-			game.update(lastTime);
-			long endTime = System.nanoTime();
-			lastTime = (endTime - startTime) / 1000000;
-		}
 	}
 
 	private class CBrickBuilder implements ComponentBuilder<CBody> {

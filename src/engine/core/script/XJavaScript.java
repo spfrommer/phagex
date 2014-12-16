@@ -7,8 +7,7 @@ import org.mozilla.javascript.ScriptableObject;
 
 import commons.Logger;
 import commons.Resource;
-import commons.ResourceFactory;
-
+import engine.core.asset.ResourceFactory;
 import engine.core.exceptions.XScriptException;
 
 /**

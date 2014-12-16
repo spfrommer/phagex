@@ -1,0 +1,14 @@
+<animation repeat="true">
+	<frame duration="100">
+		<material texture="test/render/treads1.png" color="1, 0, 0" lighted="true"/>
+	</frame>
+	<frame duration="1000">
+		<material texture="test/render/treads2.png" lighted="true"/>
+	</frame>
+	<frame duration="1000">
+		<material texture="test/render/treads3.png" lighted="true"/>
+	</frame>
+	<frame duration="1000">
+		<material texture="test/render/treads4.png" lighted="true"/>
+	</frame>
+</animation>
