@@ -57,7 +57,7 @@ public class Game {
 	protected void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
 		for (EntitySystem system : m_systems) {
 			if (system.getEntityEventFilter().matches(entity))
-				system.entityAdded(entity, parent, scene);
+				system.entityRemoved(entity, parent, scene);
 		}
 	}
 

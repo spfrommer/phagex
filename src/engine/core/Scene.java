@@ -91,9 +91,6 @@ public class Scene implements TreeNode {
 		}
 
 		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), builder.getTransform());
-		List<XScript> scripts = builder.getScripts();
-		for (XScript script : scripts)
-			entity.scripts().add(script.duplicate());
 
 		parent.addChild(entity);
 		m_allEntities.add(entity);
@@ -103,6 +100,10 @@ public class Scene implements TreeNode {
 		for (String childName : keys) {
 			createEntity(childName, entity, children.get(childName));
 		}
+
+		List<XScript> scripts = builder.getScripts();
+		for (XScript script : scripts)
+			entity.scripts().add(script.duplicate());
 		return entity;
 	}
 
