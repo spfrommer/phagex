@@ -20,7 +20,8 @@ import engine.core.script.XScript;
  * Creates, destroys, and moves Entities in the tree.
  */
 public class Scene implements TreeNode {
-	// the top level entities are practically the children of the EntityContainer aspect of the Scene
+	// the top level entities are practically the children of the
+	// EntityContainer aspect of the Scene
 	private Map<String, Entity> m_rootEntities;
 	// private List<Entity> m_rootEntities;
 	private List<Entity> m_allEntities;
@@ -68,8 +69,9 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Creates a child Entity of a parent container. The Entity has the Components specified in the builder as well as a
-	 * CTransform and a CScriptData.
+	 * Creates a child Entity of a parent container. The Entity has the
+	 * Components specified in the builder as well as a CTransform and a
+	 * CScriptData.
 	 * 
 	 * @param name
 	 * 
@@ -130,7 +132,8 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Removes an Entity from the Scene. Only use this method if you want to add the Entity back again later.
+	 * Removes an Entity from the Scene. Only use this method if you want to add
+	 * the Entity back again later.
 	 * 
 	 * @param entity
 	 */
@@ -143,7 +146,8 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Removes an Entity from the Scene and destroys it completely to speed up garbage collection.
+	 * Removes an Entity from the Scene and destroys it completely to speed up
+	 * garbage collection.
 	 * 
 	 * @param entity
 	 */
@@ -156,8 +160,8 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Recursively removes the Entity and its children from the allEntities Set. Will also call destroy() on the
-	 * Entities.
+	 * Recursively removes the Entity and its children from the allEntities Set.
+	 * Will also call destroy() on the Entities.
 	 * 
 	 * @param entity
 	 */
@@ -259,6 +263,28 @@ public class Scene implements TreeNode {
 	}
 
 	/**
+	 * Finds an Entity in the Scene given by the path - each Entity is separated
+	 * by a ".".
+	 * 
+	 * Example: "player.camera"
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public Entity find(String path) {
+		if (path == null)
+			throw new SceneException("Cannot find Entity with null path!");
+		String[] strings = path.split(".");
+		Entity root = this.getRootEntity(strings[0]);
+		Entity found = root;
+		for (int i = 1; i < strings.length; i++) {
+			found = found.tree().getChild(strings[i]);
+		}
+
+		return found;
+	}
+
+	/**
 	 * @return if this is the current Scene.
 	 */
 	public boolean isCurrent() {
@@ -323,7 +349,8 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Adds a TOP-LEVEL child to the Scene. This should not be called. Use createEntity(name, scene) instead.
+	 * Adds a TOP-LEVEL child to the Scene. This should not be called. Use
+	 * createEntity(name, scene) instead.
 	 */
 	@Override
 	public void addChild(Entity entity) {
@@ -337,8 +364,8 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Removes a TOP-LEVEL child from the Scene. This should not be called. You should call destroyEntity(Entity) if you
-	 * want to completely destroy it.
+	 * Removes a TOP-LEVEL child from the Scene. This should not be called. You
+	 * should call destroyEntity(Entity) if you want to completely destroy it.
 	 */
 	@Override
 	public void removeChild(Entity entity) {
