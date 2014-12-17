@@ -274,7 +274,7 @@ public class Scene implements TreeNode {
 	public Entity find(String path) {
 		if (path == null)
 			throw new SceneException("Cannot find Entity with null path!");
-		String[] strings = path.split(".");
+		String[] strings = path.split("\\.");
 		Entity root = this.getRootEntity(strings[0]);
 		Entity found = root;
 		for (int i = 1; i < strings.length; i++) {
