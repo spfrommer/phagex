@@ -106,4 +106,9 @@ public class CTags implements Component {
 		};
 		return builder;
 	}
+
+	@Override
+	public String toString() {
+		return m_tags.toString();
+	}
 }

@@ -1,17 +1,22 @@
 package engine.imp.physics.dyn4j;
 
+import org.dyn4j.collision.Filter;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.contact.ContactConstraint;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Mass.Type;
 import org.dyn4j.geometry.Rectangle;
 
+import commons.BiMap;
 import commons.matrix.Vector2f;
 
 import engine.core.Component;
 import engine.core.ComponentBuilder;
+import engine.core.Entity;
 import engine.core.exceptions.ComponentException;
+import engine.imp.physics.PhysicsException;
 import engine.imp.physics.PhysicsUtils;
 
 /**
@@ -19,6 +24,7 @@ import engine.imp.physics.PhysicsUtils;
  */
 public class CBody implements Component {
 	public static final String NAME = "body";
+	public static final String FILTER = "filter";
 	public static final String BULLET = "bullet";
 	public static final String LINEAR_DAMPING = "linearDamping";
 	public static final String ANGULAR_DAMPING = "angularDamping";
@@ -30,11 +36,24 @@ public class CBody implements Component {
 	public static final String RESTITUTION = "restitution";
 	public static final String SHAPE = "shape";
 
-	private static final String[] IDENTIFIERS = new String[] { BULLET, LINEAR_DAMPING, ANGULAR_DAMPING, MASS_TYPE,
-			MASS, INERTIA, DENSITY, FRICTION, RESTITUTION };
+	private static final String[] IDENTIFIERS = new String[] { BULLET, FILTER, LINEAR_DAMPING, ANGULAR_DAMPING,
+			MASS_TYPE, MASS, INERTIA, DENSITY, FRICTION, RESTITUTION };
 
 	private Body m_body;
 	private BodyFixture m_fixture;
+	private CollisionFilter m_filter = new CollisionFilter() {
+		@Override
+		public boolean canCollide(Entity entity1, Entity entity2) {
+			return true;
+		}
+
+		@Override
+		public boolean continueCollision(Entity entity1, Entity entity2, ContactConstraint constraint) {
+			return true;
+		}
+	};
+
+	private static BiMap<Filter, CBody> s_allFilters = new BiMap<Filter, CBody>();
 
 	/**
 	 * Creates a CDyn4jBody.
@@ -43,8 +62,6 @@ public class CBody implements Component {
 	 */
 	public CBody() {
 		m_body = new Body();
-		// m_fixture = new BodyFixture(new Rectangle(1, 1));
-		// m_body.addFixture(m_fixture);
 
 		setShape(new Rectangle(1, 1));
 		setMassType(Type.NORMAL);
@@ -73,6 +90,24 @@ public class CBody implements Component {
 	 */
 	protected Body getBody() {
 		return m_body;
+	}
+
+	/**
+	 * Sets the collision filter to be used.
+	 * 
+	 * @param filter
+	 */
+	public void setCollisionFilter(CollisionFilter filter) {
+		if (filter == null)
+			throw new PhysicsException("Cannot set null CollisionFilter!");
+		m_filter = filter;
+	}
+
+	/**
+	 * @return the collision filter to be used
+	 */
+	public CollisionFilter getCollisionFilter() {
+		return m_filter;
 	}
 
 	/**
@@ -398,6 +433,30 @@ public class CBody implements Component {
 			m_body.addFixture(m_fixture);
 			m_body.setMass(m_fixture.createMass());
 		}
+
+		if (s_allFilters.containsValue(this)) {
+			s_allFilters.removeBackward(this);
+		}
+
+		Filter filter = new Filter() {
+			@Override
+			public boolean isAllowed(Filter filter) {
+				CBody cbody1 = s_allFilters.getForward(this);
+				CBody cbody2 = s_allFilters.getForward(filter);
+				Entity entity1 = (Entity) cbody1.getBody().getUserData();
+				Entity entity2 = (Entity) cbody2.getBody().getUserData();
+
+				if (!cbody1.getCollisionFilter().canCollide(entity1, entity2))
+					return false;
+
+				if (!cbody2.getCollisionFilter().canCollide(entity2, entity1))
+					return false;
+
+				return true;
+			}
+		};
+		s_allFilters.put(filter, this);
+		m_fixture.setFilter(filter);
 	}
 
 	/**
@@ -445,6 +504,8 @@ public class CBody implements Component {
 
 		if (identifier.equals(BULLET))
 			return isBullet();
+		if (identifier.equals(FILTER))
+			return getCollisionFilter();
 		if (identifier.equals(LINEAR_DAMPING))
 			return getLinearDamping();
 		if (identifier.equals(ANGULAR_DAMPING))
@@ -476,6 +537,8 @@ public class CBody implements Component {
 
 		if (identifier.equals(BULLET)) {
 			setBullet((Boolean) data);
+		} else if (identifier.equals(FILTER)) {
+			setCollisionFilter((CollisionFilter) data);
 		} else if (identifier.equals(LINEAR_DAMPING)) {
 			setLinearDamping((Float) data);
 		} else if (identifier.equals(ANGULAR_DAMPING)) {
@@ -505,6 +568,7 @@ public class CBody implements Component {
 			@Override
 			public CBody build() {
 				CBody newBody = new CBody(getShape());
+				newBody.setCollisionFilter(getCollisionFilter());
 				newBody.setAngularDamping(getAngularDamping());
 				newBody.setAsleep(isAsleep());
 				newBody.setBullet(isBullet());
@@ -517,6 +581,7 @@ public class CBody implements Component {
 				newBody.setLinearDamping(getLinearDamping());
 				newBody.setAngularDamping(getAngularDamping());
 				newBody.setRestitution(getRestitution());
+				newBody.setCollisionFilter(getCollisionFilter());
 				return newBody;
 			}
 

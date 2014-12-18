@@ -103,11 +103,11 @@ public class Game {
 	 */
 	public void update(float time) {
 		Scene current = m_scenes.getCurrentScene();
-		List<Entity> entities = current.getAllEntities();
 
 		for (EntitySystem system : m_systems)
 			system.update(current, time);
 
+		List<Entity> entities = current.getAllEntities();
 		for (Entity e : entities) {
 			for (EntitySystem system : m_systems) {
 				if (system.getUpdateFilter().matches(e))
@@ -116,7 +116,7 @@ public class Game {
 		}
 		for (EntitySystem system : m_systems)
 			system.postUpdate(current);
-		// updates the Scripts
+
 		m_scenes.getCurrentScene().updateScripts(time);
 	}
 

@@ -1,9 +1,15 @@
 package engine.imp.physics.dyn4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.dyn4j.collision.manifold.Manifold;
+import org.dyn4j.collision.narrowphase.Penetration;
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.CollisionListener;
 import org.dyn4j.dynamics.World;
+import org.dyn4j.dynamics.contact.ContactConstraint;
 import org.dyn4j.geometry.Transform;
 import org.dyn4j.geometry.Vector2;
 
@@ -29,6 +35,10 @@ public class BodySystem implements EntitySystem {
 			new String[0], new String[0], false);
 	private World m_world;
 
+	public static final String COLLISION_FUNCTION = "onContact";
+
+	private List<ContactEvent> m_contacts = new ArrayList<ContactEvent>();
+
 	/**
 	 * Initializes a PhysicsSystem with a certain gravity.
 	 * 
@@ -37,6 +47,46 @@ public class BodySystem implements EntitySystem {
 	public BodySystem(Vector2f gravity) {
 		m_world = new World();
 		m_world.setGravity(new Vector2(gravity.getX(), gravity.getY()));
+		listenForCollisions();
+	}
+
+	private void listenForCollisions() {
+		m_world.addListener(new CollisionListener() {
+			@Override
+			public boolean collision(ContactConstraint contact) {
+				Entity entity1 = (Entity) contact.getBody1().getUserData();
+				Entity entity2 = (Entity) contact.getBody2().getUserData();
+				CBody body1 = (CBody) entity1.components().get(CBody.NAME);
+				CBody body2 = (CBody) entity2.components().get(CBody.NAME);
+				CollisionFilter filter1 = body1.getCollisionFilter();
+				CollisionFilter filter2 = body2.getCollisionFilter();
+
+				if (!filter1.continueCollision(entity1, entity2, contact))
+					return false;
+
+				if (!filter2.continueCollision(entity2, entity1, contact))
+					return false;
+
+				m_contacts.add(new ContactEvent(entity1, entity2, contact));
+
+				return true;
+			}
+
+			@Override
+			public boolean collision(Body arg0, Body arg1) {
+				return true;
+			}
+
+			@Override
+			public boolean collision(Body arg0, BodyFixture arg1, Body arg2, BodyFixture arg3, Penetration arg4) {
+				return true;
+			}
+
+			@Override
+			public boolean collision(Body arg0, BodyFixture arg1, Body arg2, BodyFixture arg3, Manifold arg4) {
+				return true;
+			}
+		});
 	}
 
 	/**
@@ -72,6 +122,7 @@ public class BodySystem implements EntitySystem {
 		newTrans.setRotation(worldTransform.getRotation());
 
 		body.setTransform(newTrans);
+		body.setUserData(entity);
 
 		entity.addListener(new PhysicsListener());
 		m_world.addBody(body);
@@ -93,6 +144,12 @@ public class BodySystem implements EntitySystem {
 	@Override
 	public void update(Scene scene, float time) {
 		m_world.update(time / 1000);
+
+		for (ContactEvent event : m_contacts) {
+			event.entity1.scripts().callFunc(COLLISION_FUNCTION, event.entity2, event.contact);
+			event.entity2.scripts().callFunc(COLLISION_FUNCTION, event.entity1, event.contact);
+		}
+		m_contacts.clear();
 	}
 
 	@Override
@@ -110,7 +167,6 @@ public class BodySystem implements EntitySystem {
 
 	@Override
 	public void postUpdate(Scene scene) {
-
 	}
 
 	@Override

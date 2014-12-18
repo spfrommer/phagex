@@ -33,8 +33,8 @@ import glcommon.Color;
 /**
  * Tests the Dyn4j physics.
  */
-public class Dyn4jPhysicsTest {
-	public Dyn4jPhysicsTest() {
+public class PhysicsTest {
+	public PhysicsTest() {
 	}
 
 	public void start() {
@@ -164,6 +164,6 @@ public class Dyn4jPhysicsTest {
 	}
 
 	public static void main(String[] args) {
-		new Dyn4jPhysicsTest().start();
+		new PhysicsTest().start();
 	}
 }

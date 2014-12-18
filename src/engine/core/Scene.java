@@ -259,6 +259,14 @@ public class Scene implements TreeNode {
 	}
 
 	/**
+	 * @param entity
+	 * @return whether or not the Entity is in the Scene
+	 */
+	public boolean contains(Entity entity) {
+		return m_allEntities.contains(entity);
+	}
+
+	/**
 	 * @return if this is the current Scene.
 	 */
 	public boolean isCurrent() {
@@ -331,8 +339,7 @@ public class Scene implements TreeNode {
 			throw new SceneException("Entity is already in Scene!");
 		if (m_rootEntities.containsKey(entity.getName()))
 			throw new EntityException("No two children with the same name allowed!");
-		// m_childNames.add(entity.getName());
-		// m_rootEntities.add(entity);
+
 		m_rootEntities.put(entity.getName(), entity);
 	}
 

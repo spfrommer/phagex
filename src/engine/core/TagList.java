@@ -13,6 +13,10 @@ import engine.core.exceptions.TagException;
 public class TagList implements Iterable<String> {
 	private ArrayList<String> m_tags = new ArrayList<String>();
 
+	public TagList() {
+
+	}
+
 	public TagList(String... strings) {
 		m_tags.addAll(Arrays.asList(strings));
 	}
