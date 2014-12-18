@@ -267,6 +267,27 @@ public class Scene implements TreeNode {
 	}
 
 	/**
+	 * Finds an Entity in the Scene given by the path - each Entity is separated by a ".".
+	 * 
+	 * Example: "player.camera"
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public Entity find(String path) {
+		if (path == null)
+			throw new SceneException("Cannot find Entity with null path!");
+		String[] strings = path.split("\\.");
+		Entity root = this.getRootEntity(strings[0]);
+		Entity found = root;
+		for (int i = 1; i < strings.length; i++) {
+			found = found.tree().getChild(strings[i]);
+		}
+
+		return found;
+	}
+
+	/**
 	 * @return if this is the current Scene.
 	 */
 	public boolean isCurrent() {
