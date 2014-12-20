@@ -1,0 +1,11 @@
+<assets>
+	<classpath>
+		<xpython name="script" path="test/render/Script.py"/>
+		<animation name="treads" path="test/render/animation.anm"/>
+		<material name="icicle" texture="test/render/icicle.png" lighted="true"/>
+		<material name="lake" texture="test/render/lake.png" lighted="true"/>
+		<material name="platform1" texture="test/render/platform1.png" lighted="true"/>
+		<material name="platform2" texture="test/render/platform2.png" lighted="true"/>
+		<material name="frame1" texture="test/render/treads1.png" lighted="true"/>
+	</classpath>  
+</assets>

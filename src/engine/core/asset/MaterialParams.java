@@ -12,6 +12,10 @@ public class MaterialParams {
 	public Color color;
 	public boolean isLighted;
 
+	public MaterialParams() {
+		isLighted = true;
+	}
+
 	public MaterialParams(Resource normalMap, boolean isLighted) {
 		this.normalMap = normalMap;
 		this.isLighted = isLighted;

@@ -1,7 +1,7 @@
 package test.render;
 
 import commons.Resource;
-import commons.ResourceLocator.ClasspathResourceLocator;
+import commons.ResourceLocator;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
 import commons.matrix.Vector3f;
@@ -80,7 +80,7 @@ public class RenderTest {
 		bPlatform1.setTransform(new Transform2f(new Vector2f(-0.3f, 0f), 0f, new Vector2f(2f, 2f)));
 
 		EntityBuilder bPlatform2 = new EntityBuilder();
-		bPlatform2.addComponentBuilder(new CRender(manager.get("platform4", Material2D.class), 0, 2f));
+		bPlatform2.addComponentBuilder(new CRender(manager.get("platform2", Material2D.class), 0, 2f));
 		bPlatform2.setTransform(new Transform2f(new Vector2f(1f, 0f), 0f, new Vector2f(2f, 2f)));
 
 		bBackground.addChildBuilder("platform1", bPlatform1);
@@ -127,29 +127,7 @@ public class RenderTest {
 	private void loadAssets(RenderingSystem system) {
 		AssetManager manager = AssetManager.init(system.getRenderer().getGL());
 
-		ClasspathResourceLocator locator = new ClasspathResourceLocator();
-		Resource rScript = new Resource(locator, "test/render/Script.py");
-		Resource rIcicle = new Resource(locator, "test/render/cave_icicle_1_0.png");
-		Resource rLake = new Resource(locator, "test/render/cave_lake_1_0.png");
-		Resource rPlatform1 = new Resource(locator, "test/render/cave_platform_1_0.png");
-		Resource rPlatform4 = new Resource(locator, "test/render/cave_platform_4_0.png");
-		Resource rFrame1 = new Resource(locator, "test/render/treads1.png");
-		/*Resource rFrame2 = new Resource(locator, "test/render/treads2.png");
-		Resource rFrame3 = new Resource(locator, "test/render/treads3.png");
-		Resource rFrame4 = new Resource(locator, "test/render/treads4.png");*/
-		Resource rTreads = new Resource(locator, "test/render/animation.anm");
-
-		manager.load("script", rScript, XPython.class);
-
-		manager.load("icicle", rIcicle, Material2D.class);
-		manager.load("lake", rLake, Material2D.class);
-		manager.load("platform1", rPlatform1, Material2D.class);
-		manager.load("platform4", rPlatform4, Material2D.class);
-		manager.load("treads", rTreads, Animation.class);
-		manager.load("frame1", rFrame1, Material2D.class);
-		/*manager.load("frame2", rFrame2, Material2D.class);
-		manager.load("frame3", rFrame3, Material2D.class);
-		manager.load("frame4", rFrame4, Material2D.class);*/
+		manager.loadFromFile(new Resource(new ResourceLocator.ClasspathResourceLocator(), "test/render/assets.ast"));
 	}
 
 	public static void main(String[] args) {

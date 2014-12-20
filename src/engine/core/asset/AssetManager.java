@@ -9,7 +9,15 @@ import gltools.gl.GL;
 
 import java.util.HashMap;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
+
+import commons.Logger;
 import commons.Resource;
+import commons.ResourceLocator.ClasspathResourceLocator;
 
 /**
  * Manages the assets of a game.
@@ -25,8 +33,9 @@ public class AssetManager {
 	private HashMap<Resource, Object> m_resourceObjects = new HashMap<Resource, Object>();
 
 	private AssetManager(GL gl) {
-		m_loaders.put(Material2D.class, new MaterialLoader(gl));
-		m_loaders.put(Animation.class, new AnimationLoader(gl));
+		MaterialLoader loader = new MaterialLoader(gl);
+		m_loaders.put(Material2D.class, loader);
+		m_loaders.put(Animation.class, new AnimationLoader(loader));
 		m_loaders.put(XPython.class, new XPythonLoader());
 		m_loaders.put(XJava.class, new XJavaLoader());
 	}
@@ -69,6 +78,45 @@ public class AssetManager {
 	}
 
 	/**
+	 * Loads all the resources in the given XML file.
+	 * 
+	 * @param file
+	 */
+	public void loadFromFile(Resource file) {
+		String xml = ResourceFactory.readString(file);
+		Document doc = Jsoup.parse(xml, "", Parser.xmlParser());
+
+		Element assets = doc.getElementsByTag("assets").first();
+		Elements classpaths = assets.getElementsByTag("classpath");
+		ClasspathResourceLocator classpath = new ClasspathResourceLocator();
+		for (Element e : classpaths) {
+			Elements children = e.children();
+			for (Element child : children) {
+				if (!child.hasAttr("name"))
+					throw new AssetException("No name attribute!");
+				String type = child.tagName();
+				String name = child.attr("name");
+
+				if (type.equals("material")) {
+					Resource resource = new Resource(classpath, child.attr("texture"));
+					load(name, resource, Material2D.class, ResourceFactory.readMaterialParams(child, classpath));
+				} else if (type.equals("animation")) {
+					Resource resource = new Resource(classpath, child.attr("path"));
+					load(name, resource, Animation.class);
+				} else if (type.equals("xpython")) {
+					Resource resource = new Resource(classpath, child.attr("path"));
+					load(name, resource, XPython.class);
+				} else if (type.equals("xjava")) {
+					Resource resource = new Resource(classpath, child.attr("path"));
+					load(name, resource, XJava.class);
+				} else {
+					Logger.instance().error("Did not recognize type: " + type);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Gets the asset for the identifier.
 	 * 
 	 * @param identifier
@@ -100,6 +148,15 @@ public class AssetManager {
 		Resource resource = m_resourceIdentifiers.get(identifier);
 		Object resObject = m_resourceObjects.get(resource);
 		return resObject;
+	}
+
+	/**
+	 * Test prints all the assets.
+	 */
+	public void dump() {
+		for (String s : m_resourceIdentifiers.keySet()) {
+			Logger.instance().out(s);
+		}
 	}
 
 	private static AssetManager INSTANCE;
