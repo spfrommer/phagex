@@ -1,11 +1,12 @@
 package engine.core.script;
 
+import engine.core.asset.Asset;
 import engine.core.exceptions.XScriptException;
 
 /**
  * A Script which defines a behavior that the Entity has.
  */
-public abstract class XScript {
+public abstract class XScript extends Asset {
 	public static final String SCENE_LOAD = "onSceneLoad";
 	public static final String UPDATE = "update";
 	public static final String EXIT = "exit";

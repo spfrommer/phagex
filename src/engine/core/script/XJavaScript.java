@@ -6,8 +6,7 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 import commons.Logger;
-import commons.Resource;
-import engine.core.asset.ResourceFactory;
+
 import engine.core.exceptions.XScriptException;
 
 /**
@@ -25,11 +24,6 @@ public class XJavaScript extends XScript {
 			throw new XScriptException("Cannot init Script with null String!");
 		Logger.instance().warn("JavaScript scripts are not working!");
 		m_code = code;
-	}
-
-	public XJavaScript(Resource resource) {
-		m_code = ResourceFactory.readString(resource);
-		Logger.instance().warn("JavaScript scripts are not working!");
 	}
 
 	@Override

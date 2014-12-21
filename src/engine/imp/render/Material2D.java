@@ -1,12 +1,14 @@
 package engine.imp.render;
 
+import engine.core.asset.Asset;
 import glcommon.Color;
 import gltools.texture.Texture2D;
 
 /**
  * Defines a rendering material.
  */
-public class Material2D {
+public class Material2D extends Asset {
+	private String m_identifier;
 	private Texture2D m_texture;
 	private Texture2D m_normal;
 	private Color m_color;
@@ -40,6 +42,21 @@ public class Material2D {
 		m_normal = normal;
 		m_color = color;
 		m_lighted = lighted;
+	}
+
+	/**
+	 * @return the identifier
+	 */
+	public String getIdentifier() {
+		return m_identifier;
+	}
+
+	/**
+	 * @param identifier
+	 *            the identifier
+	 */
+	public void setIdentifier(String identifier) {
+		m_identifier = identifier;
 	}
 
 	/**

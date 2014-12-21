@@ -3,10 +3,12 @@ package engine.imp.render;
 import java.util.ArrayList;
 import java.util.List;
 
+import engine.core.asset.Asset;
+
 /**
  * Contains the data for one Animation.
  */
-public class Animation {
+public class Animation extends Asset {
 	private List<Frame> m_frames;
 
 	// time since last update

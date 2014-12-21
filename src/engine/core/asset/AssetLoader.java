@@ -7,7 +7,7 @@ import commons.Resource;
  * 
  * @param <T>
  */
-public interface AssetLoader<T> {
+public interface AssetLoader<T extends Asset> {
 	/**
 	 * Loads a resource.
 	 * 

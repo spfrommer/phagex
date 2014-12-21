@@ -8,9 +8,8 @@ import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
 import commons.Logger;
-import commons.Resource;
+
 import engine.core.Component;
-import engine.core.asset.ResourceFactory;
 import engine.core.exceptions.XScriptException;
 
 public class XPython extends XScript {
@@ -25,10 +24,6 @@ public class XPython extends XScript {
 		if (code == null)
 			throw new XScriptException("Cannot init Script with null String!");
 		m_code = code;
-	}
-
-	public XPython(Resource resource) {
-		m_code = ResourceFactory.readString(resource);
 	}
 
 	@Override
