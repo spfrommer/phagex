@@ -11,10 +11,6 @@ import engine.core.exceptions.ComponentException;
  */
 public class CTransform implements Component {
 	public static final String NAME = "transform";
-	public static final String TRANSLATION = "translation";
-	public static final String ROTATION = "rotation";
-	public static final String SCALE = "scale";
-	private static final String[] IDENTIFIERS = new String[] { TRANSLATION, ROTATION, SCALE };
 
 	private Entity m_entity;
 	private Transform2f m_transform;
@@ -161,52 +157,6 @@ public class CTransform implements Component {
 	@Override
 	public String getName() {
 		return NAME;
-	}
-
-	@Override
-	public String[] getIdentifiers() {
-		return IDENTIFIERS;
-	}
-
-	@Override
-	public Object getData(String identifier) {
-		if (identifier == null)
-			throw new ComponentException("Cannot get data for null identifier!");
-		if (m_warnings)
-			Logger.instance().warn("Getting data on a unbound CTransform");
-
-		if (identifier.equals(TRANSLATION))
-			return m_transform.getTranslation();
-		if (identifier.equals(ROTATION))
-			return m_transform.getRotation();
-		if (identifier.equals(SCALE))
-			return m_transform.getScale();
-
-		throw new ComponentException("No such identifier!");
-	}
-
-	@Override
-	public void setData(String identifier, Object data) {
-		if (m_warnings)
-			Logger.instance().warn("Getting data on a unbound CTransform");
-
-		if (identifier == null)
-			throw new ComponentException("Cannot set transform data with a null identifier!");
-		if (data == null)
-			throw new ComponentException("Cannot set null data for identifier: " + identifier);
-
-		Transform2f newTransform = new Transform2f(m_transform);
-		if (identifier.equals(TRANSLATION)) {
-			newTransform.setTranslation((Vector2f) data);
-		} else if (identifier.equals(ROTATION)) {
-			newTransform.setRotation((Float) data);
-		} else if (identifier.equals(SCALE)) {
-			newTransform.setScale((Vector2f) data);
-		} else {
-			throw new ComponentException("No data for identifier: " + identifier);
-		}
-
-		setTransform(newTransform);
 	}
 
 	@Override

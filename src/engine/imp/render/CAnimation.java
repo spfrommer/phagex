@@ -6,15 +6,12 @@ import java.util.Set;
 
 import engine.core.Component;
 import engine.core.ComponentBuilder;
-import engine.core.exceptions.ComponentException;
 
 /**
  * Containes the animation data for an Entity.
  */
 public class CAnimation implements Component {
 	public static final String NAME = "animation";
-	public static final String ANIMATIONS = "animations";
-	public static final String[] IDENTIFIERS = new String[] { ANIMATIONS };
 
 	private Map<String, Animation> m_animations = new HashMap<String, Animation>();
 	private Animation m_current;
@@ -103,37 +100,6 @@ public class CAnimation implements Component {
 	@Override
 	public String getName() {
 		return NAME;
-	}
-
-	@Override
-	public String[] getIdentifiers() {
-		return IDENTIFIERS;
-	}
-
-	@Override
-	public Object getData(String identifier) {
-		if (identifier == null)
-			throw new ComponentException("Cannot get data for null identifier!");
-
-		if (identifier.equals(ANIMATIONS))
-			return m_animations;
-
-		throw new ComponentException("No such identifier!");
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void setData(String identifier, Object data) {
-		if (identifier == null)
-			throw new ComponentException("Cannot set data for null identifier!");
-		if (data == null)
-			throw new ComponentException("Cannot set null data for identifier: " + identifier);
-
-		if (identifier.equals(ANIMATIONS)) {
-			m_animations = (Map<String, Animation>) data;
-		} else {
-			throw new ComponentException("No data for identifier: " + identifier);
-		}
 	}
 
 	@Override

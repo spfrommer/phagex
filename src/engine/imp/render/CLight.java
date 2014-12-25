@@ -2,7 +2,6 @@ package engine.imp.render;
 
 import engine.core.Component;
 import engine.core.ComponentBuilder;
-import engine.core.exceptions.ComponentException;
 import glextra.renderer.Light;
 
 /**
@@ -10,8 +9,6 @@ import glextra.renderer.Light;
  */
 public class CLight implements Component {
 	public static final String NAME = "light";
-	public static final String LIGHT = "light";
-	private static final String[] IDENTIFIERS = new String[] { LIGHT };
 
 	private Light m_light;
 
@@ -42,36 +39,6 @@ public class CLight implements Component {
 	@Override
 	public String getName() {
 		return NAME;
-	}
-
-	@Override
-	public String[] getIdentifiers() {
-		return IDENTIFIERS;
-	}
-
-	@Override
-	public Object getData(String identifier) {
-		if (identifier == null)
-			throw new ComponentException("Cannot get data for null identifier!");
-
-		if (identifier.equals(LIGHT))
-			return m_light;
-
-		throw new ComponentException("No such identifier!");
-	}
-
-	@Override
-	public void setData(String identifier, Object data) {
-		if (identifier == null)
-			throw new ComponentException("Cannot set data for null identifier!");
-		if (data == null)
-			throw new ComponentException("Cannot set null data for identifier: " + identifier);
-
-		if (identifier.equals(LIGHT)) {
-			m_light = (Light) data;
-		} else {
-			throw new ComponentException("No data for identifier: " + identifier);
-		}
 	}
 
 	@Override

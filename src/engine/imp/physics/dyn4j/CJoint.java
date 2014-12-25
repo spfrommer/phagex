@@ -2,23 +2,15 @@ package engine.imp.physics.dyn4j;
 
 import org.dyn4j.dynamics.joint.Joint;
 
-import commons.Logger;
 import commons.matrix.Vector2f;
 
 import engine.core.Component;
 import engine.core.ComponentBuilder;
-import engine.core.exceptions.ComponentException;
 import engine.imp.physics.PhysicsException;
 import engine.imp.physics.PhysicsUtils;
 
 public class CJoint implements Component {
 	public static final String NAME = "joint";
-	public static final String JOINT = "joint";
-	public static final String ANCHOR1 = "anchor1";
-	public static final String ANCHOR2 = "anchor2";
-	public static final String COLLISION_ALLOWED = "collisionAllowed";
-
-	public static final String[] IDENTIFIERS = new String[] { JOINT, ANCHOR1, ANCHOR2, COLLISION_ALLOWED };
 
 	private Joint m_joint;
 
@@ -80,46 +72,6 @@ public class CJoint implements Component {
 	@Override
 	public String getName() {
 		return NAME;
-	}
-
-	@Override
-	public String[] getIdentifiers() {
-		return IDENTIFIERS;
-	}
-
-	@Override
-	public Object getData(String identifier) {
-		if (identifier == null)
-			throw new ComponentException("Cannot get data for null identifier!");
-
-		if (identifier.equals(JOINT))
-			return m_joint;
-		if (identifier.equals(ANCHOR1))
-			return getAnchor1();
-		if (identifier.equals(ANCHOR2))
-			return getAnchor2();
-		if (identifier.equals(COLLISION_ALLOWED))
-			return isCollisionAllowed();
-
-		throw new ComponentException("No such identifier!");
-	}
-
-	@Override
-	public void setData(String identifier, Object data) {
-		if (identifier == null)
-			throw new ComponentException("Cannot set data for null identifier!");
-		if (data == null)
-			throw new ComponentException("Cannot set null data for identifier: " + identifier);
-
-		if (identifier.equals(JOINT)) {
-			setJoint((Joint) data);
-		} else if (identifier.equals(COLLISION_ALLOWED)) {
-			setCollisionAllowed((Boolean) data);
-		} else if (identifier.equals(ANCHOR1) || identifier.equals(ANCHOR2)) {
-			Logger.instance().warn("Cannot set anchors in Joint!");
-		} else {
-			throw new ComponentException("No data for identifier: " + identifier);
-		}
 	}
 
 	@Override

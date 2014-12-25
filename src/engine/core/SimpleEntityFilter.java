@@ -10,14 +10,11 @@ import engine.core.exceptions.EntityException;
  */
 public class SimpleEntityFilter implements EntityFilter {
 	private List<String> m_requiredComponents;
-	private List<String> m_requiredFields;
 	private TagList m_requiredTags;
 	private boolean m_topLevelOnly;
 
-	public SimpleEntityFilter(String[] requiredComponents, String[] requiredFields, String[] requiredTags,
-			boolean topLevelOnly) {
+	public SimpleEntityFilter(String[] requiredComponents, String[] requiredTags, boolean topLevelOnly) {
 		m_requiredComponents = Arrays.asList(requiredComponents);
-		m_requiredFields = Arrays.asList(requiredFields);
 		m_requiredTags = new TagList(requiredTags);
 		m_topLevelOnly = topLevelOnly;
 	}
@@ -34,9 +31,7 @@ public class SimpleEntityFilter implements EntityFilter {
 
 		TagList tags = entity.getCTags().getTags();
 		List<String> components = entity.components().allNames();
-		List<String> fields = entity.fields().all();
-		if (tags.containsAll(m_requiredTags) && components.containsAll(m_requiredComponents)
-				&& fields.containsAll(m_requiredFields)) {
+		if (tags.containsAll(m_requiredTags) && components.containsAll(m_requiredComponents)) {
 			return true;
 		}
 		return false;

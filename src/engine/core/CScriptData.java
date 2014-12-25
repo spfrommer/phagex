@@ -20,12 +20,10 @@ public class CScriptData implements Component {
 		return NAME;
 	}
 
-	@Override
 	public String[] getIdentifiers() {
 		return m_data.keySet().toArray(new String[0]);
 	}
 
-	@Override
 	public Object getData(String identifier) {
 		if (identifier == null)
 			throw new ComponentException("Cannot get script data with a null identifier");
@@ -35,7 +33,6 @@ public class CScriptData implements Component {
 		return m_data.get(identifier);
 	}
 
-	@Override
 	public void setData(String identifier, Object data) {
 		if (identifier == null)
 			throw new ComponentException("Cannot set script data with a null identifier");

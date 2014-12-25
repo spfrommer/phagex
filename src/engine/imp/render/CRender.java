@@ -2,20 +2,12 @@ package engine.imp.render;
 
 import engine.core.Component;
 import engine.core.ComponentBuilder;
-import engine.core.exceptions.ComponentException;
 
 /**
  * Contains the data for the RenderSystem.
  */
 public class CRender implements Component {
 	public static final String NAME = "render";
-	public static final String MATERIAL = "material";
-	public static final String LAYER = "layer";
-	public static final String DEPTH = "depth";
-	public static final String REPEAT_X = "repeatX";
-	public static final String REPEAT_Y = "repeatY";
-	public static final String IS_VISIBLE = "isVisible";
-	private static final String[] IDENTIFIERS = new String[] { MATERIAL, LAYER, DEPTH, REPEAT_X, REPEAT_Y, IS_VISIBLE };
 
 	private Material2D m_material;
 	private float m_depth;
@@ -190,56 +182,6 @@ public class CRender implements Component {
 	@Override
 	public String getName() {
 		return NAME;
-	}
-
-	@Override
-	public String[] getIdentifiers() {
-		return IDENTIFIERS;
-	}
-
-	@Override
-	public Object getData(String identifier) {
-		if (identifier == null)
-			throw new ComponentException("Cannot get data for null identifier!");
-
-		if (identifier.equals(MATERIAL))
-			return m_material;
-		if (identifier.equals(LAYER))
-			return m_layer;
-		if (identifier.equals(DEPTH))
-			return m_depth;
-		if (identifier.equals(REPEAT_X))
-			return m_repeatX;
-		if (identifier.equals(REPEAT_Y))
-			return m_repeatY;
-		if (identifier.equals(IS_VISIBLE))
-			return m_isVisible;
-
-		throw new ComponentException("No such identifier!");
-	}
-
-	@Override
-	public void setData(String identifier, Object data) {
-		if (identifier == null)
-			throw new ComponentException("Cannot set data for null identifier!");
-		if (data == null)
-			throw new ComponentException("Cannot set null data for identifier: " + identifier);
-
-		if (identifier.equals(MATERIAL)) {
-			m_material = (Material2D) data;
-		} else if (identifier.equals(LAYER)) {
-			m_layer = (Integer) data;
-		} else if (identifier.equals(DEPTH)) {
-			m_depth = (Float) data;
-		} else if (identifier.equals(REPEAT_X)) {
-			m_repeatX = (Float) data;
-		} else if (identifier.equals(REPEAT_Y)) {
-			m_repeatY = (Float) data;
-		} else if (identifier.equals(IS_VISIBLE)) {
-			m_isVisible = (Boolean) data;
-		} else {
-			throw new ComponentException("No data for identifier: " + identifier);
-		}
 	}
 
 	@Override

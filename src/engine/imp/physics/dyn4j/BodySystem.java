@@ -30,9 +30,9 @@ import engine.imp.physics.PhysicsUtils;
  */
 public class BodySystem implements EntitySystem {
 	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CBody.NAME },
-			new String[0], new String[0], true);
+			new String[0], true);
 	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CBody.NAME },
-			new String[0], new String[0], false);
+			new String[0], false);
 	private World m_world;
 
 	public static final String COLLISION_FUNCTION = "onContact";

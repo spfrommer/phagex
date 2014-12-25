@@ -15,7 +15,6 @@ import commons.matrix.Vector2f;
 import engine.core.Component;
 import engine.core.ComponentBuilder;
 import engine.core.Entity;
-import engine.core.exceptions.ComponentException;
 import engine.imp.physics.PhysicsException;
 import engine.imp.physics.PhysicsUtils;
 
@@ -24,23 +23,10 @@ import engine.imp.physics.PhysicsUtils;
  */
 public class CBody implements Component {
 	public static final String NAME = "body";
-	public static final String FILTER = "filter";
-	public static final String BULLET = "bullet";
-	public static final String LINEAR_DAMPING = "linearDamping";
-	public static final String ANGULAR_DAMPING = "angularDamping";
-	public static final String MASS_TYPE = "massType";
-	public static final String MASS = "mass";
-	public static final String INERTIA = "inertia";
-	public static final String DENSITY = "density";
-	public static final String FRICTION = "friction";
-	public static final String RESTITUTION = "restitution";
-	public static final String SHAPE = "shape";
-
-	private static final String[] IDENTIFIERS = new String[] { BULLET, FILTER, LINEAR_DAMPING, ANGULAR_DAMPING,
-			MASS_TYPE, MASS, INERTIA, DENSITY, FRICTION, RESTITUTION };
 
 	private Body m_body;
 	private BodyFixture m_fixture;
+
 	private CollisionFilter m_filter = new CollisionFilter() {
 		@Override
 		public boolean canCollide(Entity entity1, Entity entity2) {
@@ -490,76 +476,6 @@ public class CBody implements Component {
 	@Override
 	public String getName() {
 		return NAME;
-	}
-
-	@Override
-	public String[] getIdentifiers() {
-		return IDENTIFIERS;
-	}
-
-	@Override
-	public Object getData(String identifier) {
-		if (identifier == null)
-			throw new ComponentException("Cannot get data for null identifier!");
-
-		if (identifier.equals(BULLET))
-			return isBullet();
-		if (identifier.equals(FILTER))
-			return getCollisionFilter();
-		if (identifier.equals(LINEAR_DAMPING))
-			return getLinearDamping();
-		if (identifier.equals(ANGULAR_DAMPING))
-			return getAngularDamping();
-		if (identifier.equals(MASS_TYPE))
-			return getMassType();
-		if (identifier.equals(MASS))
-			return getMass();
-		if (identifier.equals(INERTIA))
-			return getInertia();
-		if (identifier.equals(DENSITY))
-			return getDensity();
-		if (identifier.equals(FRICTION))
-			return getCollisionFriction();
-		if (identifier.equals(RESTITUTION))
-			return getRestitution();
-		if (identifier.equals(SHAPE))
-			return getShape();
-
-		throw new ComponentException("No such identifier!");
-	}
-
-	@Override
-	public void setData(String identifier, Object data) {
-		if (identifier == null)
-			throw new ComponentException("Cannot set data for null identifier!");
-		if (data == null)
-			throw new ComponentException("Cannot set null data for identifier: " + identifier);
-
-		if (identifier.equals(BULLET)) {
-			setBullet((Boolean) data);
-		} else if (identifier.equals(FILTER)) {
-			setCollisionFilter((CollisionFilter) data);
-		} else if (identifier.equals(LINEAR_DAMPING)) {
-			setLinearDamping((Float) data);
-		} else if (identifier.equals(ANGULAR_DAMPING)) {
-			setAngularDamping((Float) data);
-		} else if (identifier.equals(MASS_TYPE)) {
-			setMassType((Mass.Type) data);
-		} else if (identifier.equals(MASS)) {
-			setMass((Float) data);
-		} else if (identifier.equals(INERTIA)) {
-			setInertia((Float) data);
-		} else if (identifier.equals(DENSITY)) {
-			setDensity((Float) data);
-		} else if (identifier.equals(FRICTION)) {
-			setCollisionFriction((Float) data);
-		} else if (identifier.equals(RESTITUTION)) {
-			setRestitution((Float) data);
-		} else if (identifier.equals(SHAPE)) {
-			setShape((Convex) data);
-		} else {
-			throw new ComponentException("No data for identifier: " + identifier);
-		}
 	}
 
 	@Override

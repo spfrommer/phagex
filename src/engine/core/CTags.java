@@ -8,8 +8,6 @@ import engine.core.exceptions.TagException;
  */
 public class CTags implements Component {
 	public static final String NAME = "tags";
-	public static final String TAGS = "tags";
-	private static final String[] IDENTIFIERS = new String[] { TAGS };
 
 	private TagList m_tags;
 
@@ -62,32 +60,6 @@ public class CTags implements Component {
 	@Override
 	public String getName() {
 		return NAME;
-	}
-
-	@Override
-	public String[] getIdentifiers() {
-		return IDENTIFIERS;
-	}
-
-	@Override
-	public Object getData(String identifier) {
-		if (identifier == null)
-			throw new ComponentException("Cannot get data for null identifier!");
-
-		if (identifier.equals(TAGS))
-			return m_tags;
-
-		throw new ComponentException("No such identifier!");
-	}
-
-	@Override
-	public void setData(String identifier, Object data) {
-		if (identifier == null)
-			throw new ComponentException("Cannot set tag data with a null identifier");
-		if (data == null)
-			throw new ComponentException("Cannot set null data for identifier: " + identifier);
-
-		m_tags = (TagList) data;
 	}
 
 	@Override

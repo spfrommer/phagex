@@ -54,8 +54,8 @@ public class PhysicsTest {
 		game.scenes().addScene(scene, "main");
 
 		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(0.5f, 0.5f, 0.5f), new Color(1f, 1f, 1f))));
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f), new Vector3f(0.5f,
+				0.5f, 0.5f), new Color(1f, 1f, 1f))));
 		scene.createEntity("light", scene, lightBuilder);
 
 		makeScene(scene);
@@ -92,12 +92,10 @@ public class PhysicsTest {
 		Entity brick1 = scene.createEntity("brick1", scene, brickBuilder);
 		brick1.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, new Vector2f(1f, 1f)));
 		Entity brick2 = scene.createEntity("brick2", scene, brickBuilder);
-		brick1.fields().set(CBody.DENSITY, 100f);
 		brick2.getCTransform().setTransform(new Transform2f(new Vector2f(4f, 2f), 0f, new Vector2f(1f, 1f)));
 
 		EntityBuilder jointBuilder = new EntityBuilder();
-		jointBuilder.addComponentBuilder(new CJointBuilder(PhysicsFactory.createRevolute(brick1, brick2, new Vector2f(
-				0f, 2f))));
+		jointBuilder.addComponentBuilder(new CJointBuilder(PhysicsFactory.createRevolute(brick1, brick2, new Vector2f(0f, 2f))));
 		scene.createEntity("joint", scene, jointBuilder);
 
 		EntityBuilder groundBuilder = new EntityBuilder();

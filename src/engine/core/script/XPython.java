@@ -40,7 +40,6 @@ public class XPython extends XScript {
 		m_python.set("tree", context.entity.tree());
 		m_python.set("scripts", context.entity.scripts());
 		m_python.set("components", context.entity.components());
-		m_python.set("fields", context.entity.fields());
 
 		List<Component> allComps = context.entity.components().all();
 		for (Component c : allComps)

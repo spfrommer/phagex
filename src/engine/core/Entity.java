@@ -18,8 +18,6 @@ public class Entity implements TreeNode {
 	private TreeManager m_tree;
 	// manages the components
 	private ComponentManager m_components;
-	// manages the fields
-	private FieldManager m_fields;
 	// manages the Scripts
 	private ScriptManager m_scripts;
 
@@ -50,7 +48,6 @@ public class Entity implements TreeNode {
 
 		m_tree = new TreeManager(this, parent);
 		m_components = new ComponentManager(this, components);
-		m_fields = new FieldManager(this);
 		m_scripts = new ScriptManager(this);
 	}
 
@@ -60,8 +57,7 @@ public class Entity implements TreeNode {
 	 * @param parent
 	 * @param components
 	 */
-	protected Entity(String name, Scene scene, TreeNode parent, List<Component> components, TagList tags,
-			Transform2f transform) {
+	protected Entity(String name, Scene scene, TreeNode parent, List<Component> components, TagList tags, Transform2f transform) {
 		m_name = name;
 		m_scene = scene;
 		m_listeners = new ArrayList<EntityListener>();
@@ -71,7 +67,6 @@ public class Entity implements TreeNode {
 
 		m_tree = new TreeManager(this, parent);
 		m_components = new ComponentManager(this, components);
-		m_fields = new FieldManager(this);
 		m_scripts = new ScriptManager(this);
 	}
 
@@ -89,7 +84,6 @@ public class Entity implements TreeNode {
 	 */
 	public void updateScripts(float time) {
 		m_scripts.update(time);
-		m_fields.reloadFields(m_scriptData);
 	}
 
 	/**
@@ -198,15 +192,6 @@ public class Entity implements TreeNode {
 	 */
 	public ComponentManager components() {
 		return m_components;
-	}
-
-	/**
-	 * Returns the FieldManager, which manages this Entity's fields. It loads the fields from the ComponentManager.
-	 * 
-	 * @return
-	 */
-	public FieldManager fields() {
-		return m_fields;
 	}
 
 	/**

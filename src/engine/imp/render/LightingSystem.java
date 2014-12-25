@@ -18,7 +18,7 @@ import glextra.renderer.Renderer2D;
  */
 public class LightingSystem implements EntitySystem {
 	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CLight.NAME },
-			new String[0], new String[0], false);
+			new String[0], false);
 
 	private RenderingSystem m_render;
 

@@ -17,9 +17,9 @@ import engine.core.script.XScript;
  */
 public class JointSystem implements EntitySystem {
 	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CJoint.NAME },
-			new String[0], new String[0], true);
+			new String[0], true);
 	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CJoint.NAME },
-			new String[0], new String[0], false);
+			new String[0], false);
 	private BodySystem m_bodySystem;
 
 	public JointSystem(BodySystem bodySystem) {

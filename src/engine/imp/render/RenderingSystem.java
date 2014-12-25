@@ -37,9 +37,9 @@ import gltools.texture.Texture2D;
  */
 public class RenderingSystem implements EntitySystem {
 	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CCamera.NAME },
-			new String[0], new String[0], false);
+			new String[0], false);
 	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CRender.NAME },
-			new String[0], new String[0], false);
+			new String[0], false);
 	private HashMap<Integer, List<Entity>> m_entityLayers = new HashMap<Integer, List<Entity>>();
 
 	// holds the cameras in each Scene

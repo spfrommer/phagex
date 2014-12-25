@@ -15,7 +15,7 @@ import engine.core.script.XScript;
  */
 public class AnimationSystem implements EntitySystem {
 	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME,
-			CAnimation.NAME }, new String[0], new String[0], false);
+			CAnimation.NAME }, new String[0], false);
 
 	@Override
 	public void sceneChanged(Scene oldScene, Scene newScene) {
