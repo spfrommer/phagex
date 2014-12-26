@@ -90,7 +90,7 @@ public class Scene implements TreeNode {
 			components.add(componentBuilder.build());
 		}
 
-		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), builder.getTransform());
+		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), new Transform2f(builder.getTransform()));
 
 		parent.addChild(entity);
 		m_allEntities.add(entity);
@@ -200,8 +200,7 @@ public class Scene implements TreeNode {
 		}
 
 		Transform2f newLocalTrans = new Transform2f();
-		newLocalTrans.setTranslation(oldWorldTrans.getTranslation().subtract(newParentWorldTrans.getTranslation())
-				.toVector2f());
+		newLocalTrans.setTranslation(oldWorldTrans.getTranslation().subtract(newParentWorldTrans.getTranslation()).toVector2f());
 		newLocalTrans.setRotation(newLocalTrans.getRotation() - oldWorldTrans.getRotation());
 		Vector2f oldScale = oldWorldTrans.getScale();
 		Vector2f chainScale = newParentWorldTrans.getScale();
@@ -215,8 +214,7 @@ public class Scene implements TreeNode {
 		Transform2f newWorldTrans = getWorldTransform(entity);
 
 		for (EntityListener listener : entity.getListeners())
-			listener.parentChanged(entity, oldParent, newParent, oldLocalTrans, newLocalTrans, oldWorldTrans,
-					newWorldTrans, this);
+			listener.parentChanged(entity, oldParent, newParent, oldLocalTrans, newLocalTrans, oldWorldTrans, newWorldTrans, this);
 		m_game.entityMoved(entity, oldParent, newParent, this);
 	}
 

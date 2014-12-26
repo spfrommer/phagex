@@ -50,10 +50,10 @@ public class EntityBuilder {
 	}
 
 	/**
-	 * @return a deep clone of the Transform
+	 * @return the Transform2f
 	 */
 	public Transform2f getTransform() {
-		return new Transform2f(m_transform);
+		return m_transform;
 	}
 
 	/**
