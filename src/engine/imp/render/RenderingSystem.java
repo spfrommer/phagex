@@ -36,10 +36,10 @@ import gltools.texture.Texture2D;
  * Renders the Entities with a CRender to a Display. Will also call mouse and keyboard events on the scripts.
  */
 public class RenderingSystem implements EntitySystem {
-	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CCamera.NAME },
-			new String[0], false);
-	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CRender.NAME },
-			new String[0], false);
+	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CCamera.NAME }, new String[0],
+			false);
+	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CRender.NAME }, new String[0],
+			false);
 	private HashMap<Integer, List<Entity>> m_entityLayers = new HashMap<Integer, List<Entity>>();
 
 	// holds the cameras in each Scene
@@ -232,10 +232,6 @@ public class RenderingSystem implements EntitySystem {
 			CCamera camera = (CCamera) e.components().get(CCamera.NAME);
 			camera.setRenderingSystem(this);
 			if (camera.isLookedThrough()) {
-				if (m_currentCam != null) {
-					CCamera current = (CCamera) m_currentCam.components().get(CCamera.NAME);
-					current.setLookThrough(false);
-				}
 				m_currentCam = e;
 			}
 
