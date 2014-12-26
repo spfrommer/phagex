@@ -15,6 +15,10 @@ public class XJava extends XScript {
 	private Interpreter m_interpreter;
 
 	private String m_code;
+	
+	static {
+		XScriptTypeManager.instance().registerType(XJava.class, "java", new XJavaFactory());;
+	}
 
 	public XJava(String code) {
 		m_code = code;
@@ -90,7 +94,9 @@ public class XJava extends XScript {
 
 	@Override
 	public XScript duplicate() {
-		return new XJava(m_code);
+		XJava java = new XJava(m_code);
+		java.setIdentifier(getIdentifier());
+		return java;
 	}
 
 	@Override
@@ -99,6 +105,13 @@ public class XJava extends XScript {
 			m_interpreter.getNameSpace().setVariable(object.getName(), object.getObject(), false);
 		} catch (UtilEvalError e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static class XJavaFactory implements XScriptFactory {
+		@Override
+		public XScript create(String code) {
+			return new XJava(code);
 		}
 	}
 }

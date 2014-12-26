@@ -20,6 +20,10 @@ public class XPython extends XScript {
 
 	private String m_code;
 
+	static {
+		XScriptTypeManager.instance().registerType(XPython.class, "python", new XPythonFactory());;
+	}
+	
 	public XPython(String code) {
 		if (code == null)
 			throw new XScriptException("Cannot init Script with null String!");
@@ -97,11 +101,21 @@ public class XPython extends XScript {
 
 	@Override
 	public XPython duplicate() {
-		return new XPython(m_code);
+		XPython python =  new XPython(m_code);
+		python.setIdentifier(getIdentifier());
+		return python;
 	}
 
 	@Override
 	public void addScriptObject(XScriptObject object) {
 		m_python.set(object.getName(), object.getObject());
+	}
+	
+	public static class XPythonFactory implements XScriptFactory {
+		@Override
+		public XScript create(String code) {
+			return new XPython(code);
+		}
+		
 	}
 }
