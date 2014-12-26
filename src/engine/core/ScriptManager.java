@@ -76,7 +76,14 @@ public class ScriptManager {
 		script.deactivateContext();
 		m_scripts.remove(script);
 	}
-
+	/**
+	 * Returns all scripts
+	 * @return all scripts of the manager
+	 */
+	public List<XScript> getAllScripts() {
+		return m_scripts;
+	}
+	
 	/**
 	 * Calls the function on all the Scripts.
 	 * 
