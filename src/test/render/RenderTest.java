@@ -87,7 +87,7 @@ public class RenderTest {
 		bBackground.addChildBuilder("platform2", bPlatform2);
 
 		Entity background = scene.createEntity("background", scene, bBackground);
-		background.getCTransform().translate(1f, 0f);
+		background.transform().translate(1f, 0f);
 	}
 
 	private void makeForeground(Scene scene) {
@@ -104,11 +104,11 @@ public class RenderTest {
 		bLake.addComponentBuilder(clake);
 
 		Entity icicle = scene.createEntity("icicle1", scene, bIcicle);
-		icicle.getCTransform().setTransform(
+		icicle.transform().setTransform(
 				new Transform2f(new Vector2f(0.5f, 0.6f), (float) Math.PI, new Vector2f(0.5f, 1f)));
 
 		Entity lake = scene.createEntity("lake", scene, bLake);
-		lake.getCTransform().translate(0f, -0.8f);
+		lake.transform().translate(0f, -0.8f);
 	}
 
 	private void makeTreads(Scene scene) {

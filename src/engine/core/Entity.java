@@ -158,21 +158,21 @@ public class Entity implements TreeNode {
 	/**
 	 * @return the CTags
 	 */
-	public CTags getCTags() {
+	public CTags tags() {
 		return m_tags;
 	}
 
 	/**
 	 * @return the CTransform
 	 */
-	public CTransform getCTransform() {
+	public CTransform transform() {
 		return m_transform;
 	}
 
 	/**
 	 * @return the CScriptData
 	 */
-	public CScriptData getCScriptData() {
+	public CScriptData scriptData() {
 		return m_scriptData;
 	}
 

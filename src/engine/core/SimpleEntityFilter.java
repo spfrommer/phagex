@@ -29,7 +29,7 @@ public class SimpleEntityFilter implements EntityFilter {
 				return false;
 		}
 
-		TagList tags = entity.getCTags().getTags();
+		TagList tags = entity.tags().getTags();
 		List<String> components = entity.components().allNames();
 		if (tags.containsAll(m_requiredTags) && components.containsAll(m_requiredComponents)) {
 			return true;

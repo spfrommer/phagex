@@ -92,6 +92,15 @@ public class Scene implements TreeNode {
 
 		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), new Transform2f(builder.getTransform()));
 
+		entity.transform().setTranslateChildren(builder.isTranslateChildren());
+		entity.transform().setRotateChildren(builder.isRotateChildren());
+		entity.transform().setScaleChildren(builder.isScaleChildren());
+
+		Map<String, Object> scriptData = builder.getScriptData();
+		for (String s : scriptData.keySet()) {
+			entity.scriptData().setData(s, scriptData.get(s));
+		}
+
 		parent.addChild(entity);
 		m_allEntities.add(entity);
 		m_game.entityAdded(entity, parent, this);
@@ -122,6 +131,7 @@ public class Scene implements TreeNode {
 			throw new SceneException("Cannot create an Entity with a null name!");
 		if (!m_allEntities.contains(parent) && !(this == parent))
 			throw new SceneException("Trying to create an Entity in a container not in the Scene!");
+
 		Entity entity = new Entity(name, this, parent, new ArrayList<Component>());
 		parent.addChild(entity);
 		m_allEntities.add(entity);
@@ -190,7 +200,7 @@ public class Scene implements TreeNode {
 		TreeNode oldParent = entity.tree().getParent();
 
 		Transform2f oldWorldTrans = getWorldTransform(entity);
-		Transform2f oldLocalTrans = entity.getCTransform().getTransform();
+		Transform2f oldLocalTrans = entity.transform().getTransform();
 
 		Transform2f newParentWorldTrans;
 		if (newParent == this) {
@@ -209,7 +219,7 @@ public class Scene implements TreeNode {
 		oldParent.removeChild(entity);
 		newParent.addChild(entity);
 		entity.tree().setParent(newParent);
-		entity.getCTransform().quietSetTransform(newLocalTrans);
+		entity.transform().quietSetTransform(newLocalTrans);
 
 		Transform2f newWorldTrans = getWorldTransform(entity);
 
@@ -240,19 +250,43 @@ public class Scene implements TreeNode {
 
 		AffineTransform at = new AffineTransform();
 		float totalRot = 0;
-		for (Entity e : entities) {
-			Transform2f trans = e.getCTransform().getTransform();
+		for (int i = 0; i < entities.size(); i++) {
+			Entity e = entities.get(i);
+			CTransform trans = e.transform();
+
+			if (i == 0) {
+				at.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
+				at.rotate(trans.getRotation());
+				totalRot += trans.getRotation();
+				at.scale(trans.getScale().getX(), trans.getScale().getY());
+				continue;
+			}
+
+			CTransform pTrans = entities.get(i - 1).transform();
+
+			if (!pTrans.isTranslateChildren()) {
+				at.translate(-at.getTranslateX(), -at.getTranslateY());
+			}
 			at.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
+
+			if (!pTrans.isRotateChildren()) {
+				at.rotate(-totalRot);
+				totalRot = 0;
+			}
+
 			at.rotate(trans.getRotation());
-			at.scale(trans.getScale().getX(), trans.getScale().getY());
 			totalRot += trans.getRotation();
+
+			if (!pTrans.isScaleChildren()) {
+				at.scale(1 / (at.getScaleX() / Math.cos(totalRot)), 1 / (at.getScaleY() / Math.cos(totalRot)));
+			}
+			at.scale(trans.getScale().getX(), trans.getScale().getY());
 		}
 
 		Vector2f translation = new Vector2f((float) at.getTranslateX(), (float) at.getTranslateY());
 		float rotation = totalRot;
 		Vector2f scale = new Vector2f((float) (at.getScaleX() / Math.cos(rotation)),
 				(float) (at.getScaleY() / Math.cos(rotation)));
-
 		return new Transform2f(translation, rotation, scale);
 	}
 

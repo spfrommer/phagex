@@ -25,6 +25,8 @@ public class WorldMouse {
 	 */
 	public float getWorldX() {
 		Entity camera = m_render.getCamera();
+		if (camera == null)
+			return m_mouse.getX();
 		Vector2f translate = camera.getScene().getWorldTransform(camera).getTranslation();
 		float scale = ((CCamera) camera.components().get(CCamera.NAME)).getScale();
 
@@ -40,6 +42,8 @@ public class WorldMouse {
 	 */
 	public float getWorldY() {
 		Entity camera = m_render.getCamera();
+		if (camera == null)
+			return m_mouse.getY();
 		Vector2f translate = camera.getScene().getWorldTransform(camera).getTranslation();
 		float scale = ((CCamera) camera.components().get(CCamera.NAME)).getScale();
 

@@ -29,45 +29,68 @@ import engine.core.format.Format;
 import engine.core.format.MetaDecoder;
 import engine.core.format.MetaEncoder;
 import engine.core.script.XScript;
-import engine.core.script.XScriptTypeManager;
 
 public class XMLFormat extends Format<String, Entity, EntityDef> {
 	private ArrayList<Encoder<Component, String>> m_encoders = new ArrayList<Encoder<Component, String>>();
 	private ArrayList<Decoder<Element, Component>> m_decoders = new ArrayList<Decoder<Element, Component>>();
-	
+
 	private ArrayList<MetaEncoder<Entity, String>> m_metaEncoders = new ArrayList<MetaEncoder<Entity, String>>();
 	private ArrayList<MetaDecoder<Element, EntityDef>> m_metaDecoders = new ArrayList<MetaDecoder<Element, EntityDef>>();
-	
-	public XMLFormat() {}
-	
-	public void addEncoder(Encoder<Component, String> encoder) { m_encoders.add(encoder); }
-	public void addDecoder(Decoder<Element, Component> decoder) { m_decoders.add(decoder); }
-	public void addMetaEncoder(MetaEncoder<Entity, String> encoder) { m_metaEncoders.add(encoder); }
-	public void addMetaDecoder(MetaDecoder<Element, EntityDef> decoder) { m_metaDecoders.add(decoder); }
 
-	public void removeEncoder(Encoder<Component, String> encoder) { m_encoders.remove(encoder); }
-	public void removeDecoder(Decoder<Element, Component> decoder) { m_decoders.remove(decoder); }
-	public void removeMetaEncoder(MetaEncoder<Entity, String> encoder) { m_metaEncoders.remove(encoder); }
-	public void removeMetaDecoder(MetaDecoder<Element, EntityDef> decoder) { m_metaDecoders.remove(decoder); }
+	public XMLFormat() {
+	}
 
-	
+	public void addEncoder(Encoder<Component, String> encoder) {
+		m_encoders.add(encoder);
+	}
+
+	public void addDecoder(Decoder<Element, Component> decoder) {
+		m_decoders.add(decoder);
+	}
+
+	public void addMetaEncoder(MetaEncoder<Entity, String> encoder) {
+		m_metaEncoders.add(encoder);
+	}
+
+	public void addMetaDecoder(MetaDecoder<Element, EntityDef> decoder) {
+		m_metaDecoders.add(decoder);
+	}
+
+	public void removeEncoder(Encoder<Component, String> encoder) {
+		m_encoders.remove(encoder);
+	}
+
+	public void removeDecoder(Decoder<Element, Component> decoder) {
+		m_decoders.remove(decoder);
+	}
+
+	public void removeMetaEncoder(MetaEncoder<Entity, String> encoder) {
+		m_metaEncoders.remove(encoder);
+	}
+
+	public void removeMetaDecoder(MetaDecoder<Element, EntityDef> decoder) {
+		m_metaDecoders.remove(decoder);
+	}
+
 	@Override
 	public boolean isEncodable(Entity entity) {
 		return true;
 	}
+
 	@Override
 	public boolean isDecodable(String s) {
 		Document doc = Jsoup.parse(s, "", Parser.xmlParser());
 		return doc.tagName().equals("entity");
 	}
-	
+
 	@Override
 	public String encode(Entity entity) {
 		return create(entity, true);
 	}
+
 	public String create(Entity entity, boolean specifyParent) {
 		StringBuilder xml = new StringBuilder();
-		
+
 		xml.append("<entity ").append("name=\"").append(entity.getName()).append("\"");
 		if (specifyParent) {
 			List<String> names = new ArrayList<String>();
@@ -85,11 +108,12 @@ public class XMLFormat extends Format<String, Entity, EntityDef> {
 			}
 		}
 		xml.append(">").append('\n');
-		
-		for (MetaEncoder<Entity, String> metacoder: m_metaEncoders) {
-			if (metacoder.isEncodable(entity)) xml.append(metacoder.encode(entity)).append('\n');
+
+		for (MetaEncoder<Entity, String> metacoder : m_metaEncoders) {
+			if (metacoder.isEncodable(entity))
+				xml.append(metacoder.encode(entity)).append('\n');
 		}
-		
+
 		xml.append("<components>").append('\n');
 		for (Component c : entity.components().all()) {
 			for (Encoder<Component, String> enc : m_encoders) {
@@ -100,37 +124,37 @@ public class XMLFormat extends Format<String, Entity, EntityDef> {
 			}
 		}
 		xml.append("</components>").append('\n');
-		
+
 		xml.append("<children>").append('\n');
-		
+
 		for (Entity e : entity.tree().getChildren()) {
 			xml.append(create(e, false)).append('\n');
 		}
-		
+
 		xml.append("</children>").append('\n');
-		
+
 		xml.append("</entity>").append('\n');
-		
-		return xml.toString();		
+
+		return xml.toString();
 	}
 
 	@Override
 	public EntityDef decode(String value) {
 		Document doc = Jsoup.parse(value, "", Parser.xmlParser());
-		Element root = (Element) doc;
+		Element root = doc;
 		return parse(root);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private EntityDef parse(Element e) {
 		EntityDef d = new EntityDef();
 		d.setName(e.attr("name"));
 		String parent = e.attr("");
 		if (!parent.equals("")) {
-			d.setPath((List<String>) Arrays.asList(parent.split("\\.")));
+			d.setPath(Arrays.asList(parent.split("\\.")));
 		}
 		EntityBuilder b = new EntityBuilder();
-		
+
 		for (Element child : e.children()) {
 			if (child.tagName().equals("components")) {
 				for (Element el : child.children()) {
@@ -155,9 +179,10 @@ public class XMLFormat extends Format<String, Entity, EntityDef> {
 				}
 			}
 		}
-		
+
 		return null;
 	}
+
 	public static class XMLScriptDecoder implements MetaDecoder<Element, EntityDef> {
 		@Override
 		public boolean isDecodable(Element value) {
@@ -166,7 +191,8 @@ public class XMLFormat extends Format<String, Entity, EntityDef> {
 
 		@Override
 		public void decode(Element value, EntityDef object) {
-			if (!isDecodable(value)) throw new IllegalArgumentException("Cannot decode: " + value);
+			if (!isDecodable(value))
+				throw new IllegalArgumentException("Cannot decode: " + value);
 			Elements children = value.children();
 			for (Element s : children) {
 				XScript script = AssetManager.instance().get(s.attr("asset"), XScript.class);
@@ -174,30 +200,32 @@ public class XMLFormat extends Format<String, Entity, EntityDef> {
 			}
 		}
 	}
+
 	public static class XMLScriptEncoder implements MetaEncoder<Entity, String> {
 		@Override
 		public boolean isEncodable(Entity object) {
 			return true;
 		}
+
 		@Override
 		public String encode(Entity object) {
 			StringBuilder builder = new StringBuilder();
-			
+
 			List<XScript> scripts = object.scripts().getAllScripts();
-			
+
 			builder.append("<scripts>\n");
-			
+
 			for (XScript script : scripts) {
 				System.out.println(script.getIdentifier());
 				builder.append("<script asset=\"").append(script.getIdentifier()).append("\">\n");
 			}
-			
+
 			builder.append("<scripts/>");
-			
+
 			return builder.toString();
 		}
 	}
-	
+
 	public static class XMLTransformDecoder implements Decoder<Element, Component> {
 		@Override
 		public boolean isDecodable(Element value) {
@@ -206,16 +234,16 @@ public class XMLFormat extends Format<String, Entity, EntityDef> {
 
 		@Override
 		public Component decode(Element value) {
-			if (!isDecodable(value)) throw new IllegalArgumentException("Cannot decode: " + value);
-			Vector2f trans = new Vector2f(Float.parseFloat(value.attr("x")),
-					  Float.parseFloat(value.attr("y")));
-			Vector2f scale = new Vector2f(Float.parseFloat(value.attr("sx")),
-										  Float.parseFloat(value.attr("sy")));
+			if (!isDecodable(value))
+				throw new IllegalArgumentException("Cannot decode: " + value);
+			Vector2f trans = new Vector2f(Float.parseFloat(value.attr("x")), Float.parseFloat(value.attr("y")));
+			Vector2f scale = new Vector2f(Float.parseFloat(value.attr("sx")), Float.parseFloat(value.attr("sy")));
 			float rot = Float.parseFloat(value.attr("rot"));
-			
+
 			return new CTransform(new Transform2f(trans, rot, scale));
 		}
 	}
+
 	public static class XMLTransformEncoder implements Encoder<Component, String> {
 		@Override
 		public boolean isEncodable(Component object) {
@@ -226,23 +254,21 @@ public class XMLFormat extends Format<String, Entity, EntityDef> {
 		public String encode(Component object) {
 			if (object instanceof CTransform) {
 				CTransform transComp = (CTransform) object;
-				Transform2f transform = transComp.getTransform();
-				
-				Vector2f trans = transform.getTranslation();
-				Vector2f scale = transform.getScale();
-				float rot = transform.getRotation();
-				
+
+				Vector2f trans = transComp.getTranslation();
+				Vector2f scale = transComp.getScale();
+				float rot = transComp.getRotation();
+
 				StringBuilder builder = new StringBuilder();
-				
-				builder.append("<transform x=\"").append(trans.getX())
-					   .append("\" y=\"").append(trans.getY()).append("\" ");
+
+				builder.append("<transform x=\"").append(trans.getX()).append("\" y=\"").append(trans.getY()).append("\" ");
 				builder.append("rot=\"").append(rot).append("\" ");
-				builder.append("sx=\"").append(scale.getX())
-					   .append("\" sy=\"").append(scale.getY()).append("\"/>");
-				
+				builder.append("sx=\"").append(scale.getX()).append("\" sy=\"").append(scale.getY()).append("\"/>");
+
 				return builder.toString();
-			} else throw new IllegalArgumentException("Must pass in CTransform!");
+			} else
+				throw new IllegalArgumentException("Must pass in CTransform!");
 		}
 	}
-	
+
 }

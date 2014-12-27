@@ -26,9 +26,9 @@ public class ComponentManager {
 	public ComponentManager(Entity entity, List<Component> components) {
 		m_components = new HashMap<String, Component>();
 
-		m_components.put(entity.getCTags().getName(), entity.getCTags());
-		m_components.put(entity.getCTransform().getName(), entity.getCTransform());
-		m_components.put(entity.getCScriptData().getName(), entity.getCScriptData());
+		m_components.put(entity.tags().getName(), entity.tags());
+		m_components.put(entity.transform().getName(), entity.transform());
+		m_components.put(entity.scriptData().getName(), entity.scriptData());
 		for (Component comp : components) {
 			String name = comp.getName();
 			if (m_components.containsKey(name))

@@ -90,9 +90,9 @@ public class PhysicsTest {
 		brickBuilder.addComponentBuilder(new CRender(manager.get("testtube", Material2D.class)));
 		brickBuilder.addComponentBuilder(new CBrickBuilder());
 		Entity brick1 = scene.createEntity("brick1", scene, brickBuilder);
-		brick1.getCTransform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, new Vector2f(1f, 1f)));
+		brick1.transform().setTransform(new Transform2f(new Vector2f(0f, 2f), 0f, new Vector2f(1f, 1f)));
 		Entity brick2 = scene.createEntity("brick2", scene, brickBuilder);
-		brick2.getCTransform().setTransform(new Transform2f(new Vector2f(4f, 2f), 0f, new Vector2f(1f, 1f)));
+		brick2.transform().setTransform(new Transform2f(new Vector2f(4f, 2f), 0f, new Vector2f(1f, 1f)));
 
 		EntityBuilder jointBuilder = new EntityBuilder();
 		jointBuilder.addComponentBuilder(new CJointBuilder(PhysicsFactory.createRevolute(brick1, brick2, new Vector2f(0f, 2f))));
@@ -103,7 +103,7 @@ public class PhysicsTest {
 		groundBuilder.addComponentBuilder(new CGroundBuilder());
 		groundBuilder.setTransform(new Transform2f(new Vector2f(0f, -2f), 0f, new Vector2f(2f, 1f)));
 		Entity ground = scene.createEntity("ground", scene, groundBuilder);
-		ground.getCTransform().setTransform(new Transform2f(new Vector2f(0f, -1f), 0f, new Vector2f(2f, 1f)));
+		ground.transform().setTransform(new Transform2f(new Vector2f(0f, -1f), 0f, new Vector2f(2f, 1f)));
 	}
 
 	private class CBrickBuilder implements ComponentBuilder<CBody> {

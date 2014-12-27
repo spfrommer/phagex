@@ -15,6 +15,10 @@ public class CTransform implements Component {
 	private Entity m_entity;
 	private Transform2f m_transform;
 
+	private boolean m_translateChildren = true;
+	private boolean m_rotateChildren = true;
+	private boolean m_scaleChildren = true;
+
 	private boolean m_warnings = false;
 
 	/**
@@ -55,7 +59,7 @@ public class CTransform implements Component {
 	 * 
 	 * @return
 	 */
-	public Transform2f getTransform() {
+	protected Transform2f getTransform() {
 		if (m_warnings)
 			Logger.instance().warn("Getting transform on a unbound CTransform");
 		return m_transform;
@@ -118,7 +122,37 @@ public class CTransform implements Component {
 	}
 
 	/**
-	 * Adds a rotation to the current rotation.
+	 * @return the translation
+	 */
+	public Vector2f getTranslation() {
+		return m_transform.getTranslation();
+	}
+
+	/**
+	 * Sets the translation.
+	 * 
+	 * @param translation
+	 */
+	public void setTranslation(Vector2f translation) {
+		if (translation == null)
+			throw new ComponentException("Cannot set a null translation!");
+		setTranslation(translation.getX(), translation.getY());
+	}
+
+	/**
+	 * Sets the translation.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void setTranslation(float x, float y) {
+		Transform2f newTrans = new Transform2f(m_transform);
+		newTrans.setTranslation(new Vector2f(x, y));
+		setTransform(newTrans);
+	}
+
+	/**
+	 * Adds a rotation to the current rotation in radians with counter clockwise being positive.
 	 * 
 	 * @param rotate
 	 */
@@ -126,6 +160,31 @@ public class CTransform implements Component {
 		Transform2f newTrans = new Transform2f(m_transform);
 		newTrans.setRotation(m_transform.getRotation() + rotate);
 		setTransform(newTrans);
+	}
+
+	/**
+	 * @return the rotation
+	 */
+	public float getRotation() {
+		return m_transform.getRotation();
+	}
+
+	/**
+	 * Sets the rotation in radians with counter clockwise being positive.
+	 * 
+	 * @param rotation
+	 */
+	public void setRotation(float rotation) {
+		Transform2f newTrans = new Transform2f(m_transform);
+		newTrans.setRotation(rotation);
+		setTransform(newTrans);
+	}
+
+	/**
+	 * @return the scale
+	 */
+	public Vector2f getScale() {
+		return m_transform.getScale();
 	}
 
 	/**
@@ -152,6 +211,77 @@ public class CTransform implements Component {
 		Vector2f newScale = new Vector2f(x * oldScale.getX(), y * oldScale.getY());
 		newTrans.setScale(newScale);
 		setTransform(newTrans);
+	}
+
+	/**
+	 * Sets the scale.
+	 * 
+	 * @param scale
+	 */
+	public void setScale(Vector2f scale) {
+		if (scale == null)
+			throw new ComponentException("Cannot set a null translation!");
+		setScale(scale.getX(), scale.getY());
+	}
+
+	/**
+	 * Sets the scale.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void setScale(float x, float y) {
+		Transform2f newTrans = new Transform2f(m_transform);
+		newTrans.setScale(new Vector2f(x, y));
+		setTransform(newTrans);
+	}
+
+	/**
+	 * @return whether the child Entities are translated relative to this Entity's translation
+	 */
+	public boolean isTranslateChildren() {
+		return m_translateChildren;
+	}
+
+	/**
+	 * Sets whether the child Entities are translated relative to this Entity's translation.
+	 * 
+	 * @param translateChildren
+	 */
+	public void setTranslateChildren(boolean translateChildren) {
+		m_translateChildren = translateChildren;
+	}
+
+	/**
+	 * @return whether the child Entities are rotated relative to this Entity's rotation.
+	 */
+	public boolean isRotateChildren() {
+		return m_rotateChildren;
+	}
+
+	/**
+	 * Sets whether the child Entities are rotated relative to this Entity's rotation.
+	 * 
+	 * @param rotateChildren
+	 */
+	public void setRotateChildren(boolean rotateChildren) {
+		m_rotateChildren = rotateChildren;
+	}
+
+	/**
+	 * @return whether the child Entities are scaled relative to this Entity's scale
+	 */
+	public boolean isScaleChildren() {
+		return m_scaleChildren;
+	}
+
+	/**
+	 * Sets whether the child Entities are scaled relative to this Entity's scale.
+	 * 
+	 * @param scaleChildren
+	 */
+	public void setScaleChildren(boolean scaleChildren) {
+		m_scaleChildren = scaleChildren;
 	}
 
 	@Override
