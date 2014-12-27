@@ -6,6 +6,7 @@ import java.util.List;
 import commons.Transform2f;
 
 import engine.core.exceptions.EntityException;
+import engine.core.script.XScript;
 
 /**
  * An Entity in a Scene. Child Entities all transform relative to each other.
@@ -176,6 +177,30 @@ public class Entity implements TreeNode {
 		return m_scriptData;
 	}
 
+	/**
+	 * Creates a builder from the entity
+	 * return
+	 */
+	public EntityBuilder getBuilder() {
+		EntityBuilder builder = new EntityBuilder();
+
+		builder.setTagList(getCTags().getTags());
+		builder.setTransform(getCTransform().getTransform());
+
+		
+		for (XScript s : scripts().getAllScripts()) {
+			builder.addScript(s);
+		}
+		for (Component c : components().all()) {
+			builder.addComponentBuilder(c);
+		}
+		for (Entity child : tree().getChildren()) {
+			builder.addChildBuilder(child.getName(), child.getBuilder());
+		}
+		
+		return builder;
+	}
+	
 	/**
 	 * Returns the TreeManager, which manages this Entity's children and parents.
 	 * 

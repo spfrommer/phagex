@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public class StringUtils {
-	public static String join(String del, Object... objs) {
+	public static String joinObjects(String del, Object... objs) {
 		return join(del, Arrays.asList(objs));
 	}
 	public static String join(String del, Collection<?> col) {

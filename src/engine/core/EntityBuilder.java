@@ -22,11 +22,6 @@ public class EntityBuilder {
 	protected List<XScript> m_scripts;
 	private TagList m_tags = new TagList();
 	private Transform2f m_transform = new Transform2f();
-	private boolean m_translateChildren = true;
-	private boolean m_rotateChildren = true;
-	private boolean m_scaleChildren = true;
-
-	private Map<String, Object> m_scriptData = new HashMap<String, Object>();
 	private Map<String, EntityBuilder> m_childBuilders;
 
 	/**
@@ -68,54 +63,6 @@ public class EntityBuilder {
 	 */
 	public void setTransform(Transform2f transform) {
 		m_transform = transform;
-	}
-
-	/**
-	 * @return whether the child Entities are translated relative to this Entity's translation
-	 */
-	public boolean isTranslateChildren() {
-		return m_translateChildren;
-	}
-
-	/**
-	 * Sets whether the child Entities are translated relative to this Entity's translation.
-	 * 
-	 * @param translateChildren
-	 */
-	public void setTranslateChildren(boolean translateChildren) {
-		m_translateChildren = translateChildren;
-	}
-
-	/**
-	 * @return whether the child Entities are rotated relative to this Entity's rotation.
-	 */
-	public boolean isRotateChildren() {
-		return m_rotateChildren;
-	}
-
-	/**
-	 * Sets whether the child Entities are rotated relative to this Entity's rotation.
-	 * 
-	 * @param rotateChildren
-	 */
-	public void setRotateChildren(boolean rotateChildren) {
-		m_rotateChildren = rotateChildren;
-	}
-
-	/**
-	 * @return whether the child Entities are scaled relative to this Entity's scale
-	 */
-	public boolean isScaleChildren() {
-		return m_scaleChildren;
-	}
-
-	/**
-	 * Sets whether the child Entities are scaled relative to this Entity's scale.
-	 * 
-	 * @param scaleChildren
-	 */
-	public void setScaleChildren(boolean scaleChildren) {
-		m_scaleChildren = scaleChildren;
 	}
 
 	/**
@@ -251,14 +198,18 @@ public class EntityBuilder {
 	 * 
 	 * @return
 	 */
-	protected List<ComponentBuilder<? extends Component>> getComponentBuilders() {
+	public List<ComponentBuilder<? extends Component>> getComponentBuilders() {
 		return m_builders;
+	}
+
+	public List<XScript> getScripts() {
+		return m_scripts;
 	}
 
 	/**
 	 * @return the EntityBuilders for the children
 	 */
-	protected Map<String, EntityBuilder> getEntityBuilders() {
+	public Map<String, EntityBuilder> getEntityBuilders() {
 		return m_childBuilders;
 	}
 }
