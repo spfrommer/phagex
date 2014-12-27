@@ -178,16 +178,16 @@ public class Entity implements TreeNode {
 	}
 
 	/**
-	 * Creates a builder from the entity
-	 * return
+	 * Creates a builder from the entity return
+	 * 
+	 * @return the EntityBuilder
 	 */
 	public EntityBuilder getBuilder() {
 		EntityBuilder builder = new EntityBuilder();
 
-		builder.setTagList(getCTags().getTags());
-		builder.setTransform(getCTransform().getTransform());
+		builder.setTagList(tags().getTags());
+		builder.setTransform(transform().getTransform());
 
-		
 		for (XScript s : scripts().getAllScripts()) {
 			builder.addScript(s);
 		}
@@ -197,10 +197,10 @@ public class Entity implements TreeNode {
 		for (Entity child : tree().getChildren()) {
 			builder.addChildBuilder(child.getName(), child.getBuilder());
 		}
-		
+
 		return builder;
 	}
-	
+
 	/**
 	 * Returns the TreeManager, which manages this Entity's children and parents.
 	 * 
