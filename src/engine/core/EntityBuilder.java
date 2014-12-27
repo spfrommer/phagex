@@ -176,18 +176,18 @@ public class EntityBuilder {
 	 * 
 	 * @return
 	 */
-	protected List<ComponentBuilder<? extends Component>> getComponentBuilders() {
+	public List<ComponentBuilder<? extends Component>> getComponentBuilders() {
 		return m_builders;
 	}
 
-	protected List<XScript> getScripts() {
+	public List<XScript> getScripts() {
 		return m_scripts;
 	}
 
 	/**
 	 * @return the EntityBuilders for the children
 	 */
-	protected Map<String, EntityBuilder> getEntityBuilders() {
+	public Map<String, EntityBuilder> getEntityBuilders() {
 		return m_childBuilders;
 	}
 }

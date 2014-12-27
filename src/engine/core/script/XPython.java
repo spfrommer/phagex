@@ -75,6 +75,8 @@ public class XPython extends XScript {
 	public void exit() {
 		if (m_exit != null)
 			m_exit.__call__();
+		m_python.cleanup();
+		m_python = null;
 	}
 
 	@Override

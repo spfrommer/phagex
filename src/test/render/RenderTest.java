@@ -60,12 +60,18 @@ public class RenderTest {
 		scene.createEntity("camera", scene, cameraBuilder);
 
 		game.start();
-
+		long counter = 200;
 		float lastTime = 16f;
 		while (true) {
+			
+			if (counter < 0) {
+				System.gc();
+				counter = 200;
+			}
 			long startTime = System.nanoTime();
 			game.update(lastTime);
 			long endTime = System.nanoTime();
+			counter -= (endTime - startTime) / 1000000;
 			lastTime = (endTime - startTime) / 1000000;
 		}
 	}
