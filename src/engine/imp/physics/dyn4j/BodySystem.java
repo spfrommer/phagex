@@ -30,7 +30,7 @@ import engine.imp.physics.PhysicsUtils;
  */
 public class BodySystem implements EntitySystem {
 	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CBody.NAME }, new String[0],
-			true);
+			false);
 	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CBody.NAME }, new String[0],
 			false);
 	private World m_world;
@@ -159,6 +159,7 @@ public class BodySystem implements EntitySystem {
 		Body body = entityPhysics.getBody();
 
 		Vector2 trans = body.getTransform().getTranslation();
+
 		// TODO: transforms relative to parent
 		entity.transform().quietSetTransform(
 				new Transform2f(PhysicsUtils.fromDyn4j(trans), (float) body.getTransform().getRotation(), entity.transform()

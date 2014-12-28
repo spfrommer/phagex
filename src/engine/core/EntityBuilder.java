@@ -7,6 +7,7 @@ import java.util.Map;
 
 import commons.Transform2f;
 
+import engine.core.CTransform.TransformMode;
 import engine.core.exceptions.ComponentException;
 import engine.core.exceptions.EntityException;
 import engine.core.exceptions.XScriptException;
@@ -23,9 +24,7 @@ public class EntityBuilder {
 	private TagList m_tags = new TagList();
 	private Transform2f m_transform = new Transform2f();
 
-	private boolean m_translateChildren = true;
-	private boolean m_rotateChildren = true;
-	private boolean m_scaleChildren = true;
+	private TransformMode m_mode = TransformMode.ALL;
 
 	private Map<String, EntityBuilder> m_childBuilders;
 	private Map<String, Object> m_scriptData;
@@ -73,51 +72,19 @@ public class EntityBuilder {
 	}
 
 	/**
-	 * @return whether the child Entities are translated relative to this Entity's translation
+	 * @return how this Entity transforms relative to its parent.
 	 */
-	public boolean isTranslateChildren() {
-		return m_translateChildren;
+	public TransformMode getTransformMode() {
+		return m_mode;
 	}
 
 	/**
-	 * Sets whether the child Entities are translated relative to this Entity's translation.
+	 * Sets how this Entity transforms relative to its parent.
 	 * 
-	 * @param translateChildren
+	 * @param mode
 	 */
-	public void setTranslateChildren(boolean translateChildren) {
-		m_translateChildren = translateChildren;
-	}
-
-	/**
-	 * @return whether the child Entities are rotated relative to this Entity's rotation.
-	 */
-	public boolean isRotateChildren() {
-		return m_rotateChildren;
-	}
-
-	/**
-	 * Sets whether the child Entities are rotated relative to this Entity's rotation.
-	 * 
-	 * @param rotateChildren
-	 */
-	public void setRotateChildren(boolean rotateChildren) {
-		m_rotateChildren = rotateChildren;
-	}
-
-	/**
-	 * @return whether the child Entities are scaled relative to this Entity's scale
-	 */
-	public boolean isScaleChildren() {
-		return m_scaleChildren;
-	}
-
-	/**
-	 * Sets whether the child Entities are scaled relative to this Entity's scale.
-	 * 
-	 * @param scaleChildren
-	 */
-	public void setScaleChildren(boolean scaleChildren) {
-		m_scaleChildren = scaleChildren;
+	public void setTransformMode(TransformMode mode) {
+		m_mode = mode;
 	}
 
 	/**

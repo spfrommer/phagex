@@ -6,6 +6,7 @@ import commons.Transform2f;
 import commons.matrix.Vector2f;
 import commons.matrix.Vector3f;
 
+import engine.core.CTransform.TransformMode;
 import engine.core.Entity;
 import engine.core.EntityBuilder;
 import engine.core.Game;
@@ -47,8 +48,8 @@ public class RenderTest {
 		game.scenes().addScene(scene, "main");
 
 		EntityBuilder lightBuilder = new EntityBuilder();
-		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f),
-				new Vector3f(0.5f, 0.5f, 0.5f), new Color(0.7f, 0.7f, 1f))));
+		lightBuilder.addComponentBuilder(new CLight(LightFactory.createDiffusePoint(new Vector3f(0f, 0f, 1f), new Vector3f(0.5f,
+				0.5f, 0.5f), new Color(0.7f, 0.7f, 1f))));
 		scene.createEntity("light", scene, lightBuilder);
 
 		makeBackground(scene);
@@ -60,18 +61,11 @@ public class RenderTest {
 		scene.createEntity("camera", scene, cameraBuilder);
 
 		game.start();
-		long counter = 200;
 		float lastTime = 16f;
 		while (true) {
-			
-			if (counter < 0) {
-				System.gc();
-				counter = 200;
-			}
 			long startTime = System.nanoTime();
 			game.update(lastTime);
 			long endTime = System.nanoTime();
-			counter -= (endTime - startTime) / 1000000;
 			lastTime = (endTime - startTime) / 1000000;
 		}
 	}
@@ -103,6 +97,12 @@ public class RenderTest {
 		bIcicle.addComponentBuilder(new CRender(manager.get("icicle", Material2D.class), 2, 1f));
 		bIcicle.addScript(manager.get("script", XPython.class));
 
+		EntityBuilder childIcicle = new EntityBuilder();
+		childIcicle.addComponentBuilder(new CRender(manager.get("icicle", Material2D.class), 2, 1f));
+		childIcicle.setTransform(new Transform2f(new Vector2f(0f, 1f), 0f, new Vector2f(1f, 1f)));
+		childIcicle.setTransformMode(TransformMode.FIXED_TRANSLATE);
+		bIcicle.addChildBuilder("child", childIcicle);
+
 		EntityBuilder bLake = new EntityBuilder();
 		CRender clake = new CRender(manager.get("lake", Material2D.class), 2, 1f);
 		clake.setRepeatX(2);
@@ -110,8 +110,7 @@ public class RenderTest {
 		bLake.addComponentBuilder(clake);
 
 		Entity icicle = scene.createEntity("icicle1", scene, bIcicle);
-		icicle.transform().setTransform(
-				new Transform2f(new Vector2f(0.5f, 0.6f), (float) Math.PI, new Vector2f(0.5f, 1f)));
+		icicle.transform().setTransform(new Transform2f(new Vector2f(0f, 0f), (float) Math.PI, new Vector2f(0.5f, 1f)));
 
 		Entity lake = scene.createEntity("lake", scene, bLake);
 		lake.transform().translate(0f, -0.8f);

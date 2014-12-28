@@ -12,6 +12,7 @@ import java.util.Set;
 import commons.Transform2f;
 import commons.matrix.Vector2f;
 
+import engine.core.CTransform.TransformMode;
 import engine.core.exceptions.EntityException;
 import engine.core.exceptions.SceneException;
 import engine.core.script.XScript;
@@ -92,9 +93,8 @@ public class Scene implements TreeNode {
 
 		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), new Transform2f(builder.getTransform()));
 
-		entity.transform().setTranslateChildren(builder.isTranslateChildren());
-		entity.transform().setRotateChildren(builder.isRotateChildren());
-		entity.transform().setScaleChildren(builder.isScaleChildren());
+		entity.transform().setTransformMode(builder.getTransformMode());
+		;
 
 		Map<String, Object> scriptData = builder.getScriptData();
 		for (String s : scriptData.keySet()) {
@@ -253,33 +253,41 @@ public class Scene implements TreeNode {
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			CTransform trans = e.transform();
+			TransformMode mode = trans.getTransformMode();
 
-			if (i == 0) {
-				at.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
-				at.rotate(trans.getRotation());
+			if (mode == TransformMode.NONE) {
+				at = new AffineTransform();
+				totalRot = 0;
+			} else if (mode == TransformMode.FIXED_TRANSLATE) {
+				AffineTransform newTrans = new AffineTransform();
+				newTrans.translate(at.getTranslateX(), at.getTranslateY());
+				at = newTrans;
+				totalRot = 0;
+			} else if (mode == TransformMode.FIXED_ROTATE) {
+				at = new AffineTransform();
 				totalRot += trans.getRotation();
+
+				at.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
+				at.rotate(totalRot);
 				at.scale(trans.getScale().getX(), trans.getScale().getY());
+				continue;
+			} else if (mode == TransformMode.RTRANSLATE) {
+				AffineTransform newTrans = new AffineTransform();
+				newTrans.translate(at.getTranslateX(), at.getTranslateY());
+				newTrans.rotate(totalRot);
+				newTrans.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
+				newTrans.rotate(-totalRot);
+				newTrans.rotate(trans.getRotation());
+				totalRot = trans.getRotation();
+				newTrans.scale(trans.getScale().getX(), trans.getScale().getY());
+
+				at = newTrans;
 				continue;
 			}
 
-			CTransform pTrans = entities.get(i - 1).transform();
-
-			if (!pTrans.isTranslateChildren()) {
-				at.translate(-at.getTranslateX(), -at.getTranslateY());
-			}
 			at.translate(trans.getTranslation().getX(), trans.getTranslation().getY());
-
-			if (!pTrans.isRotateChildren()) {
-				at.rotate(-totalRot);
-				totalRot = 0;
-			}
-
 			at.rotate(trans.getRotation());
 			totalRot += trans.getRotation();
-
-			if (!pTrans.isScaleChildren()) {
-				at.scale(1 / (at.getScaleX() / Math.cos(totalRot)), 1 / (at.getScaleY() / Math.cos(totalRot)));
-			}
 			at.scale(trans.getScale().getX(), trans.getScale().getY());
 		}
 

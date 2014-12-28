@@ -15,9 +15,9 @@ public class XJava extends XScript {
 	private Interpreter m_interpreter;
 
 	private String m_code;
-	
+
 	static {
-		XScriptTypeManager.instance().registerType(XJava.class, "java", new XJavaFactory());;
+		XScriptTypeManager.instance().registerType(XJava.class, "java", new XJavaFactory());
 	}
 
 	public XJava(String code) {
@@ -107,7 +107,7 @@ public class XJava extends XScript {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static class XJavaFactory implements XScriptFactory {
 		@Override
 		public XScript create(String code) {

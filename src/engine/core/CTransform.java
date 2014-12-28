@@ -15,11 +15,12 @@ public class CTransform implements Component {
 	private Entity m_entity;
 	private Transform2f m_transform;
 
-	private boolean m_translateChildren = true;
-	private boolean m_rotateChildren = true;
-	private boolean m_scaleChildren = true;
-
+	private TransformMode m_mode;
 	private boolean m_warnings = false;
+
+	public enum TransformMode {
+		ALL, NONE, FIXED_TRANSLATE, FIXED_ROTATE, RTRANSLATE
+	}
 
 	/**
 	 * Initializes a CTransform with only a transform.
@@ -237,51 +238,19 @@ public class CTransform implements Component {
 	}
 
 	/**
-	 * @return whether the child Entities are translated relative to this Entity's translation
+	 * @return how this Entity transforms relative to its parent
 	 */
-	public boolean isTranslateChildren() {
-		return m_translateChildren;
+	public TransformMode getTransformMode() {
+		return m_mode;
 	}
 
 	/**
-	 * Sets whether the child Entities are translated relative to this Entity's translation.
+	 * Sets how this Entity transforms relative to its parent.
 	 * 
-	 * @param translateChildren
+	 * @param mode
 	 */
-	public void setTranslateChildren(boolean translateChildren) {
-		m_translateChildren = translateChildren;
-	}
-
-	/**
-	 * @return whether the child Entities are rotated relative to this Entity's rotation.
-	 */
-	public boolean isRotateChildren() {
-		return m_rotateChildren;
-	}
-
-	/**
-	 * Sets whether the child Entities are rotated relative to this Entity's rotation.
-	 * 
-	 * @param rotateChildren
-	 */
-	public void setRotateChildren(boolean rotateChildren) {
-		m_rotateChildren = rotateChildren;
-	}
-
-	/**
-	 * @return whether the child Entities are scaled relative to this Entity's scale
-	 */
-	public boolean isScaleChildren() {
-		return m_scaleChildren;
-	}
-
-	/**
-	 * Sets whether the child Entities are scaled relative to this Entity's scale.
-	 * 
-	 * @param scaleChildren
-	 */
-	public void setScaleChildren(boolean scaleChildren) {
-		m_scaleChildren = scaleChildren;
+	public void setTransformMode(TransformMode mode) {
+		m_mode = mode;
 	}
 
 	@Override
