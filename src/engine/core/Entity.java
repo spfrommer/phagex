@@ -33,6 +33,10 @@ public class Entity implements TreeNode {
 	// the name of the Entity
 	private String m_name;
 
+	// whether or not the Entity is active in the Scene
+	private boolean m_active = true;
+	private boolean m_destroyed = false;
+
 	/**
 	 * Constructs a new Entity.
 	 * 
@@ -94,6 +98,7 @@ public class Entity implements TreeNode {
 		m_scene = null;
 		m_transform = null;
 		m_listeners.clear();
+		m_destroyed = true;
 	}
 
 	/**
@@ -127,6 +132,29 @@ public class Entity implements TreeNode {
 			throw new EntityException("Tried to remove a nonexistant EntityListener!");
 
 		m_listeners.add(listener);
+	}
+
+	/**
+	 * @return whether or not the Entity has been destroyed.
+	 */
+	public boolean isDestroyed() {
+		return m_destroyed;
+	}
+
+	/**
+	 * @return whether or not the Entity is active in the Scene.
+	 */
+	public boolean isEnabled() {
+		return m_active;
+	}
+
+	/**
+	 * Sets whether or not the Entity is active in the Scene.
+	 * 
+	 * @param active
+	 */
+	protected void setEnabled(boolean active) {
+		m_active = active;
 	}
 
 	@Override

@@ -16,10 +16,10 @@ import engine.core.script.XScript;
  * Manages the Joints in a game.
  */
 public class JointSystem implements EntitySystem {
-	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CJoint.NAME },
-			new String[0], true);
-	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CJoint.NAME },
-			new String[0], false);
+	private static final SimpleEntityFilter s_updateFilter = new SimpleEntityFilter(new String[] { CJoint.NAME }, new String[0],
+			true);
+	private static final SimpleEntityFilter s_eventFilter = new SimpleEntityFilter(new String[] { CJoint.NAME }, new String[0],
+			false);
 	private BodySystem m_bodySystem;
 
 	public JointSystem(BodySystem bodySystem) {
@@ -57,6 +57,16 @@ public class JointSystem implements EntitySystem {
 
 	@Override
 	public void entityMoved(Entity entity, TreeNode oldParent, TreeNode newParent, Scene scene) {
+	}
+
+	@Override
+	public void entityEnabled(Entity entity, TreeNode parent, Scene scene) {
+		entityAdded(entity, parent, scene);
+	}
+
+	@Override
+	public void entityDisabled(Entity entity, TreeNode parent, Scene scene) {
+		entityRemoved(entity, parent, scene);
 	}
 
 	@Override

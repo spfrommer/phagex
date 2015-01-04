@@ -81,6 +81,7 @@ public class TreeManager {
 		if (!m_children.contains(child))
 			throw new EntityException("Trying to remove a nonexistant child!");
 		m_children.remove(child);
+		m_childNames.remove(child.getName());
 
 		for (EntityListener listener : m_entity.getListeners())
 			listener.childRemoved(m_entity, child, m_entity.getScene());

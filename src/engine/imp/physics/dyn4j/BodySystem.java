@@ -142,6 +142,16 @@ public class BodySystem implements EntitySystem {
 	}
 
 	@Override
+	public void entityEnabled(Entity entity, TreeNode parent, Scene scene) {
+		entityAdded(entity, parent, scene);
+	}
+
+	@Override
+	public void entityDisabled(Entity entity, TreeNode parent, Scene scene) {
+		entityRemoved(entity, parent, scene);
+	}
+
+	@Override
 	public void update(Scene scene, float time) {
 		m_world.update(time / 1000);
 

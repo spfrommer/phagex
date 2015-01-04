@@ -17,8 +17,7 @@ import glextra.renderer.Renderer2D;
  * Draws Lights to a RenderSystem.
  */
 public class LightingSystem implements EntitySystem {
-	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CLight.NAME },
-			new String[0], false);
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CLight.NAME }, new String[0], false);
 
 	private RenderingSystem m_render;
 
@@ -43,6 +42,14 @@ public class LightingSystem implements EntitySystem {
 	@Override
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene) {
 
+	}
+
+	@Override
+	public void entityEnabled(Entity entity, TreeNode parent, Scene scene) {
+	}
+
+	@Override
+	public void entityDisabled(Entity entity, TreeNode parent, Scene scene) {
 	}
 
 	@Override

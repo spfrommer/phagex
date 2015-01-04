@@ -77,6 +77,34 @@ public class Game {
 	}
 
 	/**
+	 * Called by the Scene.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	protected void entityEnabled(Entity entity, TreeNode parent, Scene scene) {
+		for (EntitySystem system : m_systems) {
+			if (system.getEntityEventFilter().matches(entity))
+				system.entityEnabled(entity, parent, scene);
+		}
+	}
+
+	/**
+	 * Called by the Scene.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	protected void entityDisabled(Entity entity, TreeNode parent, Scene scene) {
+		for (EntitySystem system : m_systems) {
+			if (system.getEntityEventFilter().matches(entity))
+				system.entityDisabled(entity, parent, scene);
+		}
+	}
+
+	/**
 	 * Called by an Entity.
 	 * 
 	 * @param entity
@@ -109,9 +137,11 @@ public class Game {
 
 		List<Entity> entities = current.getAllEntities();
 		for (Entity e : entities) {
-			for (EntitySystem system : m_systems) {
-				if (system.getUpdateFilter().matches(e))
-					system.updateEntity(e, current, time);
+			if (e.isEnabled()) {
+				for (EntitySystem system : m_systems) {
+					if (system.getUpdateFilter().matches(e))
+						system.updateEntity(e, current, time);
+				}
 			}
 		}
 		for (EntitySystem system : m_systems)

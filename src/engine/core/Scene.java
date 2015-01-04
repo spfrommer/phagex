@@ -94,7 +94,6 @@ public class Scene implements TreeNode {
 		Entity entity = new Entity(name, this, parent, components, builder.getTagList(), new Transform2f(builder.getTransform()));
 
 		entity.transform().setTransformMode(builder.getTransformMode());
-		;
 
 		Map<String, Object> scriptData = builder.getScriptData();
 		for (String s : scriptData.keySet()) {
@@ -140,19 +139,6 @@ public class Scene implements TreeNode {
 	}
 
 	/**
-	 * Removes an Entity from the Scene. Only use this method if you want to add the Entity back again later.
-	 * 
-	 * @param entity
-	 */
-	public void removeEntity(Entity entity) {
-		if (!m_allEntities.contains(entity))
-			throw new SceneException("Trying to remove an Entity not in the Scene!");
-
-		entity.tree().getParent().removeChild(entity);
-		recursiveRemove(entity, entity.tree().getParent(), false);
-	}
-
-	/**
 	 * Removes an Entity from the Scene and destroys it completely to speed up garbage collection.
 	 * 
 	 * @param entity
@@ -178,7 +164,36 @@ public class Scene implements TreeNode {
 		m_allEntities.remove(entity);
 		if (destroy)
 			entity.destroy();
-		m_game.entityRemoved(entity, parent, this);
+		m_game.entityDisabled(entity, parent, this);
+		entity.setEnabled(false);
+	}
+
+	/**
+	 * Reactivates an Entity after being deactivated.
+	 * 
+	 * @param entity
+	 */
+	public void enable(Entity entity) {
+		if (!entity.isEnabled()) {
+			entity.setEnabled(true);
+			m_game.entityEnabled(entity, entity.tree().getParent(), this);
+			for (Entity child : entity.tree().getChildren())
+				enable(child);
+		}
+	}
+
+	/**
+	 * Deactivates an Entity, temporarily removing it from the Scene.
+	 * 
+	 * @param entity
+	 */
+	public void disable(Entity entity) {
+		if (entity.isEnabled()) {
+			entity.setEnabled(false);
+			m_game.entityDisabled(entity, entity.tree().getParent(), this);
+			for (Entity child : entity.tree().getChildren())
+				disable(child);
+		}
 	}
 
 	/**
@@ -237,8 +252,8 @@ public class Scene implements TreeNode {
 			throw new SceneException("Tried to transform a null entity!");
 		if (node instanceof Scene)
 			return new Transform2f();
-		if (!m_allEntities.contains(node))
-			throw new SceneException("Entity is not part of Scene - transform cannot be calculated!");
+		if (((Entity) node).isDestroyed())
+			throw new SceneException("Cannot calculate world transform of destroyed Entity!");
 		// List of entities in the chain
 		List<Entity> entities = new ArrayList<Entity>();
 		TreeNode parent = node;

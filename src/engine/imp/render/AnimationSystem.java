@@ -14,8 +14,8 @@ import engine.core.script.XScript;
  * Updates animations.
  */
 public class AnimationSystem implements EntitySystem {
-	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME,
-			CAnimation.NAME }, new String[0], false);
+	private static final SimpleEntityFilter s_filter = new SimpleEntityFilter(new String[] { CRender.NAME, CAnimation.NAME },
+			new String[0], false);
 
 	@Override
 	public void sceneChanged(Scene oldScene, Scene newScene) {
@@ -31,6 +31,14 @@ public class AnimationSystem implements EntitySystem {
 
 	@Override
 	public void entityMoved(Entity entity, TreeNode oldParent, TreeNode newParent, Scene scene) {
+	}
+
+	@Override
+	public void entityEnabled(Entity entity, TreeNode parent, Scene scene) {
+	}
+
+	@Override
+	public void entityDisabled(Entity entity, TreeNode parent, Scene scene) {
 	}
 
 	@Override

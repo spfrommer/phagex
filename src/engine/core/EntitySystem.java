@@ -33,6 +33,24 @@ public interface EntitySystem {
 	public void entityRemoved(Entity entity, TreeNode parent, Scene scene);
 
 	/**
+	 * Called when an Entity that matches the EntitySystem's EntityFilter is enabled.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	public void entityEnabled(Entity entity, TreeNode parent, Scene scene);
+
+	/**
+	 * Called when an Entity that matches the EntitySystem's EntityFilter is disabled.
+	 * 
+	 * @param entity
+	 * @param parent
+	 * @param scene
+	 */
+	public void entityDisabled(Entity entity, TreeNode parent, Scene scene);
+
+	/**
 	 * Called when an Entity is moved to a new parent.
 	 * 
 	 * @param entity
@@ -53,6 +71,7 @@ public interface EntitySystem {
 
 	/**
 	 * Called to update any centralized process - such as a physics World, for example.
+	 * 
 	 * @param scene
 	 * @param time
 	 */
@@ -63,7 +82,8 @@ public interface EntitySystem {
 	 * 
 	 * @param entity
 	 * @param scene
-	 * @param time TODO
+	 * @param time
+	 *            TODO
 	 */
 	public void updateEntity(Entity entity, Scene scene, float time);
 
